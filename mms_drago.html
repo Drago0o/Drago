@@ -3,1533 +3,791 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0f172a" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <title>Mms & Drago | مملكتنا الذكية 👑🎮</title>
+  <meta name="theme-color" content="#e11d48" />
+  <title>أهلاً بيكي يا Mms 👑✨ — بيتنا ومخزننا</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <style>
-    :root {
-      --bg: #0b1120;
-      --surface: rgba(30, 41, 59, 0.84);
-      --surface-solid: #1e293b;
-      --surface-2: rgba(51, 65, 85, 0.68);
-      --border: rgba(255, 255, 255, 0.12);
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-      --primary: #38bdf8;
-      --primary-glow: rgba(56, 189, 248, 0.35);
-      --accent: #818cf8;
-      --success: #22c55e;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --card-radius: 18px;
-      --bg-gradient: radial-gradient(circle at top right, #1e1b4b, #0b1120 60%);
-    }
-
-    body.theme-mms {
-      --bg: #1d1024;
-      --surface: rgba(49, 23, 62, 0.86);
-      --surface-solid: #31173e;
-      --surface-2: rgba(82, 37, 102, 0.65);
-      --border: rgba(244, 114, 182, 0.25);
-      --text: #fdf2f8;
-      --text-muted: #f5d0fe;
-      --primary: #f472b6;
-      --primary-glow: rgba(244, 114, 182, 0.4);
-      --accent: #c084fc;
-      --bg-gradient: radial-gradient(circle at top left, #4a154b, #1d1024 65%);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Cairo', sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
-
     body {
-      background: var(--bg);
-      background-image: var(--bg-gradient);
-      color: var(--text);
+      font-family: 'Cairo', sans-serif;
+      background-color: #FFFDF9;
+      background-image:
+        radial-gradient(circle at 12% 10%, rgba(251, 207, 232, 0.35), transparent 38%),
+        radial-gradient(circle at 88% 15%, rgba(167, 243, 208, 0.35), transparent 40%),
+        radial-gradient(circle at 50% 90%, rgba(254, 240, 138, 0.3), transparent 45%);
       min-height: 100dvh;
       overflow-x: hidden;
-      transition: background 0.35s ease;
     }
 
-    /* Floating Background Layer (Battery-friendly) */
-    #ambient-layer {
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(6deg); }
+    }
+    .animate-float-slow { animation: floatSlow 5s ease-in-out infinite; }
+    .animate-float-delay { animation: floatSlow 6.5s ease-in-out 1.5s infinite; }
+
+    @keyframes burstFly {
+      0% { transform: translate(0, 0) scale(0.5) rotate(0deg); opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) scale(1.25) rotate(var(--rot)); opacity: 0; }
+    }
+    .joy-particle {
       position: fixed;
-      inset: 0;
       pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-    }
-
-    #ambient-layer.paused .ambient-item {
-      animation-play-state: paused !important;
-      opacity: 0.12;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .ambient-item {
-        animation: none !important;
-        opacity: 0.2 !important;
-      }
-    }
-
-    .ambient-item {
-      position: absolute;
-      user-select: none;
-    }
-
-    .ambient-star {
-      animation: twinkleFloat var(--dur, 8s) ease-in-out infinite;
-      animation-delay: var(--delay, 0s);
-    }
-
-    .ambient-critter {
-      animation: driftUp var(--dur, 19s) linear infinite;
-      animation-delay: var(--delay, 0s);
-    }
-
-    @keyframes twinkleFloat {
-      0%, 100% {
-        transform: translate3d(0, 0, 0) scale(0.85);
-        opacity: 0.25;
-      }
-      50% {
-        transform: translate3d(8px, -14px, 0) scale(1.2);
-        opacity: 0.85;
-      }
-    }
-
-    @keyframes driftUp {
-      0% {
-        transform: translate3d(0, 108dvh, 0) rotate(-6deg);
-        opacity: 0;
-      }
-      12% {
-        opacity: 0.85;
-      }
-      50% {
-        transform: translate3d(var(--sway, 30px), 50dvh, 0) rotate(8deg);
-      }
-      88% {
-        opacity: 0.85;
-      }
-      100% {
-        transform: translate3d(calc(var(--sway, 30px) * -0.7), -14dvh, 0) rotate(-5deg);
-        opacity: 0;
-      }
-    }
-
-    /* Role Gate Screen */
-    #role-gate {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      background: radial-gradient(circle at center, #2a1439 0%, #090d16 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      text-align: center;
-    }
-
-    .gate-badge {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 6px 16px;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      color: #f9a8d4;
-      margin-bottom: 14px;
-    }
-
-    .gate-title {
-      font-size: 2rem;
-      font-weight: 900;
-      margin-bottom: 8px;
-      background: linear-gradient(135deg, #f472b6, #c084fc, #38bdf8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .gate-sub {
-      color: #cbd5e1;
-      font-size: 0.98rem;
-      margin-bottom: 32px;
-      max-width: 420px;
-    }
-
-    .role-cards {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(145px, 210px));
-      gap: 18px;
-      width: 100%;
-      max-width: 450px;
-    }
-
-    .role-card {
-      background: rgba(30, 41, 59, 0.75);
-      border: 1.5px solid rgba(255, 255, 255, 0.12);
-      border-radius: 24px;
-      padding: 26px 16px;
-      cursor: pointer;
-      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-      backdrop-filter: blur(12px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .role-card:hover, .role-card:active {
-      transform: translateY(-4px) scale(1.02);
-    }
-
-    .role-card.mms:hover {
-      border-color: #f472b6;
-      box-shadow: 0 12px 30px rgba(244, 114, 182, 0.28);
-      background: rgba(74, 21, 75, 0.78);
-    }
-
-    .role-card.drago:hover {
-      border-color: #38bdf8;
-      box-shadow: 0 12px 30px rgba(56, 189, 248, 0.28);
-      background: rgba(15, 23, 42, 0.92);
-    }
-
-    .role-emoji {
-      font-size: 3rem;
-      line-height: 1;
-    }
-
-    .role-name {
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: #fff;
-    }
-
-    .role-desc {
-      font-size: 0.8rem;
-      color: #94a3b8;
-    }
-
-    /* App Shell */
-    #app-shell {
-      position: relative;
-      z-index: 1;
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 14px 14px 90px;
-      display: none;
-    }
-
-    /* Header */
-    .topbar {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      backdrop-filter: blur(14px);
-      border-radius: 20px;
-      padding: 12px 16px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 14px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-    }
-
-    .brand-box {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .brand-avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
+      z-index: 9999;
       font-size: 1.5rem;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      box-shadow: 0 4px 14px var(--primary-glow);
+      animation: burstFly 1.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    .brand-title {
-      font-size: 1.08rem;
-      font-weight: 800;
-    }
-
-    .brand-sub {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      border: 1px solid var(--border);
-      background: var(--surface-2);
-      color: var(--text);
-      padding: 8px 13px;
-      border-radius: 12px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: filter 0.2s ease, transform 0.2s ease;
-    }
-
-    .btn:hover {
-      filter: brightness(1.12);
-      transform: translateY(-1px);
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      border: none;
-      color: #fff;
-      box-shadow: 0 4px 15px var(--primary-glow);
-    }
-
-    .sync-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      display: inline-block;
-      background: var(--danger);
-      box-shadow: 0 0 8px var(--danger);
-    }
-
-    .sync-dot.online {
-      background: var(--success);
-      box-shadow: 0 0 10px var(--success);
-    }
-
-    .sync-dot.syncing {
-      background: var(--warning);
-      box-shadow: 0 0 10px var(--warning);
-    }
-
-    /* Global Search */
-    .search-bar-wrap {
-      position: relative;
-      margin-bottom: 14px;
-    }
-
-    .search-input {
-      width: 100%;
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      color: var(--text);
-      padding: 12px 44px 12px 16px;
-      border-radius: 16px;
-      font-size: 0.95rem;
-      outline: none;
-      backdrop-filter: blur(12px);
-      transition: border-color 0.2s;
-    }
-
-    .search-input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px var(--primary-glow);
-    }
-
-    .search-icon {
-      position: absolute;
-      right: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 1.1rem;
-      pointer-events: none;
-    }
-
-    /* Main Tabs */
-    .tabs-scroll {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 6px;
-      margin-bottom: 14px;
-      scrollbar-width: none;
-    }
-
-    .tabs-scroll::-webkit-scrollbar {
-      display: none;
-    }
-
-    .tab-btn {
-      white-space: nowrap;
-      padding: 10px 15px;
-      border-radius: 14px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      font-weight: 700;
-      font-size: 0.88rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .tab-btn.active {
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      color: #fff;
-      border-color: transparent;
-      box-shadow: 0 4px 14px var(--primary-glow);
-    }
-
-    .tab-btn.vip-tab {
-      border-color: rgba(244, 114, 182, 0.35);
-    }
-
-    /* Section Header & Filters */
-    .section-toolbar {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 14px;
-      margin-bottom: 16px;
-      backdrop-filter: blur(12px);
-    }
-
-    .section-top {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      font-size: 1.12rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .pills-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-      margin-top: 8px;
-    }
-
-    .pill {
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .pill.active {
-      background: var(--primary);
-      color: #0b1120;
-      border-color: var(--primary);
-    }
-
-    body.theme-mms .pill.active {
-      color: #1d1024;
-    }
-
-    /* Cards Grid */
-    .items-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
-      gap: 14px;
-    }
-
-    .item-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--card-radius);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      backdrop-filter: blur(10px);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .item-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
-    }
-
-    .item-card.bought {
-      opacity: 0.58;
-    }
-
-    .item-card.bought .item-name {
-      text-decoration: line-through;
-    }
-
-    .item-img-box {
-      width: 100%;
-      height: 155px;
-      background: rgba(15, 23, 42, 0.45);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      position: relative;
-      cursor: pointer;
-    }
-
-    .item-img-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .item-placeholder {
-      font-size: 2.7rem;
-      opacity: 0.85;
-    }
-
-    .badge-chip {
-      position: absolute;
-      top: 9px;
-      right: 9px;
-      background: rgba(15, 23, 42, 0.82);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      padding: 3px 9px;
-      border-radius: 999px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      backdrop-filter: blur(6px);
-    }
-
-    .badge-chip.left {
-      right: auto;
-      left: 9px;
-      background: rgba(244, 114, 182, 0.88);
-      color: #1d1024;
-    }
-
-    .item-body {
-      padding: 12px 14px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .item-name {
-      font-size: 1rem;
-      font-weight: 800;
-      line-height: 1.35;
-    }
-
-    .item-meta {
-      font-size: 0.78rem;
-      color: var(--primary);
-      font-weight: 700;
-    }
-
-    .item-note {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      line-height: 1.4;
-    }
-
-    .item-actions {
-      margin-top: auto;
-      padding-top: 8px;
-      display: flex;
-      gap: 6px;
-      justify-content: flex-end;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .icon-btn {
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 5px 10px;
-      border-radius: 9px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .icon-btn.del {
-      color: #fca5a5;
-      border-color: rgba(239, 68, 68, 0.35);
-    }
-
-    /* Empty State */
-    .empty-box {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 42px 18px;
-      background: var(--surface);
-      border: 1px dashed var(--border);
-      border-radius: 20px;
-      color: var(--text-muted);
-    }
-
-    /* Modals */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(2, 6, 23, 0.78);
-      backdrop-filter: blur(8px);
-      z-index: 2000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-
-    .modal-backdrop.open {
-      display: flex;
-    }
-
-    .modal-card {
-      background: var(--surface-solid);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      width: 100%;
-      max-width: 470px;
-      max-height: 90dvh;
-      overflow-y: auto;
-      padding: 20px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
-    .modal-title {
-      font-size: 1.12rem;
-      font-weight: 800;
-    }
-
-    .form-group {
-      margin-bottom: 13px;
-    }
-
-    .form-label {
-      display: block;
-      font-size: 0.83rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      margin-bottom: 5px;
-    }
-
-    .form-control {
-      width: 100%;
-      background: rgba(15, 23, 42, 0.7);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 10px 12px;
-      border-radius: 12px;
-      font-size: 0.92rem;
-      outline: none;
-    }
-
-    .form-control:focus {
-      border-color: var(--primary);
-    }
-
-    .preview-img {
-      width: 100%;
-      max-height: 170px;
-      object-fit: cover;
-      border-radius: 12px;
-      margin-top: 8px;
-      display: none;
-    }
-
-    /* Toast */
-    #toast {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      max-width: 92vw;
-      width: max-content;
-      text-align: center;
-      transform: translateX(-50%) translateY(140px);
-      background: #0f172a;
-      color: #fff;
-      border: 1px solid var(--primary);
-      padding: 10px 18px;
-      border-radius: 18px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      line-height: 1.4;
-      z-index: 3000;
-      transition: transform 0.28s ease;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
-    }
-
-    #toast.show {
-      transform: translateX(-50%) translateY(0);
-    }
-
-    #toast-undo-btn {
-      background: var(--primary);
-      color: #0b1120;
-      border: none;
-      border-radius: 8px;
-      padding: 2px 9px;
-      margin-right: 8px;
-      font-size: 0.78rem;
-      font-weight: 800;
-      cursor: pointer;
-      display: none;
-    }
-
-    .admin-only {
-      display: none;
-    }
-
-    body.role-drago .admin-only {
-      display: inline-flex;
-    }
-
-    @media (max-width: 520px) {
-      .role-cards {
-        grid-template-columns: 1fr;
-        max-width: 280px;
-      }
-      .items-grid {
-        grid-template-columns: 1fr;
-      }
-    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { scrollbar-width: none; }
   </style>
 </head>
-<body>
+<body class="text-slate-800 antialiased pb-16">
 
-  <!-- Live Floating Background (Stars, Butterflies, Bears, Pandas, Penguins) -->
-  <div id="ambient-layer" aria-hidden="true"></div>
+  <!-- Gentle Floating Background Hearts & Sparkles -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0 select-none opacity-45">
+    <span class="absolute top-16 right-8 text-2xl animate-float-slow">🌸</span>
+    <span class="absolute top-36 left-10 text-xl animate-float-delay">✨</span>
+    <span class="absolute bottom-24 right-12 text-2xl animate-float-delay">💖</span>
+    <span class="absolute bottom-36 left-8 text-2xl animate-float-slow">🦋</span>
+  </div>
 
-  <!-- Role Selection Gate (Always opens first) -->
-  <section id="role-gate">
-    <div class="gate-badge">✨ AES-256 Encrypted Smart Home & VIP Vault</div>
-    <h1 class="gate-title">أهلاً بيكم في مملكتنا 👑🎮</h1>
-    <p class="gate-sub">اختار حسابك للدخول — كل عالم متصمم على مقاسك بالظبط</p>
-
-    <div class="role-cards">
-      <div class="role-card mms" onclick="selectRole('mms')">
-        <div class="role-emoji">👑</div>
-        <div class="role-name">Mms</div>
-        <div class="role-desc">عالمك الخاص، الميكب، العطور، وطلبات البيت 🌸</div>
+  <!-- Active User Selector Modal (Mms vs Drago — Direct entry, no password) -->
+  <div id="user-select-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md">
+    <div class="bg-white border-2 border-rose-200 rounded-3xl w-full max-w-md p-6 sm:p-8 shadow-2xl text-center space-y-5">
+      <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-rose-500 to-amber-400 text-white flex items-center justify-center text-3xl shadow-lg">
+        🏡
       </div>
-
-      <div class="role-card drago" onclick="selectRole('drago')">
-        <div class="role-emoji">🎮</div>
-        <div class="role-name">Drago</div>
-        <div class="role-desc">لوحة الأدمن، المخزن، الباك اب، والمزامنة 🚀</div>
+      <div>
+        <h2 class="text-xl sm:text-2xl font-extrabold text-slate-800">أهلاً بيكم في بيتنا ✨</h2>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1">مين بيستخدم السيستم دلوقتي عشان نسجل الحركات باسمه؟</p>
+      </div>
+      <div class="grid grid-cols-2 gap-3.5 pt-2">
+        <button id="choose-mms-btn" type="button" class="group p-4 rounded-2xl border-2 border-rose-200 bg-rose-50/60 hover:bg-rose-500 hover:border-rose-500 hover:text-white transition cursor-pointer flex flex-col items-center gap-2 shadow-xs">
+          <span class="text-3xl group-hover:scale-110 transition">👑</span>
+          <span class="font-extrabold text-base">Mms</span>
+          <span class="text-[11px] opacity-80">ست الكل 💖</span>
+        </button>
+        <button id="choose-drago-btn" type="button" class="group p-4 rounded-2xl border-2 border-teal-200 bg-teal-50/60 hover:bg-teal-600 hover:border-teal-600 hover:text-white transition cursor-pointer flex flex-col items-center gap-2 shadow-xs">
+          <span class="text-3xl group-hover:scale-110 transition">🎮</span>
+          <span class="font-extrabold text-base">Drago</span>
+          <span class="text-[11px] opacity-80">المعلم 😎</span>
+        </button>
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- Main App Shell -->
-  <main id="app-shell">
-    <header class="topbar">
-      <div class="brand-box">
-        <div class="brand-avatar" id="user-avatar">👑</div>
+  <!-- Main Container -->
+  <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-5 space-y-6">
+
+    <!-- Header Banner -->
+    <header class="bg-white/90 backdrop-blur-md border border-rose-100 rounded-3xl p-4 sm:p-6 shadow-sm flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div class="flex items-start sm:items-center gap-3.5">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-rose-500 via-pink-500 to-amber-400 text-white flex items-center justify-center text-2xl sm:text-3xl shadow-md shrink-0">
+          👑
+        </div>
         <div>
-          <div class="brand-title" id="user-greeting">أهلاً يا Mms 👑</div>
-          <div class="brand-sub" id="user-subtitle">كل حاجتك متنظمة ومحمية ✨</div>
+          <div class="flex flex-wrap items-center gap-2">
+            <h1 class="text-lg sm:text-2xl font-extrabold text-slate-800">
+              أهلاً بيكي يا <span class="text-rose-600">Mms</span> ✨ — بيتنا ومخزننا
+            </h1>
+            <span id="pc-sync-badge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-slate-100 text-slate-600 border border-slate-200">
+              <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+              <span>جاري الفحص...</span>
+            </span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
+            مخزن <span class="font-bold text-rose-600">Mms</span> & <span class="font-bold text-teal-700">Drago</span> — كل حاجة في مكانها بوضوح وبساطة 🏡💖
+          </p>
         </div>
       </div>
 
-      <div class="header-actions">
-        <button class="btn" id="anim-toggle-btn" onclick="toggleAnimations()" title="تشغيل/إيقاف حركة الخلفية">
-          🦋 الحركة: شغالة
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-start md:justify-end">
+        <button
+          id="backup-modal-btn"
+          type="button"
+          title="نسخ احتياطي واسترجاع الداتا"
+          class="hidden drago-only items-center justify-center gap-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 font-bold text-xs px-3 py-2.5 rounded-2xl shadow-xs transition cursor-pointer"
+        >
+          <i class="fa-solid fa-shield-halved text-amber-600"></i>
+          <span>Backup</span>
         </button>
 
-        <button class="btn" onclick="syncNow()" title="مزامنة الآن">
-          <span class="sync-dot" id="sync-dot"></span>
-          <span id="sync-label">أوفلاين</span>
+        <button
+          id="nodes-settings-btn"
+          type="button"
+          title="إعدادات السيرفرات والربط السحابي المشفر"
+          class="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold text-xs px-3 py-2.5 rounded-2xl shadow-xs transition cursor-pointer"
+        >
+          <span id="cloud-status-dot" class="w-2.5 h-2.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.7)] shrink-0"></span>
+          <i class="fa-solid fa-cloud text-teal-600"></i>
+          <span>الربط السحابي ☁️</span>
         </button>
 
-        <!-- Admin-Only Controls (Hidden completely from Mms) -->
-        <button class="btn admin-only" onclick="openCloudModal()">
-          ☁️ الربط السحابي
+        <button
+          id="switch-user-btn"
+          type="button"
+          class="inline-flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs px-3 py-2.5 rounded-2xl transition cursor-pointer"
+        >
+          <span id="active-user-badge">👑 Mms</span>
+          <i class="fa-solid fa-repeat text-[10px] opacity-60"></i>
         </button>
-        <button class="btn admin-only" onclick="exportBackup()">
-          💾 تصدير باك اب
-        </button>
-        <button class="btn admin-only" onclick="document.getElementById('import-backup-input').click()">
-          📥 استيراد باك اب
-        </button>
-        <input type="file" id="import-backup-input" accept="application/json,.json" style="display:none;" onchange="importBackup(event)" />
 
-        <button class="btn" onclick="switchAccount()">
-          🔄 تبديل الحساب
+        <button
+          id="joy-burst-btn"
+          type="button"
+          class="inline-flex items-center justify-center gap-1.5 bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white font-bold text-xs sm:text-sm px-3.5 py-2.5 rounded-2xl shadow-sm transition active:scale-95 cursor-pointer"
+        >
+          <span>رشة بهجة لـ Mms ✨</span>
+        </button>
+
+        <button
+          id="open-add-modal-btn"
+          type="button"
+          class="inline-flex items-center justify-center gap-1.5 bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-2xl shadow-sm transition active:scale-95 cursor-pointer"
+        >
+          <i class="fa-solid fa-plus"></i>
+          <span>إضافة حاجة جديدة</span>
         </button>
       </div>
     </header>
 
-    <!-- Global Search -->
-    <div class="search-bar-wrap">
-      <span class="search-icon">🔍</span>
-      <input type="text" id="global-search" class="search-input" placeholder="ابحث في كل حاجة (ميكب، برفيوم، بودي ميست، طلبات البيت، المخزن...)" oninput="renderCurrentView()" />
+    <!-- Quick Joyful Stats Bar -->
+    <section class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-3.5">
+      <div class="bg-white/90 border border-slate-100 rounded-2xl p-3 sm:p-4 flex items-center gap-3 shadow-2xs">
+        <span class="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center text-lg shrink-0">📊</span>
+        <div>
+          <p class="text-[11px] font-bold text-slate-400">إجمالي الحاجات</p>
+          <p id="stat-total" class="text-base sm:text-lg font-extrabold text-slate-800">0</p>
+        </div>
+      </div>
+      <div class="bg-white/90 border border-emerald-100 rounded-2xl p-3 sm:p-4 flex items-center gap-3 shadow-2xs">
+        <span class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg shrink-0">🟢</span>
+        <div>
+          <p class="text-[11px] font-bold text-slate-400">شغال في البيت</p>
+          <p id="stat-live" class="text-base sm:text-lg font-extrabold text-emerald-700">0</p>
+        </div>
+      </div>
+      <div class="bg-white/90 border border-teal-100 rounded-2xl p-3 sm:p-4 flex items-center gap-3 shadow-2xs">
+        <span class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center text-lg shrink-0">📦</span>
+        <div>
+          <p class="text-[11px] font-bold text-slate-400">في المخزن</p>
+          <p id="stat-store" class="text-base sm:text-lg font-extrabold text-teal-700">0</p>
+        </div>
+      </div>
+      <div class="bg-white/90 border border-rose-100 rounded-2xl p-3 sm:p-4 flex items-center gap-3 shadow-2xs">
+        <span class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-lg shrink-0">👑</span>
+        <div>
+          <p class="text-[11px] font-bold text-slate-400">Mms / Drago</p>
+          <p id="stat-owners" class="text-sm sm:text-base font-extrabold text-rose-600">0 / 0</p>
+        </div>
+      </div>
+      <button id="open-grocery-btn" type="button" class="col-span-2 sm:col-span-1 bg-gradient-to-br from-amber-50 to-orange-50 hover:from-amber-100 hover:to-orange-100 border-2 border-amber-200 rounded-2xl p-3 sm:p-4 flex items-center justify-between gap-2 shadow-2xs cursor-pointer transition text-right group">
+        <div class="flex items-center gap-3">
+          <span class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center text-lg shrink-0 group-hover:scale-105 transition">🛒</span>
+          <div>
+            <p class="text-[11px] font-extrabold text-amber-800">طلبات البيت (Grocery)</p>
+            <p id="stat-grocery" class="text-sm sm:text-base font-extrabold text-amber-950">0 مطلوب</p>
+          </div>
+        </div>
+        <i class="fa-solid fa-chevron-left text-xs text-amber-600"></i>
+      </button>
+    </section>
+
+    <!-- Consumables Low-Stock Alert Banner -->
+    <div id="low-stock-banner" class="hidden bg-amber-50 border-2 border-amber-300 rounded-3xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+      <div class="flex items-center gap-3">
+        <span class="w-10 h-10 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-lg shrink-0 animate-bounce">🔔</span>
+        <div>
+          <h3 class="font-extrabold text-sm text-amber-900">تنبيه حاجات استهلاكية قربت تخلص!</h3>
+          <p id="low-stock-text" class="text-xs text-amber-800 mt-0.5"></p>
+        </div>
+      </div>
+      <button id="copy-shopping-btn" type="button" class="self-start sm:self-auto inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs px-3.5 py-2 rounded-2xl shadow-2xs cursor-pointer transition shrink-0">
+        <i class="fa-brands fa-whatsapp text-sm"></i>
+        <span>نسخ للواتساب 📋</span>
+      </button>
     </div>
 
-    <!-- Navigation Tabs -->
-    <nav class="tabs-scroll" id="tabs-nav">
-      <button class="tab-btn active" data-tab="grocery" onclick="setTab('grocery')">🛒 طلبات البيت</button>
-      <button class="tab-btn vip-tab" data-tab="bbw" onclick="setTab('bbw')">🧴 Bath & Body Works</button>
-      <button class="tab-btn vip-tab" data-tab="vs" onclick="setTab('vs')">🪽 Victoria's Secret</button>
-      <button class="tab-btn vip-tab" data-tab="makeup" onclick="setTab('makeup')">💄 Makeup</button>
-      <button class="tab-btn vip-tab" data-tab="perfume" onclick="setTab('perfume')">🌺 Perfume</button>
-      <button class="tab-btn" data-tab="home" onclick="setTab('home')">🏠 أغراض البيت</button>
-      <button class="tab-btn" data-tab="storage" onclick="setTab('storage')">📦 المخزن</button>
-    </nav>
-
-    <!-- Dynamic Section Toolbar & Sub-Filters -->
-    <section class="section-toolbar" id="section-toolbar"></section>
-
-    <!-- Items Grid -->
-    <section class="items-grid" id="items-grid"></section>
-  </main>
-
-  <!-- Add / Edit Item Modal -->
-  <div id="item-modal" class="modal-backdrop" onclick="if(event.target===this) closeModal('item-modal')">
-    <div class="modal-card">
-      <div class="modal-header">
-        <span class="modal-title" id="item-modal-title">➕ إضافة عنصر جديد</span>
-        <button class="icon-btn" onclick="closeModal('item-modal')">✕</button>
+    <!-- Store Overview Single Photo Section -->
+    <section class="bg-white/95 border border-teal-100 rounded-3xl p-4 sm:p-6 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2.5">
+          <span class="w-9 h-9 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center text-lg">📦</span>
+          <div>
+            <h2 class="font-extrabold text-base sm:text-lg text-slate-800">صورة المخزن العامة (Store Overview)</h2>
+            <p id="store-photo-updated" class="text-xs text-slate-400">صورة شاملة للمخزن عشان تشوفي كل حاجة بوضوح</p>
+          </div>
+        </div>
+        <label class="inline-flex items-center gap-2 bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 font-bold text-xs sm:text-sm px-4 py-2 rounded-2xl cursor-pointer transition">
+          <i class="fa-solid fa-camera"></i>
+          <span>تحديث صورة المخزن 📷</span>
+          <input type="file" id="store-photo-input" accept="image/*" class="hidden" />
+        </label>
       </div>
 
-      <input type="hidden" id="edit-item-id" />
+      <div id="store-photo-container" class="relative rounded-2xl overflow-hidden border-2 border-dashed border-slate-200 bg-slate-50/70 min-h-[190px] sm:min-h-[240px] flex items-center justify-center">
+        <div id="store-photo-empty" class="text-center p-6 space-y-2">
+          <div class="text-4xl">🖼️</div>
+          <p class="text-sm font-bold text-slate-600">لسه مفيش صورة عامة للمخزن</p>
+          <p class="text-xs text-slate-400">دوسي على "تحديث صورة المخزن 📷" لرفع صورة شاملة للمكان</p>
+        </div>
+        <img id="store-photo-img" src="" alt="صورة المخزن العامة" class="hidden w-full max-h-[340px] object-cover cursor-zoom-in" />
+      </div>
+    </section>
 
-      <div class="form-group">
-        <label class="form-label">القسم</label>
-        <select id="item-tab-select" class="form-control" onchange="updateModalSubfields()">
-          <option value="grocery">🛒 طلبات البيت (Grocery)</option>
-          <option value="bbw">🧴 Bath & Body Works</option>
-          <option value="vs">🪽 Victoria's Secret</option>
-          <option value="makeup">💄 Makeup</option>
-          <option value="perfume">🌺 Perfume</option>
-          <option value="home">🏠 أغراض البيت</option>
-          <option value="storage">📦 المخزن</option>
+    <!-- Smart Search, Zone Tabs & Dedicated Sub-Filters -->
+    <section class="bg-white/95 border border-rose-100 rounded-3xl p-4 sm:p-6 shadow-sm space-y-4">
+      <!-- Zone Tabs (Original Home/Store + 4 Dedicated Mms Tabs) -->
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 border-b border-slate-100" id="zone-tabs">
+        <button type="button" data-zone="ALL_HOME" class="zone-tab active shrink-0 px-3.5 py-2 rounded-2xl text-xs font-extrabold bg-slate-800 text-white cursor-pointer transition">
+          🏡 البيت والمخزن
+        </button>
+        <button type="button" data-zone="BBW" class="zone-tab shrink-0 px-3.5 py-2 rounded-2xl text-xs font-extrabold bg-pink-50 text-pink-700 hover:bg-pink-100 border border-pink-200 cursor-pointer transition">
+          🧴 Bath & Body Works
+        </button>
+        <button type="button" data-zone="VS" class="zone-tab shrink-0 px-3.5 py-2 rounded-2xl text-xs font-extrabold bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 cursor-pointer transition">
+          🪽 Victoria's Secret
+        </button>
+        <button type="button" data-zone="MAKEUP" class="zone-tab shrink-0 px-3.5 py-2 rounded-2xl text-xs font-extrabold bg-fuchsia-50 text-fuchsia-800 hover:bg-fuchsia-100 border border-fuchsia-200 cursor-pointer transition">
+          💄 Makeup
+        </button>
+        <button type="button" data-zone="PERFUME" class="zone-tab shrink-0 px-3.5 py-2 rounded-2xl text-xs font-extrabold bg-purple-50 text-purple-800 hover:bg-purple-100 border border-purple-200 cursor-pointer transition">
+          🌺 Perfume
+        </button>
+      </div>
+
+      <!-- Search + Category -->
+      <div class="flex flex-col md:flex-row gap-3">
+        <div class="relative flex-1">
+          <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-rose-400 text-base"></i>
+          <input
+            type="text"
+            id="search-input"
+            dir="auto"
+            placeholder="ابحثي في كل حاجة (PS4، شاشة، بودي ميست، ميكب، درجة لون، برفيوم...)"
+            class="w-full bg-rose-50/40 border-2 border-rose-100 focus:border-rose-400 focus:bg-white rounded-2xl pr-11 pl-10 py-3 text-sm sm:text-base font-bold text-slate-800 outline-none transition"
+          />
+          <button id="clear-search-btn" type="button" class="hidden absolute left-3 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-slate-200 hover:bg-rose-200 text-slate-600 items-center justify-center text-xs cursor-pointer">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <select id="category-select" class="bg-slate-50 border-2 border-slate-200 focus:border-teal-500 rounded-2xl px-4 py-3 text-xs sm:text-sm font-bold text-slate-700 outline-none cursor-pointer">
+          <option value="ALL">كل الأقسام 📂</option>
+          <option value="GAMING">ألعاب وكونسول 🎮</option>
+          <option value="TV">شاشات وتلفزيون 📺</option>
+          <option value="SMART_HOME">سمارت هوم 🏠</option>
+          <option value="POWER">شواحن وبطاريات 🔌</option>
+          <option value="CABLES">كابلات ووصلات 🧵</option>
+          <option value="BATH_BODY">Bath & Body / VS 🧴</option>
+          <option value="MAKEUP">Makeup 💄</option>
+          <option value="PERFUME">Perfume 🌺</option>
+          <option value="OTHER">حاجات متنوعة ✨</option>
         </select>
       </div>
 
-      <div id="dynamic-subfields"></div>
-
-      <div class="form-group">
-        <label class="form-label">اسم المنتج / الحاجة (اختياري لو هتحطي صورة فقط)</label>
-        <input type="text" id="item-name-input" class="form-control" placeholder="مثلاً: Thousand Wishes Mist أو مسكرة Sky High..." />
+      <!-- Original Filter Pills (Shown in البيت والمخزن or Search) -->
+      <div id="home-filter-pills" class="flex flex-wrap items-center gap-2">
+        <button data-filter="ALL" class="filter-pill active px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-slate-800 text-white cursor-pointer transition">الكل</button>
+        <button data-filter="HOME" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-rose-50 text-rose-700 hover:bg-rose-100 cursor-pointer transition">حاجات Mms والبيت 🏡</button>
+        <button data-filter="DRAGO" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-amber-50 text-amber-800 hover:bg-amber-100 cursor-pointer transition">حاجات Drago 🎮</button>
+        <button data-filter="HOME_LIVE" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 cursor-pointer transition">شغال في البيت 🟢</button>
+        <button data-filter="STORE_STOCK" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-teal-50 text-teal-700 hover:bg-teal-100 cursor-pointer transition">في المخزن 📦</button>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">ملاحظة / درجة اللون / الكمية (اختياري)</label>
-        <input type="text" id="item-note-input" class="form-control" placeholder="مثلاً: ريحته تحفة / قرب يخلص / عدد 2..." />
+      <!-- Dedicated Sub-Filters for the 4 Mms Tabs -->
+      <div id="vip-subfilters" class="hidden space-y-2.5 pt-2 border-t border-rose-100"></div>
+
+      <div class="flex items-center justify-between gap-2">
+        <span id="active-zone-hint" class="text-xs font-bold text-rose-600"></span>
+        <span id="results-summary" class="text-xs font-bold text-slate-400"></span>
+      </div>
+    </section>
+
+    <!-- Inventory Items Grid -->
+    <section id="items-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></section>
+
+    <!-- Activity Log Section -->
+    <section class="bg-white/95 border border-slate-200 rounded-3xl p-4 sm:p-6 shadow-sm space-y-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center text-sm">📋</span>
+          <div>
+            <h2 class="font-extrabold text-sm sm:text-base text-slate-800">سجل الحركات (Activity Log)</h2>
+            <p class="text-[11px] text-slate-400">كل إضافة أو سحب أو تعديل بيتسجل باسم صاحبه وتوقيته</p>
+          </div>
+        </div>
+        <button id="clear-logs-btn" type="button" class="hidden drago-only text-xs font-bold text-rose-500 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded-xl cursor-pointer transition">
+          مسح من الشاشة 🧹
+        </button>
+      </div>
+      <div id="logs-list" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
+    </section>
+
+  </div>
+
+  <!-- Grocery Checklist Modal -->
+  <div id="grocery-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+    <div class="bg-white border border-amber-200 rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🛒</span>
+          <h3 class="font-extrabold text-base text-slate-800">طلبات البيت (Grocery List)</h3>
+        </div>
+        <button id="close-grocery-btn" type="button" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-rose-100 text-slate-600 flex items-center justify-center cursor-pointer">
+          <i class="fa-solid fa-xmark text-xs"></i>
+        </button>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">صورة المنتج (اختياري — بتتضغط أوتوماتيك 📸)</label>
-        <input type="file" id="item-img-input" class="form-control" accept="image/*" onchange="handleImageUpload(event)" />
-        <img id="item-img-preview" class="preview-img" alt="معاينة الصورة" />
-        <button type="button" id="clear-img-btn" class="icon-btn del" style="margin-top:6px; display:none;" onclick="clearModalImage()">🗑️ إزالة الصورة</button>
+      <form id="grocery-form" class="flex gap-2">
+        <input type="text" id="grocery-input" dir="auto" required placeholder="اكتبي أي طلب ناقص في البيت..." class="flex-1 bg-amber-50/50 border border-amber-200 focus:border-amber-500 rounded-2xl px-3.5 py-2.5 text-xs sm:text-sm font-bold outline-none" />
+        <button type="submit" class="px-4 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs sm:text-sm cursor-pointer shrink-0">
+          إضافة +
+        </button>
+      </form>
+
+      <div id="grocery-list" class="space-y-2 overflow-y-auto flex-1 pr-1 min-h-[140px]"></div>
+
+      <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-100">
+        <button id="clear-bought-grocery-btn" type="button" class="text-xs font-bold text-slate-500 hover:text-rose-600 cursor-pointer">
+          مسح اللي اتجاب 🧹
+        </button>
+        <button id="copy-grocery-wa-btn" type="button" class="inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-3.5 py-2 rounded-2xl cursor-pointer">
+          <i class="fa-brands fa-whatsapp text-sm"></i>
+          <span>نسخ للواتساب 📋</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Multi-Node & Encrypted Cloud Sync Settings Modal -->
+  <div id="nodes-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+    <div class="bg-white border border-teal-100 rounded-3xl w-full max-w-md p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="font-extrabold text-base text-slate-800">الربط السحابي المشفر + السيرفرات ☁️🔐</h3>
+        <button id="close-nodes-btn" type="button" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-rose-100 text-slate-600 flex items-center justify-center cursor-pointer">
+          <i class="fa-solid fa-xmark text-xs"></i>
+        </button>
       </div>
 
-      <button class="btn btn-primary" style="width:100%; justify-content:center; padding:12px; margin-top:6px;" onclick="saveItem()">
-        حفظ ومزامنة ✨
+      <div class="p-3.5 rounded-2xl bg-rose-50/60 border border-rose-200 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-extrabold text-rose-800">1. المزامنة السحابية 24/7 (AES-256 🔐)</span>
+          <span class="text-[10px] font-bold bg-white text-rose-600 px-2 py-0.5 rounded-full border border-rose-200">مشفرة بالكامل</span>
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">GitHub Gist ID</label>
+          <input type="text" id="gist-id-input" dir="ltr" placeholder="cd7c92ad27b7eea98ff2c38ccaaa2682" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-800 outline-none focus:border-rose-400" />
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">GitHub Personal Access Token (ghp_...)</label>
+          <input type="password" id="gist-token-input" dir="ltr" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-800 outline-none focus:border-rose-400" />
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">كلمة سر التشفير (Secret Passphrase) 🔑</label>
+          <input type="password" id="gist-secret-input" dir="ltr" placeholder="اكتب كلمة سر قوية بينك وبين Mms" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:border-rose-400" />
+        </div>
+      </div>
+
+      <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5">
+        <span class="block text-xs font-extrabold text-slate-700">2. سيرفرات البيت (اختياري للنسخ المحلي 🖥️🐧)</span>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 mb-1">Ubuntu Home Lab Server</label>
+          <input type="text" id="node-ubuntu-url" dir="ltr" placeholder="http://192.168.1.20:5050" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:border-teal-500" />
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 mb-1">Windows PC Server</label>
+          <input type="text" id="node-pc-url" dir="ltr" placeholder="http://192.168.1.15:5050" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 outline-none focus:border-teal-500" />
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-1">
+        <button id="save-nodes-btn" type="button" class="w-full px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-extrabold bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white cursor-pointer shadow-sm">
+          حفظ وتشغيل المزامنة المشفرة 🚀🔐
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Backup & Restore Modal -->
+  <div id="backup-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+    <div class="bg-white border border-amber-200 rounded-3xl w-full max-w-lg p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="font-extrabold text-base text-slate-800">النسخ الاحتياطي والاسترجاع (Backup & Restore) 🛡️</h3>
+        <button id="close-backup-btn" type="button" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-rose-100 text-slate-600 flex items-center justify-center cursor-pointer">
+          <i class="fa-solid fa-xmark text-xs"></i>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        <button id="download-backup-btn" type="button" class="flex items-center justify-center gap-2 bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs py-3 px-4 rounded-2xl cursor-pointer transition">
+          <i class="fa-solid fa-download"></i>
+          <span>تحميل نسخة على جهازي 💾</span>
+        </button>
+        <label class="flex items-center justify-center gap-2 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold text-xs py-3 px-4 rounded-2xl cursor-pointer transition">
+          <i class="fa-solid fa-upload"></i>
+          <span>استرجاع من ملف JSON 📂</span>
+          <input type="file" id="upload-backup-input" accept=".json,application/json" class="hidden" />
+        </label>
+      </div>
+
+      <div class="space-y-2 pt-2">
+        <div class="flex items-center justify-between">
+          <h4 class="text-xs font-extrabold text-slate-700">النسخ المحفوظة أوتوماتيك على السيرفر (/backups):</h4>
+          <button id="refresh-server-backups-btn" type="button" class="text-[11px] font-bold text-teal-600 hover:underline cursor-pointer">تحديث القائمة 🔄</button>
+        </div>
+        <div id="server-backups-list" class="space-y-1.5 max-h-48 overflow-y-auto bg-slate-50 border border-slate-200 rounded-2xl p-2.5 text-xs">
+          <p class="text-slate-400 text-center py-2">جاري تحميل النسخ من السيرفر...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add / Edit Item Modal (Adapts to Home/Store vs 4 Dedicated Mms Zones) -->
+  <div id="item-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+    <div class="bg-white border border-rose-100 rounded-3xl w-full max-w-lg p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 id="modal-title" class="font-extrabold text-base sm:text-lg text-slate-800">إضافة حاجة جديدة ✨</h3>
+        <button id="close-modal-btn" type="button" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-rose-100 text-slate-600 flex items-center justify-center cursor-pointer">
+          <i class="fa-solid fa-xmark text-xs"></i>
+        </button>
+      </div>
+
+      <form id="item-form" class="space-y-3.5">
+        <input type="hidden" id="item-id" />
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">التاب / المكان المخصص</label>
+          <select id="item-zone" class="w-full bg-rose-50/50 border border-rose-200 rounded-2xl px-3 py-2.5 text-xs sm:text-sm font-extrabold text-slate-800 outline-none">
+            <option value="ALL_HOME">🏡 البيت والمخزن</option>
+            <option value="BBW">🧴 Bath & Body Works</option>
+            <option value="VS">🪽 Victoria's Secret</option>
+            <option value="MAKEUP">💄 Makeup</option>
+            <option value="PERFUME">🌺 Perfume</option>
+          </select>
+        </div>
+
+        <div>
+          <label id="item-name-label" class="block text-xs font-bold text-slate-700 mb-1">اسم الحاجة إيه؟ *</label>
+          <input type="text" id="item-name" dir="auto" placeholder="مثلاً: شاحن سامسونج 45W / بلايستيشن 4" class="w-full bg-slate-50 border border-slate-200 focus:border-teal-500 rounded-2xl px-3.5 py-2.5 text-sm font-bold outline-none" />
+        </div>
+
+        <!-- Dedicated fields for Bath & Body Works / Victoria's Secret -->
+        <div id="vip-body-fields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-2xl bg-pink-50/60 border border-pink-200">
+          <div>
+            <label class="block text-xs font-bold text-pink-900 mb-1">النوع</label>
+            <select id="vip-body-type" class="w-full bg-white border border-pink-200 rounded-xl px-3 py-2 text-xs sm:text-sm font-bold outline-none">
+              <option value="Body Mist">Body Mist</option>
+              <option value="Body Cream">Body Cream</option>
+              <option value="Body Butter">Body Butter</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-pink-900 mb-1">الرائحة / النوتة العطرية</label>
+            <input type="text" id="vip-scent" dir="auto" placeholder="مثلاً: فانيليا / توت / كراميل" class="w-full bg-white border border-pink-200 rounded-xl px-3 py-2 text-xs sm:text-sm font-bold outline-none" />
+          </div>
+        </div>
+
+        <!-- Dedicated fields for Makeup -->
+        <div id="vip-makeup-fields" class="hidden space-y-3 p-3.5 rounded-2xl bg-fuchsia-50/60 border border-fuchsia-200">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-fuchsia-950 mb-1">الفئة</label>
+              <select id="makeup-tier" class="w-full bg-white border border-fuchsia-200 rounded-xl px-3 py-2 text-xs sm:text-sm font-bold outline-none">
+                <option value="High End">💎 High End</option>
+                <option value="Drugstore">🛍️ Drugstore</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-fuchsia-950 mb-1">المجموعة الرئيسية</label>
+              <select id="makeup-group" class="w-full bg-white border border-fuchsia-200 rounded-xl px-3 py-2 text-xs sm:text-sm font-bold outline-none"></select>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-fuchsia-950 mb-1">النوع الفرعي</label>
+              <select id="makeup-sub" class="w-full bg-white border border-fuchsia-200 rounded-xl px-3 py-2 text-xs sm:text-sm font-bold outline-none"></select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-fuchsia-950 mb-1">الدرجة / اللون (Shade)</label>
+              <input type="text" id="makeup-shade" dir="auto" placeholder="مثلاً: Velvet Teddy / Shade 220" class="w-full bg-white border border-fuchsia-200 rounded-xl px-3 py-2 text-xs sm:text-sm font-bold outline-none" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Dedicated fields for Perfume -->
+        <div id="vip-perfume-fields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-2xl bg-purple-50/60 border border-purple-200">
+          <div>
+            <label class="block text-xs font-bold text-purple-950 mb-1">نوع البرفيوم</label>
+            <select id="perfume-type" class="w-full bg-white border border-purple-200 rounded-xl px-3 py-2 text-xs sm:text-sm font-bold outline-none">
+              <option value="Original">💎 Original</option>
+              <option value="Oil">💧 Oil</option>
+              <option value="Handmade">🎨 Handmade</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-purple-950 mb-1">النوتة / التركيز / المصدر</label>
+            <input type="text" id="perfume-notes" dir="auto" placeholder="مثلاً: عود عنبر / تركيب خاص" class="w-full bg-white border border-purple-200 rounded-xl px-3 py-2 text-xs sm:text-sm font-bold outline-none" />
+          </div>
+        </div>
+
+        <!-- Product Photo (Optional for any tab) -->
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">صورة المنتج (اختياري — بتتضغط أوتوماتيك 📸)</label>
+          <input type="file" id="item-photo-input" accept="image/*" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2 text-xs font-bold text-slate-600 cursor-pointer" />
+          <div id="item-photo-preview-wrap" class="hidden mt-2 relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 p-2 flex items-center justify-between gap-3">
+            <img id="item-photo-preview" src="" alt="معاينة" class="w-16 h-16 rounded-xl object-cover shrink-0" />
+            <span class="text-xs font-bold text-slate-600 flex-1">صورة جاهزة للحفظ ✅</span>
+            <button type="button" id="remove-item-photo-btn" class="px-2.5 py-1 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold cursor-pointer">إزالة</button>
+          </div>
+        </div>
+
+        <!-- Standard Home/Store fields (Shown for ALL_HOME, optional/streamlined for VIP zones) -->
+        <div id="home-standard-fields" class="space-y-3.5">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">تبع مين؟</label>
+              <select id="item-owner" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2.5 text-xs sm:text-sm font-bold outline-none">
+                <option value="HOME">حاجات Mms والبيت 🏡</option>
+                <option value="DRAGO">حاجات Drago 🎮</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">القسم</label>
+              <select id="item-category" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2.5 text-xs sm:text-sm font-bold outline-none">
+                <option value="GAMING">ألعاب وكونسول 🎮</option>
+                <option value="TV">شاشات وتلفزيون 📺</option>
+                <option value="SMART_HOME">سمارت هوم 🏠</option>
+                <option value="POWER">شواحن وبطاريات 🔌</option>
+                <option value="CABLES">كابلات ووصلات 🧵</option>
+                <option value="OTHER">حاجات متنوعة ✨</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">الحالة / المكان الرئيسي</label>
+              <select id="item-location" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2.5 text-xs sm:text-sm font-bold outline-none">
+                <option value="HOME_LIVE">شغال في البيت 🟢</option>
+                <option value="STORE_STOCK">متشال في المخزن 📦</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">العدد الموجود</label>
+              <input type="number" id="item-qty" min="0" value="1" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-3.5 py-2.5 text-sm font-bold outline-none" />
+            </div>
+          </div>
+
+          <div>
+            <label id="item-spot-label" class="block text-xs font-bold text-slate-700 mb-1">المكان بالظبط / الـ Zone 📍 *</label>
+            <input type="text" id="item-spot" dir="auto" placeholder="مثلاً: المخزن - الرف التاني - بوكس الكابلات" class="w-full bg-slate-50 border border-slate-200 focus:border-teal-500 rounded-2xl px-3.5 py-2.5 text-sm font-bold outline-none" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">تفاصيل ومواصفات أو ملاحظات</label>
+          <input type="text" id="item-details" dir="auto" placeholder="مثلاً: Samsung 43 بوصة 4K LED أو ملاحظة خاصة..." class="w-full bg-slate-50 border border-slate-200 focus:border-teal-500 rounded-2xl px-3.5 py-2.5 text-sm outline-none" />
+        </div>
+
+        <label class="flex items-center gap-2.5 p-3 rounded-2xl bg-amber-50/80 border border-amber-200 cursor-pointer">
+          <input type="checkbox" id="item-consumable" class="w-4 h-4 accent-amber-600 rounded" />
+          <span class="text-xs font-bold text-amber-900">حاجة استهلاكية (نبهني لو العدد وصل لـ 1 أو خلص 🔔)</span>
+        </label>
+
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" id="cancel-modal-btn" class="px-4 py-2.5 rounded-2xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 cursor-pointer">إلغاء</button>
+          <button type="submit" class="px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold bg-teal-600 hover:bg-teal-500 text-white cursor-pointer">حفظ البيانات ✅</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Fullscreen Photo Lightbox Modal -->
+  <div id="photo-lightbox" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm">
+    <div class="relative max-w-4xl w-full">
+      <button id="close-lightbox-btn" type="button" class="absolute -top-11 left-0 w-9 h-9 rounded-full bg-white text-slate-800 flex items-center justify-center shadow-lg cursor-pointer">
+        <i class="fa-solid fa-xmark"></i>
       </button>
+      <img id="lightbox-img" src="" alt="صورة كاملة" class="w-full max-h-[82vh] object-contain rounded-2xl bg-black" />
     </div>
   </div>
 
-  <!-- Cloud Sync Settings Modal (Admin Only) -->
-  <div id="cloud-modal" class="modal-backdrop" onclick="if(event.target===this) closeModal('cloud-modal')">
-    <div class="modal-card">
-      <div class="modal-header">
-        <span class="modal-title">☁️ إعدادات الربط السحابي المشفر (AES-256)</span>
-        <button class="icon-btn" onclick="closeModal('cloud-modal')">✕</button>
-      </div>
-      <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:14px;">
-        البيانات بتتشفر على جهازك بـ AES-256-GCM قبل ما تترفع على Secret Gist:
-        <code style="color:var(--primary);">cd7c92ad27b7eea98ff2c38ccaaa2682</code>
-      </p>
-      <div class="form-group">
-        <label class="form-label">GitHub Personal Access Token (gist scope)</label>
-        <input type="password" id="gh-token-input" class="form-control" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">كلمة سر التشفير (Secret Passphrase)</label>
-        <input type="password" id="secret-pass-input" class="form-control" placeholder="كلمة السر المشتركة بينك وبين Mms" />
-      </div>
-      <div style="display:flex; gap:8px;">
-        <button class="btn btn-primary" style="flex:1; justify-content:center; padding:11px;" onclick="saveCloudConfig()">
-          حفظ وتشغيل المزامنة 🚀
-        </button>
-        <button class="btn" onclick="pullFromGist(true)">
-          ⬇️ سحب من السحابة
-        </button>
+  <!-- Friendly Confirmation Modal -->
+  <div id="confirm-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+    <div class="bg-white border border-rose-100 rounded-3xl w-full max-w-sm p-6 shadow-2xl text-center space-y-4">
+      <div class="text-3xl">🤔</div>
+      <p id="confirm-text" class="text-sm font-bold text-slate-700"></p>
+      <div class="flex justify-center gap-2.5">
+        <button id="confirm-no-btn" type="button" class="px-4 py-2 rounded-2xl text-xs font-bold bg-slate-100 text-slate-600 cursor-pointer">لا، خليها</button>
+        <button id="confirm-yes-btn" type="button" class="px-4 py-2 rounded-2xl text-xs font-bold bg-rose-500 text-white cursor-pointer">أيوه، تمام</button>
       </div>
     </div>
   </div>
 
-  <!-- Image Lightbox Modal -->
-  <div id="lightbox-modal" class="modal-backdrop" onclick="closeModal('lightbox-modal')">
-    <img id="lightbox-img" src="" alt="تكبير الصورة" style="max-width:94vw; max-height:88dvh; border-radius:18px; box-shadow:0 20px 60px rgba(0,0,0,0.7);" />
-  </div>
-
-  <div id="toast">
-    <span id="toast-text"></span>
-    <button id="toast-undo-btn" onclick="undoLastDelete()">↩️ تراجع</button>
-  </div>
+  <!-- Toast Notification Banner -->
+  <div id="toast-container" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 w-[92%] max-w-md pointer-events-none"></div>
 
   <script>
-    // ==========================================
-    // 1. CONSTANTS & MAKEUP TAXONOMY
-    // ==========================================
-    const GIST_ID = "cd7c92ad27b7eea98ff2c38ccaaa2682";
-    const GIST_FILENAME = "mms_drago_vault.json";
-    const STORAGE_KEY = "mms_drago_vault_v4";
-    const CLOUD_CFG_KEY = "mms_drago_cloud_cfg_v1";
-    const PBKDF2_ITERATIONS = 300000;
+    // Safe Storage Wrapper
+    const memoryFallback = {};
+    const safeStorage = {
+      getItem(key) {
+        try { return window.localStorage.getItem(key); } catch (e) { return memoryFallback[key] ?? null; }
+      },
+      setItem(key, val) {
+        try { window.localStorage.setItem(key, val); } catch (e) { memoryFallback[key] = String(val); }
+      },
+      removeItem(key) {
+        try { window.localStorage.removeItem(key); } catch (e) { delete memoryFallback[key]; }
+      }
+    };
+
+    const STORAGE_KEY = 'drago_friendly_home_v2';
+    const STORE_PHOTO_KEY = 'drago_friendly_store_photo_v1';
+    const LOGS_KEY = 'drago_friendly_logs_v1';
+    const ARCHIVED_LOGS_KEY = 'drago_friendly_archived_logs_v1';
+    const GROCERY_KEY = 'drago_friendly_grocery_v1';
+    const ACTIVE_USER_KEY = 'drago_friendly_active_user_v1';
+    const PENDING_SYNC_KEY = 'drago_friendly_pending_sync_v1';
+    const NODES_CONFIG_KEY = 'drago_friendly_nodes_v1';
+    const GIST_CONFIG_KEY = 'drago_friendly_gist_v1';
+    const DEFAULT_GIST_ID = 'cd7c92ad27b7eea98ff2c38ccaaa2682';
+    const GIST_FILENAME = 'mms_drago_home.json';
 
     const MAKEUP_CATALOG = {
-      "Face and Base": [
-        "Primer",
-        "Foundation or Skin Tint",
-        "Concealer",
-        "Setting Powder",
-        "Blush",
-        "Bronzer or Contour",
-        "Highlighter",
-        "Setting Spray"
+      'Face and Base': [
+        'Primer',
+        'Foundation or Skin Tint',
+        'Concealer',
+        'Setting Powder',
+        'Blush',
+        'Bronzer or Contour',
+        'Highlighter',
+        'Setting Spray'
       ],
-      "Eye and Brow": [
-        "Eyebrow Pencil or Gel",
-        "Eyeshadow Palette",
-        "Eyeliner",
-        "Mascara"
+      'Eye and Brow': [
+        'Eyebrow Pencil or Gel',
+        'Eyeshadow Palette',
+        'Eyeliner',
+        'Mascara'
       ],
-      "Lip Products": [
-        "Lip Balm or Oil",
-        "Lip Liner",
-        "Lipstick, Gloss, or Stain"
+      'Lip Products': [
+        'Lip Balm or Oil',
+        'Lip Liner',
+        'Lipstick, Gloss, or Stain'
       ],
-      "Essential Tools": [
-        "Makeup Sponge",
-        "Brushes",
-        "Eyelash Curler"
+      'Essential Tools': [
+        'Makeup Sponge',
+        'Brushes',
+        'Eyelash Curler'
       ]
     };
 
-    const TAB_META = {
-      grocery: { title: "🛒 طلبات البيت (Grocery)", placeholder: "🛒" },
-      bbw: { title: "🧴 Bath & Body Works", placeholder: "🌸" },
-      vs: { title: "🪽 Victoria's Secret", placeholder: "💖" },
-      makeup: { title: "💄 Makeup Collection", placeholder: "💋" },
-      perfume: { title: "🌺 Perfume Vault", placeholder: "✨" },
-      home: { title: "🏠 أغراض البيت", placeholder: "🏡" },
-      storage: { title: "📦 المخزن", placeholder: "📦" }
-    };
+    const JOY_MESSAGES_30 = [
+      "أهلاً بأجمل Mms في الدنيا، نورتي بيتك ومكانك كله 🌸👑",
+      "وجودك في البيت هو سر البهجة والجمال كله يا Mms 👑✨",
+      "ربنا يسعد قلبك دايماً ويريح بالك يا ست الكل 💕🌷",
+      "ضحكتك بتنور الدنيا كلها يا Mms 😍🌟",
+      "أحلى ملكة في البيت كله، يومك سعيد ومليان حب 👑❤️",
+      "كل حاجة في البيت بتبقى أحلى بلمستك يا Mms ✨🏡",
+      "تستاهلي كل الفرحة والراحة اللي في الدنيا يا جميلة 💖🦋",
+      "يا بخت البيت بيكي يا أحلى Mms 🌸💫",
+      "ربنا يخليكي لينا ويديم عليكي السعادة والهنا 💕👑",
+      "إنتي أجمل حاجة حصلت في البيت ده كله ❤️✨",
+      "نورتي السيستم ونورتي الدنيا كلها يا Mms 🌟💖",
+      "يومك رايق وجميل زيك بالظبط يا ست الكل 🌷😊",
+      "كل الحب والتقدير لأجمل Mms في الكون 💞👑",
+      "ابتسمي يا Mms، الدنيا بتضحك لما بتضحكي ✨🌸",
+      "ربنا يحفظك ويسعدك في كل خطوة يا غالية 💖🌟",
+      "أشيك وأرق Mms في الدنيا، يومك كله خير 💕🦋",
+      "البيت من غيرك ملوش طعم يا ست الكل 🏡❤️",
+      "باقة ورد لعيونك الحلوة يا Mms 💐👑",
+      "ربنا يملى أيامك كلها فرح وراحة بال ✨💖",
+      "إنتي الأساس والبهجة في كل ركن في البيت 🌸💕",
+      "أحلى تحية ملكية لأجمل Mms 👑🎉",
+      "كل ثانية وإنتي بخير وسعادة وحب يا Mms ❤️🌷",
+      "ذوقك وترتيبك مخليين البيت جنة ✨🏡",
+      "ربنا يفرح قلبك زي ما بتفرحينا دايماً 💖🌟",
+      "يا ست البنات وأجمل Mms في الدنيا 👑💕",
+      "يوم مليان طاقة إيجابية وحب لعيونك 🌸✨",
+      "وجودك نعمة كبيرة ربنا يديمها علينا ❤️🦋",
+      "أجمل Mms، خليكي دايماً مبسوطة ومتألقة 🌟👑",
+      "تحية خاصة من القلب لأغلى Mms في الدنيا 💖🎉",
+      "دعوة حلوة من القلب إن ربنا يسعدك طول العمر 🌷❤️"
+    ];
 
-    // ==========================================
-    // 2. APP STATE
-    // ==========================================
-    let currentRole = null;
-    let currentTab = "grocery";
-    let animationsEnabled = true;
-    let pendingImageBase64 = "";
-    let lastDeletedItem = null;
+    const MMS_ACTION_MESSAGES = [
+      "تحت أمرك يا ست الكل Mms، تم التنفيذ بكل حب ونرجو أن تكون الخدمة عجباكي 👑✨",
+      "من عيوني يا Mms! طلبك اتنفذ فوراً ونتمنى دايماً نكون عند حسن ظنك 💖🌸",
+      "تم التحديث يا ملكة البيت Mms، تحت أمرك في أي وقت ويارب الخدمة تعجبك 👑💕",
+      "أوامرك مجابة يا Mms! كل حاجة اتظبطت تمام ونرجو أن تكون الخدمة عجباكي ✨🌷",
+      "بكل سرور يا أحلى Mms، تم التنفيذ بنجاح وتحت أمرك دايماً يا ست الكل 💖👑"
+    ];
 
-    let pushTimer = null;
-    let isDirty = false;
-    let isPushing = false;
+    const DRAGO_ACTION_MESSAGES = [
+      "تمت الإضافة والتحديث بنجاح يا معلم، و Reven بيمسي عليك 😎🔥",
+      "كله تمام يا Drago! الداتا اتسجلت في التمام و Reven بيقولك عاش يا بطل 🚀🎮",
+      "اتنفذت يا كبير في ثانية، و Reven بيمسي عليك وعلى أحلى هوم لاب 💻😎",
+      "تم الحفظ بنجاح يا Drago، السيستم تحت السيطرة و Reven بيحييك 🔥✨",
+      "مية مية يا دراجو! التعديل سمع فوراً و Reven بيمسي عليك يا صاحبي 😎🚀"
+    ];
 
-    let filters = {
-      bbw: "All",
-      vs: "All",
-      perfume: "All",
-      makeupTier: "All",
-      makeupGroup: "All",
-      makeupType: "All"
-    };
+    const DEFAULT_INVENTORY = [
+      { id: 'item-1', zone: 'ALL_HOME', name: 'PlayStation 4 (PS4)', owner: 'DRAGO', category: 'GAMING', location: 'HOME_LIVE', qty: 1, spot: 'أوضة المعيشة - تحت التلفزيون', details: 'جهاز PS4 الأساسي + الكابلات متوصلة', isConsumable: false, updatedAt: 1700000001000 },
+      { id: 'item-2', zone: 'ALL_HOME', name: 'Nintendo Switch 1', owner: 'DRAGO', category: 'GAMING', location: 'HOME_LIVE', qty: 1, spot: 'ركن الجيمنج - على الدوك', details: 'النسخة الأولى + Joy-Cons', isConsumable: false, updatedAt: 1700000002000 },
+      { id: 'item-3', zone: 'ALL_HOME', name: 'PlayStation 3 (PS3)', owner: 'DRAGO', category: 'GAMING', location: 'STORE_STOCK', qty: 1, spot: 'المخزن - الرف الأول (ركن الكونسول)', details: 'متشال بحالة ممتازة في الكرتونة', isConsumable: false, updatedAt: 1700000003000 },
+      { id: 'item-4', zone: 'ALL_HOME', name: 'PlayStation 2 (PS2)', owner: 'DRAGO', category: 'GAMING', location: 'STORE_STOCK', qty: 1, spot: 'المخزن - الرف الأول (ركن الكونسول)', details: 'كلاسيك + كارت الميموري', isConsumable: false, updatedAt: 1700000004000 },
+      { id: 'item-5', zone: 'ALL_HOME', name: 'دراعات ألعاب إضافية (Extra Controllers)', owner: 'DRAGO', category: 'GAMING', location: 'STORE_STOCK', qty: 4, spot: 'المخزن - بوكس الجيمنج', details: 'دراعات PS4 / PS3 / PS2 احتياطي', isConsumable: false, updatedAt: 1700000005000 },
+      { id: 'item-6', zone: 'ALL_HOME', name: 'تلفزيون إضافي (Extra TV)', owner: 'HOME', category: 'TV', location: 'STORE_STOCK', qty: 1, spot: 'المخزن - الركن اليمين (مغلف)', details: 'شاشة احتياطية بالريموت والقاعدة', isConsumable: false, updatedAt: 1700000006000 },
+      { id: 'item-7', zone: 'ALL_HOME', name: 'أجهزة Smart Home متنوعة', owner: 'HOME', category: 'SMART_HOME', location: 'HOME_LIVE', qty: 5, spot: 'متوزعة في الصالة والأوض', details: 'فيش ذكية ولمبات سمارت', isConsumable: false, updatedAt: 1700000007000 },
+      { id: 'item-8', zone: 'ALL_HOME', name: 'شواحن ووصلات USB / Type-C', owner: 'HOME', category: 'POWER', location: 'STORE_STOCK', qty: 3, spot: 'المخزن - بوكس الكابلات والشواحن', details: 'شواحن احتياطي للموبايلات والتابلت', isConsumable: true, updatedAt: 1700000008000 },
+      { id: 'item-9', zone: 'ALL_HOME', name: 'كابلات HDMI وباور إضافية', owner: 'HOME', category: 'CABLES', location: 'STORE_STOCK', qty: 4, spot: 'المخزن - بوكس الكابلات والشواحن', details: 'كابلات HDMI للشاشات والكونسولز', isConsumable: true, updatedAt: 1700000009000 }
+    ];
 
-    let vaultData = {
-      updatedAt: 0,
-      items: []
-    };
+    let items = [];
+    let groceryItems = [];
+    let activityLogs = [];
+    let archivedLogsBuffer = [];
+    let clearVisibleLogsPending = false;
+    let storePhotoData = null;
+    let currentUser = null;
 
-    // ==========================================
-    // 3. INITIALIZATION & BATTERY-SAFE AMBIENT
-    // ==========================================
-    window.addEventListener("DOMContentLoaded", () => {
-      loadLocalVault();
-      buildAmbientLayer("gate");
-      updateSyncIndicator();
-    });
+    let activeZone = 'ALL_HOME';
+    let activeFilter = 'ALL';
+    let activeCategory = 'ALL';
+    let vipSubFilter = 'ALL';
+    let makeupTierFilter = 'ALL';
+    let makeupGroupFilter = 'ALL';
+    let searchQuery = '';
 
-    window.addEventListener("keydown", e => {
-      if (e.key === "Escape") {
-        document.querySelectorAll(".modal-backdrop.open").forEach(m => m.classList.remove("open"));
-      }
-    });
+    let pendingModalPhoto = '';
+    let pendingConfirmFn = null;
+    let isServerConnected = false;
+    let isCloudConnected = false;
+    let activeNodeName = '';
+    let activeNodeBaseUrl = '';
+    let hasPendingSync = false;
+    let lastSyncedHash = '';
+    let lastJoyIdx = -1;
+    let syncDebounceTimer = null;
 
-    document.addEventListener("visibilitychange", () => {
-      const layer = document.getElementById("ambient-layer");
-      if (!layer) return;
-      if (document.hidden) {
-        layer.classList.add("paused");
-      } else if (animationsEnabled) {
-        layer.classList.remove("paused");
-        if (isDirty) scheduleGistPush(300);
-      }
-    });
-
-    function buildAmbientLayer(mode) {
-      const layer = document.getElementById("ambient-layer");
-      layer.innerHTML = "";
-
-      const starIcons = ["✨", "⭐", "🌟", "💫"];
-      for (let i = 0; i < 14; i++) {
-        const el = document.createElement("span");
-        el.className = "ambient-item ambient-star";
-        el.textContent = starIcons[i % starIcons.length];
-        el.style.left = `${Math.random() * 96}%`;
-        el.style.top = `${Math.random() * 94}%`;
-        el.style.fontSize = `${11 + Math.random() * 10}px`;
-        el.style.setProperty("--dur", `${6 + Math.random() * 6}s`);
-        el.style.setProperty("--delay", `${-Math.random() * 6}s`);
-        layer.appendChild(el);
-      }
-
-      const critters = mode === "drago"
-        ? ["✨", "⭐", "🛸"]
-        : ["🦋", "🧸", "🐼", "🐧", "🦋", "🌸", "🧸", "🐼", "🐧", "🦋"];
-
-      const count = mode === "drago" ? 5 : 12;
-      for (let i = 0; i < count; i++) {
-        const el = document.createElement("span");
-        el.className = "ambient-item ambient-critter";
-        el.textContent = critters[i % critters.length];
-        el.style.left = `${3 + Math.random() * 92}%`;
-        el.style.fontSize = `${18 + Math.random() * 11}px`;
-        el.style.setProperty("--dur", `${15 + Math.random() * 12}s`);
-        el.style.setProperty("--delay", `${-Math.random() * 18}s`);
-        el.style.setProperty("--sway", `${(Math.random() > 0.5 ? 1 : -1) * (25 + Math.random() * 30)}px`);
-        layer.appendChild(el);
-      }
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
     }
 
-    function toggleAnimations() {
-      animationsEnabled = !animationsEnabled;
-      const layer = document.getElementById("ambient-layer");
-      const btn = document.getElementById("anim-toggle-btn");
-      layer.classList.toggle("paused", !animationsEnabled);
-      btn.textContent = animationsEnabled ? "🦋 الحركة: شغالة" : "⏸️ الحركة: متوقفة";
-    }
-
-    // ==========================================
-    // 4. ROLE GATE
-    // ==========================================
-    function selectRole(role) {
-      currentRole = role;
-      document.getElementById("role-gate").style.display = "none";
-      document.getElementById("app-shell").style.display = "block";
-
-      document.body.classList.remove("theme-mms", "role-drago");
-      if (role === "mms") {
-        document.body.classList.add("theme-mms");
-        document.getElementById("user-avatar").textContent = "👑";
-        document.getElementById("user-greeting").textContent = "أهلاً يا Mms 👑🌸";
-        document.getElementById("user-subtitle").textContent = "عالمك الخاص متدلع ومترتب عشانك ✨";
-        currentTab = "bbw";
-        buildAmbientLayer("mms");
-      } else {
-        document.body.classList.add("role-drago");
-        document.getElementById("user-avatar").textContent = "🎮";
-        document.getElementById("user-greeting").textContent = "أهلاً يا Drago (Admin) 🛡️";
-        document.getElementById("user-subtitle").textContent = "تحكم كامل + مزامنة مشفرة AES-256";
-        currentTab = "grocery";
-        buildAmbientLayer("drago");
-      }
-
-      setTab(currentTab);
-      pullFromGist(false);
-    }
-
-    function switchAccount() {
-      currentRole = null;
-      document.getElementById("app-shell").style.display = "none";
-      document.getElementById("role-gate").style.display = "flex";
-      document.body.classList.remove("theme-mms", "role-drago");
-      buildAmbientLayer("gate");
-    }
-
-    // ==========================================
-    // 5. TABS, FILTERS & RENDERING
-    // ==========================================
-    function setTab(tab) {
-      currentTab = tab;
-      document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.tab === tab);
-      });
-      renderToolbar();
-      renderCurrentView();
-    }
-
-    function renderToolbar() {
-      const bar = document.getElementById("section-toolbar");
-      const meta = TAB_META[currentTab];
-
-      let filterHTML = "";
-
-      if (currentTab === "bbw" || currentTab === "vs") {
-        const cats = ["All", "Body Mist", "Body Cream", "Body Butter"];
-        filterHTML = `
-          <div class="pills-row">
-            ${cats.map(c => `
-              <button class="pill ${filters[currentTab] === c ? "active" : ""}"
-                onclick="filters['${currentTab}']='${c}'; renderToolbar(); renderCurrentView();">
-                ${c === "All" ? "الكل ✨" : c}
-              </button>
-            `).join("")}
-          </div>
-        `;
-      } else if (currentTab === "perfume") {
-        const cats = ["All", "Original", "Oil", "Handmade"];
-        filterHTML = `
-          <div class="pills-row">
-            ${cats.map(c => `
-              <button class="pill ${filters.perfume === c ? "active" : ""}"
-                onclick="filters.perfume='${c}'; renderToolbar(); renderCurrentView();">
-                ${c === "All" ? "الكل 🌺" : c === "Original" ? "💎 Original" : c === "Oil" ? "💧 Oil" : "🎨 Handmade"}
-              </button>
-            `).join("")}
-          </div>
-        `;
-      } else if (currentTab === "makeup") {
-        const tiers = ["All", "High End", "Drugstore"];
-        const groups = ["All", ...Object.keys(MAKEUP_CATALOG)];
-        const subTypes = filters.makeupGroup !== "All" ? ["All", ...MAKEUP_CATALOG[filters.makeupGroup]] : [];
-
-        filterHTML = `
-          <div class="pills-row">
-            ${tiers.map(t => `
-              <button class="pill ${filters.makeupTier === t ? "active" : ""}"
-                onclick="filters.makeupTier='${t}'; renderToolbar(); renderCurrentView();">
-                ${t === "All" ? "كل البراندات 💄" : t === "High End" ? "💎 High End" : "🛍️ Drugstore"}
-              </button>
-            `).join("")}
-          </div>
-          <div class="pills-row">
-            ${groups.map(g => `
-              <button class="pill ${filters.makeupGroup === g ? "active" : ""}"
-                onclick="filters.makeupGroup='${g}'; filters.makeupType='All'; renderToolbar(); renderCurrentView();">
-                ${g === "All" ? "كل الأقسام" : g}
-              </button>
-            `).join("")}
-          </div>
-          ${subTypes.length ? `
-            <div class="pills-row" style="padding-top:4px; border-top:1px dashed var(--border);">
-              ${subTypes.map(st => `
-                <button class="pill ${filters.makeupType === st ? "active" : ""}"
-                  onclick="filters.makeupType=\`${st}\`; renderToolbar(); renderCurrentView();">
-                  ${st === "All" ? "كل الأنواع" : st}
-                </button>
-              `).join("")}
-            </div>
-          ` : ""}
-        `;
-      }
-
-      bar.innerHTML = `
-        <div class="section-top">
-          <div class="section-title">${meta.title}</div>
-          <button class="btn btn-primary" onclick="openAddModal('${currentTab}')">
-            ➕ إضافة هنا
-          </button>
-        </div>
-        ${filterHTML}
-      `;
-    }
-
-    function renderCurrentView() {
-      const grid = document.getElementById("items-grid");
-      const query = document.getElementById("global-search").value.trim().toLowerCase();
-
-      let list = (vaultData.items || []).filter(item => !item.deleted);
-
-      if (query) {
-        list = list.filter(item => {
-          const blob = [
-            item.name,
-            item.note,
-            item.subCategory,
-            item.tier,
-            item.makeupGroup,
-            item.makeupType,
-            TAB_META[item.tab]?.title
-          ].filter(Boolean).join(" ").toLowerCase();
-          return blob.includes(query);
-        });
-      } else {
-        list = list.filter(item => item.tab === currentTab);
-
-        if (currentTab === "bbw" && filters.bbw !== "All") {
-          list = list.filter(i => i.subCategory === filters.bbw);
-        }
-        if (currentTab === "vs" && filters.vs !== "All") {
-          list = list.filter(i => i.subCategory === filters.vs);
-        }
-        if (currentTab === "perfume" && filters.perfume !== "All") {
-          list = list.filter(i => i.subCategory === filters.perfume);
-        }
-        if (currentTab === "makeup") {
-          if (filters.makeupTier !== "All") {
-            list = list.filter(i => i.tier === filters.makeupTier);
-          }
-          if (filters.makeupGroup !== "All") {
-            list = list.filter(i => i.makeupGroup === filters.makeupGroup);
-          }
-          if (filters.makeupType !== "All") {
-            list = list.filter(i => i.makeupType === filters.makeupType);
-          }
-        }
-      }
-
-      list.sort((a, b) => {
-        if (a.tab === "grocery" && b.tab === "grocery" && !!a.bought !== !!b.bought) {
-          return a.bought ? 1 : -1;
-        }
-        return (b.createdAt || 0) - (a.createdAt || 0);
-      });
-
-      if (!list.length) {
-        grid.innerHTML = `
-          <div class="empty-box">
-            <div style="font-size:2.6rem; margin-bottom:8px;">${TAB_META[currentTab].placeholder}</div>
-            <div style="font-weight:800; font-size:1rem; margin-bottom:4px;">
-              ${query ? "مفيش نتيجة مطابقة لبحثك 🔍" : "القسم ده لسه فاضي ✨"}
-            </div>
-            <div style="font-size:0.84rem;">
-              ${query ? "جرب كلمة تانية أو امسح البحث" : "دوس على زرار (➕ إضافة هنا) وضيف أول حاجة بالاسم أو الصورة!"}
-            </div>
-          </div>
-        `;
-        return;
-      }
-
-      grid.innerHTML = list.map(item => {
-        const tabInfo = TAB_META[item.tab] || { title: item.tab, placeholder: "✨" };
-        let subBadges = [];
-        if (item.tier) subBadges.push(item.tier);
-        if (item.subCategory) subBadges.push(item.subCategory);
-        if (item.makeupType) subBadges.push(item.makeupType);
-        else if (item.makeupGroup) subBadges.push(item.makeupGroup);
-
-        const metaLine = subBadges.join(" • ");
-
-        return `
-          <article class="item-card ${item.bought ? "bought" : ""}">
-            <div class="item-img-box" onclick="${item.image ? `openLightbox('${item.id}')` : ""}">
-              ${item.image
-                ? `<img src="${item.image}" alt="${escapeHtml(item.name || "صورة المنتج")}" loading="lazy" />`
-                : `<div class="item-placeholder">${tabInfo.placeholder}</div>`
-              }
-              ${query ? `<span class="badge-chip">${tabInfo.title}</span>` : ""}
-              ${item.tier ? `<span class="badge-chip left">${item.tier}</span>` : ""}
-            </div>
-
-            <div class="item-body">
-              <div class="item-name">${escapeHtml(item.name || "منتج بدون اسم 📸")}</div>
-              ${metaLine ? `<div class="item-meta">${escapeHtml(metaLine)}</div>` : ""}
-              ${item.note ? `<div class="item-note">${escapeHtml(item.note)}</div>` : ""}
-
-              <div class="item-actions">
-                ${item.tab === "grocery" ? `
-                  <button class="icon-btn" onclick="toggleBought('${item.id}')">
-                    ${item.bought ? "↩️ رجّعه" : "✅ اتجاب"}
-                  </button>
-                ` : ""}
-                <button class="icon-btn" onclick="openEditModal('${item.id}')">✏️ تعديل</button>
-                <button class="icon-btn del" onclick="deleteItem('${item.id}')">🗑️</button>
-              </div>
-            </div>
-          </article>
-        `;
-      }).join("");
-    }
-
-    // ==========================================
-    // 6. ADD / EDIT MODAL & IMAGE COMPRESSION
-    // ==========================================
-    function openAddModal(defaultTab) {
-      document.getElementById("item-modal-title").textContent = "➕ إضافة عنصر جديد";
-      document.getElementById("edit-item-id").value = "";
-      document.getElementById("item-tab-select").value = defaultTab || currentTab;
-      document.getElementById("item-name-input").value = "";
-      document.getElementById("item-note-input").value = "";
-      document.getElementById("item-img-input").value = "";
-      clearModalImage();
-      updateModalSubfields();
-      document.getElementById("item-modal").classList.add("open");
-    }
-
-    function openEditModal(id) {
-      const item = vaultData.items.find(i => i.id === id && !i.deleted);
-      if (!item) return;
-
-      document.getElementById("item-modal-title").textContent = "✏️ تعديل العنصر";
-      document.getElementById("edit-item-id").value = item.id;
-      document.getElementById("item-tab-select").value = item.tab;
-      document.getElementById("item-name-input").value = item.name || "";
-      document.getElementById("item-note-input").value = item.note || "";
-      document.getElementById("item-img-input").value = "";
-
-      updateModalSubfields(item);
-
-      if (item.image) {
-        pendingImageBase64 = item.image;
-        const prev = document.getElementById("item-img-preview");
-        prev.src = item.image;
-        prev.style.display = "block";
-        document.getElementById("clear-img-btn").style.display = "inline-flex";
-      } else {
-        clearModalImage();
-      }
-
-      document.getElementById("item-modal").classList.add("open");
-    }
-
-    function updateModalSubfields(existing = null) {
-      const tab = document.getElementById("item-tab-select").value;
-      const box = document.getElementById("dynamic-subfields");
-
-      if (tab === "bbw" || tab === "vs") {
-        const val = existing?.subCategory || (filters[tab] !== "All" ? filters[tab] : "Body Mist");
-        box.innerHTML = `
-          <div class="form-group">
-            <label class="form-label">النوع</label>
-            <select id="sub-cat-select" class="form-control">
-              <option value="Body Mist" ${val === "Body Mist" ? "selected" : ""}>Body Mist</option>
-              <option value="Body Cream" ${val === "Body Cream" ? "selected" : ""}>Body Cream</option>
-              <option value="Body Butter" ${val === "Body Butter" ? "selected" : ""}>Body Butter</option>
-            </select>
-          </div>
-        `;
-      } else if (tab === "perfume") {
-        const val = existing?.subCategory || (filters.perfume !== "All" ? filters.perfume : "Original");
-        box.innerHTML = `
-          <div class="form-group">
-            <label class="form-label">نوع البرفيوم</label>
-            <select id="sub-cat-select" class="form-control">
-              <option value="Original" ${val === "Original" ? "selected" : ""}>💎 Original</option>
-              <option value="Oil" ${val === "Oil" ? "selected" : ""}>💧 Oil</option>
-              <option value="Handmade" ${val === "Handmade" ? "selected" : ""}>🎨 Handmade</option>
-            </select>
-          </div>
-        `;
-      } else if (tab === "makeup") {
-        const tierVal = existing?.tier || (filters.makeupTier !== "All" ? filters.makeupTier : "High End");
-        const groupVal = existing?.makeupGroup || (filters.makeupGroup !== "All" ? filters.makeupGroup : "Face and Base");
-        const typeVal = existing?.makeupType || (filters.makeupType !== "All" ? filters.makeupType : MAKEUP_CATALOG[groupVal][0]);
-
-        box.innerHTML = `
-          <div class="form-group">
-            <label class="form-label">الفئة (High End / Drugstore)</label>
-            <select id="makeup-tier-select" class="form-control">
-              <option value="High End" ${tierVal === "High End" ? "selected" : ""}>💎 High End</option>
-              <option value="Drugstore" ${tierVal === "Drugstore" ? "selected" : ""}>🛍️ Drugstore</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">المجموعة الرئيسية</label>
-            <select id="makeup-group-select" class="form-control" onchange="populateMakeupTypes()">
-              ${Object.keys(MAKEUP_CATALOG).map(g => `
-                <option value="${g}" ${groupVal === g ? "selected" : ""}>${g}</option>
-              `).join("")}
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">نوع المنتج</label>
-            <select id="makeup-type-select" class="form-control"></select>
-          </div>
-        `;
-        populateMakeupTypes(typeVal);
-      } else {
-        box.innerHTML = "";
-      }
-    }
-
-    function populateMakeupTypes(selectedType = null) {
-      const grp = document.getElementById("makeup-group-select").value;
-      const typeSel = document.getElementById("makeup-type-select");
-      const list = MAKEUP_CATALOG[grp] || [];
-      typeSel.innerHTML = list.map(t => `
-        <option value="${t}" ${selectedType === t ? "selected" : ""}>${t}</option>
-      `).join("");
-    }
-
-    function handleImageUpload(event) {
-      const file = event.target.files?.[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = e => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement("canvas");
-          const MAX_DIM = 420;
-          let w = img.width;
-          let h = img.height;
-          if (w > h && w > MAX_DIM) {
-            h = Math.round((h * MAX_DIM) / w);
-            w = MAX_DIM;
-          } else if (h > MAX_DIM) {
-            w = Math.round((w * MAX_DIM) / h);
-            h = MAX_DIM;
-          }
-          canvas.width = w;
-          canvas.height = h;
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, w, h);
-          pendingImageBase64 = canvas.toDataURL("image/jpeg", 0.62);
-
-          const prev = document.getElementById("item-img-preview");
-          prev.src = pendingImageBase64;
-          prev.style.display = "block";
-          document.getElementById("clear-img-btn").style.display = "inline-flex";
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function clearModalImage() {
-      pendingImageBase64 = "";
-      const prev = document.getElementById("item-img-preview");
-      prev.src = "";
-      prev.style.display = "none";
-      document.getElementById("clear-img-btn").style.display = "none";
-    }
-
-    function saveItem() {
-      const id = document.getElementById("edit-item-id").value;
-      const tab = document.getElementById("item-tab-select").value;
-      const name = document.getElementById("item-name-input").value.trim();
-      const note = document.getElementById("item-note-input").value.trim();
-
-      if (!name && !pendingImageBase64) {
-        return showToast("⚠️ اكتب اسم المنتج أو ارفع صورة على الأقل!");
-      }
-
-      const now = Date.now();
-      const itemObj = {
-        id: id || ("item_" + now + "_" + Math.random().toString(36).slice(2, 6)),
-        tab,
-        name,
-        note,
-        image: pendingImageBase64 || "",
-        deleted: false,
-        createdAt: now,
-        updatedAt: now
-      };
-
-      if (tab === "bbw" || tab === "vs" || tab === "perfume") {
-        itemObj.subCategory = document.getElementById("sub-cat-select").value;
-      } else if (tab === "makeup") {
-        itemObj.tier = document.getElementById("makeup-tier-select").value;
-        itemObj.makeupGroup = document.getElementById("makeup-group-select").value;
-        itemObj.makeupType = document.getElementById("makeup-type-select").value;
-      }
-
-      if (id) {
-        const idx = vaultData.items.findIndex(i => i.id === id);
-        if (idx !== -1) {
-          itemObj.bought = !!vaultData.items[idx].bought;
-          itemObj.createdAt = vaultData.items[idx].createdAt || now;
-          vaultData.items[idx] = itemObj;
-        }
-      } else {
-        vaultData.items.unshift(itemObj);
-      }
-
-      persistVault();
-      closeModal("item-modal");
-      setTab(tab);
-      showToast("✅ اتحفظ بنجاح!");
-    }
-
-    function toggleBought(id) {
-      const item = vaultData.items.find(i => i.id === id);
-      if (!item) return;
-      item.bought = !item.bought;
-      item.updatedAt = Date.now();
-      persistVault();
-      renderCurrentView();
-    }
-
-    function deleteItem(id) {
-      const item = vaultData.items.find(i => i.id === id && !i.deleted);
-      if (!item) return;
-      lastDeletedItem = { ...item };
-      item.deleted = true;
-      item.updatedAt = Date.now();
-      persistVault();
-      renderCurrentView();
-      showToast("🗑️ اتمسح العنصر", true);
-    }
-
-    function undoLastDelete() {
-      if (!lastDeletedItem) return;
-      const existing = vaultData.items.find(i => i.id === lastDeletedItem.id);
-      if (existing) {
-        existing.deleted = false;
-        existing.updatedAt = Date.now();
-      } else {
-        vaultData.items.unshift({ ...lastDeletedItem, deleted: false, updatedAt: Date.now() });
-      }
-      lastDeletedItem = null;
-      document.getElementById("toast").classList.remove("show");
-      persistVault();
-      renderCurrentView();
-      showToast("↩️ تم التراجع عن المسح!");
-    }
-
-    function openLightbox(id) {
-      const item = vaultData.items.find(i => i.id === id);
-      if (!item?.image) return;
-      document.getElementById("lightbox-img").src = item.image;
-      document.getElementById("lightbox-modal").classList.add("open");
-    }
-
-    // ==========================================
-    // 7. SAFE STORAGE, CHUNKED AES-256 & MERGE
-    // ==========================================
     function bytesToB64(bytes) {
-      let bin = "";
+      let bin = '';
       for (let i = 0; i < bytes.length; i += 0x8000) {
         bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
       }
@@ -1545,55 +803,190 @@
       return out;
     }
 
-    function loadLocalVault() {
+    function getCategoryMeta(cat, zone) {
+      if (zone === 'BBW') return { label: '🧴 Bath & Body Works', badge: 'bg-pink-50 text-pink-700 border-pink-200' };
+      if (zone === 'VS') return { label: "🪽 Victoria's Secret", badge: 'bg-rose-50 text-rose-700 border-rose-200' };
+      if (zone === 'MAKEUP') return { label: '💄 Makeup', badge: 'bg-fuchsia-50 text-fuchsia-800 border-fuchsia-200' };
+      if (zone === 'PERFUME') return { label: '🌺 Perfume', badge: 'bg-purple-50 text-purple-800 border-purple-200' };
+
+      const map = {
+        GAMING: { label: 'ألعاب وكونسول 🎮', badge: 'bg-purple-50 text-purple-700 border-purple-200' },
+        TV: { label: 'شاشات وتلفزيون 📺', badge: 'bg-sky-50 text-sky-700 border-sky-200' },
+        SMART_HOME: { label: 'سمارت هوم 🏠', badge: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+        POWER: { label: 'شواحن وبطاريات 🔌', badge: 'bg-amber-50 text-amber-800 border-amber-200' },
+        CABLES: { label: 'كابلات ووصلات 🧵', badge: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
+        BATH_BODY: { label: 'Bath & Body / VS 🧴', badge: 'bg-pink-50 text-pink-700 border-pink-200' },
+        MAKEUP: { label: 'Makeup 💄', badge: 'bg-fuchsia-50 text-fuchsia-800 border-fuchsia-200' },
+        PERFUME: { label: 'Perfume 🌺', badge: 'bg-purple-50 text-purple-800 border-purple-200' },
+        OTHER: { label: 'حاجات متنوعة ✨', badge: 'bg-slate-100 text-slate-700 border-slate-200' }
+      };
+      return map[cat] || map.OTHER;
+    }
+
+    function fetchWithTimeout(url, options = {}, timeoutMs = 2500) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      return fetch(url, { ...options, signal: controller.signal })
+        .finally(() => clearTimeout(timer));
+    }
+
+    function getCandidateNodes() {
+      const list = [];
       try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (parsed && Array.isArray(parsed.items)) {
-            vaultData = parsed;
-          }
+        const cfg = JSON.parse(safeStorage.getItem(NODES_CONFIG_KEY) || '{}');
+        if (cfg.ubuntu) list.push(cfg.ubuntu.replace(/\/+$/, ''));
+        if (cfg.pc) list.push(cfg.pc.replace(/\/+$/, ''));
+      } catch (e) {}
+      return [...new Set(list.filter(Boolean))];
+    }
+
+    function getGistConfig() {
+      try {
+        const cfg = JSON.parse(safeStorage.getItem(GIST_CONFIG_KEY) || '{}');
+        return {
+          gistId: (cfg.gistId || DEFAULT_GIST_ID).trim(),
+          token: (cfg.token || '').trim(),
+          secret: (cfg.secret || '').trim()
+        };
+      } catch (e) {
+        return { gistId: DEFAULT_GIST_ID, token: '', secret: '' };
+      }
+    }
+
+    async function deriveAesKey(passphrase, saltBytes) {
+      const enc = new TextEncoder();
+      const keyMaterial = await crypto.subtle.importKey(
+        'raw',
+        enc.encode(passphrase),
+        { name: 'PBKDF2' },
+        false,
+        ['deriveKey']
+      );
+      return crypto.subtle.deriveKey(
+        { name: 'PBKDF2', salt: saltBytes, iterations: 250000, hash: 'SHA-256' },
+        keyMaterial,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['encrypt', 'decrypt']
+      );
+    }
+
+    async function encryptPayload(obj, passphrase) {
+      if (!passphrase || !window.crypto || !crypto.subtle) {
+        return JSON.stringify(obj);
+      }
+      const salt = crypto.getRandomValues(new Uint8Array(16));
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const key = await deriveAesKey(passphrase, salt);
+      const encoded = new TextEncoder().encode(JSON.stringify(obj));
+      const cipherBuf = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, encoded);
+      return JSON.stringify({
+        encrypted: true,
+        alg: 'AES-256-GCM',
+        salt: bytesToB64(salt),
+        iv: bytesToB64(iv),
+        data: bytesToB64(new Uint8Array(cipherBuf))
+      });
+    }
+
+    async function decryptPayload(rawStr, passphrase) {
+      const parsed = JSON.parse(rawStr);
+      if (!parsed || !parsed.encrypted) return parsed;
+      if (!passphrase) throw new Error('Passphrase required');
+      const salt = b64ToBytes(parsed.salt);
+      const iv = b64ToBytes(parsed.iv);
+      const data = b64ToBytes(parsed.data);
+      const key = await deriveAesKey(passphrase, salt);
+      const plainBuf = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, data);
+      return JSON.parse(new TextDecoder().decode(plainBuf));
+    }
+
+    async function pushToGitHubGist(payload) {
+      const { gistId, token, secret } = getGistConfig();
+      if (!gistId || !token) return false;
+      try {
+        const contentStr = await encryptPayload(payload, secret);
+        const res = await fetchWithTimeout(`https://api.github.com/gists/${gistId}`, {
+          method: 'PATCH',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            files: {
+              [GIST_FILENAME]: { content: contentStr }
+            }
+          })
+        }, 5000);
+        return res.ok;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    async function pullFromGitHubGist() {
+      const { gistId, token, secret } = getGistConfig();
+      if (!gistId || !token) return null;
+      try {
+        const res = await fetchWithTimeout(`https://api.github.com/gists/${gistId}?t=${Date.now()}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          },
+          cache: 'no-store'
+        }, 4500);
+        if (!res.ok) return null;
+        const gist = await res.json();
+        const files = gist.files || {};
+        const fileObj = files[GIST_FILENAME] || Object.values(files)[0];
+        if (!fileObj) return { empty: true };
+
+        let contentStr = fileObj.content;
+        if ((fileObj.truncated || !contentStr) && fileObj.raw_url) {
+          const rawRes = await fetchWithTimeout(`${fileObj.raw_url}?t=${Date.now()}`, { cache: 'no-store' }, 5000);
+          if (rawRes.ok) contentStr = await rawRes.text();
         }
+
+        if (!contentStr || contentStr.trim() === '{}' || contentStr.trim() === '') {
+          return { empty: true };
+        }
+        const data = await decryptPayload(contentStr, secret);
+        return { empty: false, data };
       } catch (e) {
-        console.error("Local vault load error:", e);
+        return null;
       }
     }
 
-    function saveLocalVaultSafely() {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(vaultData));
-      } catch (e) {
-        console.warn("localStorage quota reached; keeping latest state in memory & syncing to cloud:", e);
+    async function findReachableNode() {
+      const candidates = getCandidateNodes();
+      for (const base of candidates) {
+        try {
+          const res = await fetchWithTimeout(`${base}/api/state`, { cache: 'no-store' }, 1500);
+          if (res.ok) {
+            const json = await res.json();
+            activeNodeBaseUrl = base;
+            activeNodeName = json.node || 'Server';
+            return { base, json };
+          }
+        } catch (e) {}
       }
+      return null;
     }
 
-    function persistVault() {
-      vaultData.updatedAt = Date.now();
-      isDirty = true;
-      saveLocalVaultSafely();
-      scheduleGistPush(1500);
-    }
-
-    function scheduleGistPush(delayMs = 1500) {
-      clearTimeout(pushTimer);
-      pushTimer = setTimeout(() => {
-        pushToGist();
-      }, delayMs);
-    }
-
-    function mergeVaultItems(localItems, remoteItems) {
+    function mergeItemsByTimestamp(localList, remoteList) {
       const map = new Map();
-      for (const item of (localItems || [])) {
-        if (item?.id) map.set(item.id, { ...item });
+      for (const it of (localList || [])) {
+        if (it?.id) map.set(it.id, { ...it });
       }
-      for (const rem of (remoteItems || [])) {
+      for (const rem of (remoteList || [])) {
         if (!rem?.id) continue;
         const loc = map.get(rem.id);
         if (!loc) {
           map.set(rem.id, { ...rem });
         } else {
-          const locTs = loc.updatedAt || loc.createdAt || 0;
-          const remTs = rem.updatedAt || rem.createdAt || 0;
+          const locTs = loc.updatedAt || 0;
+          const remTs = rem.updatedAt || 0;
           if (remTs >= locTs) {
             map.set(rem.id, { ...loc, ...rem });
           }
@@ -1602,271 +995,1362 @@
       return Array.from(map.values());
     }
 
-    function getCloudCfg() {
+    function saveLocalCacheOnly() {
+      try { safeStorage.setItem(STORAGE_KEY, JSON.stringify(items)); } catch (e) {}
+      try { safeStorage.setItem(GROCERY_KEY, JSON.stringify(groceryItems)); } catch (e) {}
+      try { safeStorage.setItem(LOGS_KEY, JSON.stringify(activityLogs)); } catch (e) {}
+      try { safeStorage.setItem(ARCHIVED_LOGS_KEY, JSON.stringify(archivedLogsBuffer)); } catch (e) {}
       try {
-        return JSON.parse(localStorage.getItem(CLOUD_CFG_KEY) || "null");
-      } catch {
-        return null;
+        if (storePhotoData) safeStorage.setItem(STORE_PHOTO_KEY, JSON.stringify(storePhotoData));
+        else safeStorage.removeItem(STORE_PHOTO_KEY);
+      } catch (e) {}
+    }
+
+    function setPendingSyncFlag(flag) {
+      hasPendingSync = flag;
+      try { safeStorage.setItem(PENDING_SYNC_KEY, flag ? '1' : '0'); } catch (e) {}
+    }
+
+    function updateSyncBadge(connected) {
+      isServerConnected = connected;
+      const badge = document.getElementById('pc-sync-badge');
+      const cloudDot = document.getElementById('cloud-status-dot');
+
+      if (cloudDot) {
+        if (isCloudConnected || connected) {
+          cloudDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.85)] animate-pulse shrink-0';
+        } else if (hasPendingSync) {
+          cloudDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.85)] animate-ping shrink-0';
+        } else {
+          cloudDot.className = 'w-2.5 h-2.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)] shrink-0';
+        }
+      }
+
+      if (!badge) return;
+      if (isCloudConnected && connected && !hasPendingSync) {
+        badge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200';
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span>سحابة مشفرة + ${escapeHtml(activeNodeName || 'Server')} 🔐💻</span>`;
+      } else if (isCloudConnected && !hasPendingSync) {
+        badge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200';
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span>مزامنة مشفرة 24/7 (AES-256) ☁️🔐</span>`;
+      } else if (connected && !hasPendingSync) {
+        const label = activeNodeName ? `متصل بـ ${activeNodeName} 💻` : 'متصل بالسيرفر 💻';
+        badge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200';
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span><span>${escapeHtml(label)}</span>`;
+      } else if (hasPendingSync) {
+        badge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-amber-50 text-amber-800 border border-amber-300';
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span><span>محفوظ مؤقتاً — في انتظار الاتصال ⏳</span>`;
+      } else {
+        badge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-slate-100 text-slate-600 border border-slate-200';
+        badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-slate-400"></span><span>وضع أوفلاين (اضبط الربط السحابي) ☁️</span>`;
       }
     }
 
-    function openCloudModal() {
-      const cfg = getCloudCfg() || {};
-      document.getElementById("gh-token-input").value = cfg.token || "";
-      document.getElementById("secret-pass-input").value = cfg.passphrase || "";
-      document.getElementById("cloud-modal").classList.add("open");
+    async function syncFullStateToPC(isAutoFlush = false) {
+      const payload = {
+        updatedAt: Date.now(),
+        items,
+        groceryItems,
+        storePhotoData,
+        activityLogs,
+        archivedLogs: archivedLogsBuffer,
+        clearVisibleLogs: clearVisibleLogsPending
+      };
+      lastSyncedHash = JSON.stringify({ items, groceryItems, storePhotoData, activityLogs });
+
+      let cloudOk = false;
+      const { token } = getGistConfig();
+      if (token) {
+        cloudOk = await pushToGitHubGist(payload);
+        isCloudConnected = cloudOk;
+      }
+
+      let localOk = false;
+      const reachable = await findReachableNode();
+      if (reachable) {
+        try {
+          const res = await fetchWithTimeout(`${reachable.base}/api/state`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          }, 3000);
+          if (res.ok) {
+            localOk = true;
+            const json = await res.json();
+            clearVisibleLogsPending = false;
+            if (json && json.data) {
+              items = json.data.items || items;
+              groceryItems = json.data.groceryItems || groceryItems;
+              storePhotoData = json.data.storePhotoData || storePhotoData;
+              activityLogs = json.data.activityLogs || activityLogs;
+              saveLocalCacheOnly();
+              renderItems();
+              renderGroceryList();
+              renderLogs();
+            }
+          }
+        } catch (e) {}
+      }
+
+      if (cloudOk || localOk) {
+        setPendingSyncFlag(false);
+        updateSyncBadge(localOk);
+        if (isAutoFlush) {
+          showToast('تمت المزامنة ورفع التعديلات المؤقتة بنجاح 🚀🔐', 'success');
+        }
+        return true;
+      }
+
+      setPendingSyncFlag(true);
+      updateSyncBadge(false);
+      return false;
     }
 
-    function saveCloudConfig() {
-      const token = document.getElementById("gh-token-input").value.trim();
-      const passphrase = document.getElementById("secret-pass-input").value.trim();
-      if (!token || !passphrase) {
-        return showToast("⚠️ اكتب الـ Token وكلمة سر التشفير");
-      }
-      try {
-        localStorage.setItem(CLOUD_CFG_KEY, JSON.stringify({ token, passphrase }));
-      } catch (e) {
-        console.error(e);
-      }
-      closeModal("cloud-modal");
-      updateSyncIndicator();
-      pullFromGist(true);
-    }
-
-    function updateSyncIndicator(state = null) {
-      const dot = document.getElementById("sync-dot");
-      const lbl = document.getElementById("sync-label");
-      const cfg = getCloudCfg();
-
-      if (!cfg?.token || !cfg?.passphrase) {
-        dot.className = "sync-dot";
-        lbl.textContent = "أوفلاين";
+    async function pollServerUpdates() {
+      if (hasPendingSync) {
+        await syncFullStateToPC(true);
         return;
       }
 
-      if (state === "syncing") {
-        dot.className = "sync-dot syncing";
-        lbl.textContent = "جاري المزامنة...";
-      } else if (state === "error") {
-        dot.className = "sync-dot";
-        lbl.textContent = "خطأ مزامنة";
-      } else {
-        dot.className = "sync-dot online";
-        lbl.textContent = "متصل ☁️";
+      const { token } = getGistConfig();
+      if (token) {
+        const cloudRes = await pullFromGitHubGist();
+        if (cloudRes) {
+          isCloudConnected = true;
+          if (!cloudRes.empty && cloudRes.data) {
+            const merged = mergeItemsByTimestamp(items, cloudRes.data.items || []);
+            const nextGrocery = cloudRes.data.groceryItems || groceryItems;
+            const nextPhoto = cloudRes.data.storePhotoData || storePhotoData;
+            const nextLogs = cloudRes.data.activityLogs || activityLogs;
+            const incomingHash = JSON.stringify({ items: merged, groceryItems: nextGrocery, storePhotoData: nextPhoto, activityLogs: nextLogs });
+            if (incomingHash !== lastSyncedHash) {
+              lastSyncedHash = incomingHash;
+              items = merged;
+              groceryItems = nextGrocery;
+              storePhotoData = nextPhoto;
+              activityLogs = nextLogs;
+              saveLocalCacheOnly();
+              renderStorePhoto();
+              renderItems();
+              renderGroceryList();
+              renderLogs();
+            }
+          }
+        } else {
+          isCloudConnected = false;
+        }
+      }
+
+      const reachable = await findReachableNode();
+      if (!reachable) {
+        updateSyncBadge(false);
+        return;
+      }
+
+      isServerConnected = true;
+      updateSyncBadge(true);
+      const json = reachable.json;
+
+      if (json && json.ok && json.data) {
+        const merged = mergeItemsByTimestamp(items, json.data.items || []);
+        const nextGrocery = json.data.groceryItems || groceryItems;
+        const nextPhoto = json.data.storePhotoData || storePhotoData;
+        const nextLogs = json.data.activityLogs || activityLogs;
+        const incomingHash = JSON.stringify({ items: merged, groceryItems: nextGrocery, storePhotoData: nextPhoto, activityLogs: nextLogs });
+        if (incomingHash !== lastSyncedHash) {
+          lastSyncedHash = incomingHash;
+          items = merged;
+          groceryItems = nextGrocery;
+          storePhotoData = nextPhoto;
+          activityLogs = nextLogs;
+          saveLocalCacheOnly();
+          renderStorePhoto();
+          renderItems();
+          renderGroceryList();
+          renderLogs();
+        }
       }
     }
 
-    async function deriveAesKey(passphrase, saltBytes) {
-      const baseKey = await crypto.subtle.importKey(
-        "raw",
-        new TextEncoder().encode(passphrase),
-        "PBKDF2",
-        false,
-        ["deriveKey"]
-      );
-      return crypto.subtle.deriveKey(
-        { name: "PBKDF2", salt: saltBytes, iterations: PBKDF2_ITERATIONS, hash: "SHA-256" },
-        baseKey,
-        { name: "AES-GCM", length: 256 },
-        false,
-        ["encrypt", "decrypt"]
-      );
+    async function loadStateFromServerOrLocal() {
+      hasPendingSync = safeStorage.getItem(PENDING_SYNC_KEY) === '1';
+      try {
+        const cachedItems = JSON.parse(safeStorage.getItem(STORAGE_KEY) || 'null');
+        if (Array.isArray(cachedItems) && cachedItems.length > 0) items = cachedItems;
+        const cachedGrocery = JSON.parse(safeStorage.getItem(GROCERY_KEY) || 'null');
+        if (Array.isArray(cachedGrocery)) groceryItems = cachedGrocery;
+        const cachedPhoto = JSON.parse(safeStorage.getItem(STORE_PHOTO_KEY) || 'null');
+        if (cachedPhoto) storePhotoData = cachedPhoto;
+        const cachedLogs = JSON.parse(safeStorage.getItem(LOGS_KEY) || 'null');
+        if (Array.isArray(cachedLogs)) activityLogs = cachedLogs;
+      } catch (e) {}
+
+      if (hasPendingSync && items.length > 0) {
+        await syncFullStateToPC(true);
+        return;
+      }
+
+      const { token } = getGistConfig();
+      if (token) {
+        const cloudRes = await pullFromGitHubGist();
+        if (cloudRes) {
+          isCloudConnected = true;
+          if (!cloudRes.empty && cloudRes.data && Array.isArray(cloudRes.data.items)) {
+            items = mergeItemsByTimestamp(items, cloudRes.data.items);
+            groceryItems = cloudRes.data.groceryItems || groceryItems;
+            storePhotoData = cloudRes.data.storePhotoData || null;
+            activityLogs = cloudRes.data.activityLogs || [];
+            lastSyncedHash = JSON.stringify({ items, groceryItems, storePhotoData, activityLogs });
+            saveLocalCacheOnly();
+            updateSyncBadge(false);
+            return;
+          } else if (cloudRes.empty) {
+            if (!items || items.length === 0) items = JSON.parse(JSON.stringify(DEFAULT_INVENTORY));
+            saveLocalCacheOnly();
+            await syncFullStateToPC(false);
+            return;
+          }
+        }
+      }
+
+      const reachable = await findReachableNode();
+      if (reachable) {
+        const json = reachable.json;
+        updateSyncBadge(true);
+        if (json && json.ok && json.data && Array.isArray(json.data.items)) {
+          items = mergeItemsByTimestamp(items, json.data.items);
+          groceryItems = json.data.groceryItems || groceryItems;
+          storePhotoData = json.data.storePhotoData || null;
+          activityLogs = json.data.activityLogs || [];
+          lastSyncedHash = JSON.stringify({ items, groceryItems, storePhotoData, activityLogs });
+          saveLocalCacheOnly();
+          return;
+        } else {
+          if (!items || items.length === 0) items = JSON.parse(JSON.stringify(DEFAULT_INVENTORY));
+          saveLocalCacheOnly();
+          await syncFullStateToPC(false);
+          return;
+        }
+      } else {
+        updateSyncBadge(false);
+      }
+
+      if (!items || items.length === 0) {
+        items = JSON.parse(JSON.stringify(DEFAULT_INVENTORY));
+        saveLocalCacheOnly();
+      }
     }
 
-    async function encryptPayload(jsonObj, passphrase) {
-      const salt = crypto.getRandomValues(new Uint8Array(16));
-      const iv = crypto.getRandomValues(new Uint8Array(12));
-      const key = await deriveAesKey(passphrase, salt);
-      const encoded = new TextEncoder().encode(JSON.stringify(jsonObj));
-      const cipher = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, encoded);
+    function persistAll() {
+      saveLocalCacheOnly();
+      setPendingSyncFlag(true);
+      updateSyncBadge(isServerConnected);
+      clearTimeout(syncDebounceTimer);
+      syncDebounceTimer = setTimeout(() => {
+        syncFullStateToPC(false);
+      }, 900);
+    }
 
-      return JSON.stringify({
-        alg: "AES-256-GCM",
-        iter: PBKDF2_ITERATIONS,
-        salt: bytesToB64(salt),
-        iv: bytesToB64(iv),
-        data: bytesToB64(new Uint8Array(cipher))
+    function setActiveUser(user) {
+      currentUser = user;
+      safeStorage.setItem(ACTIVE_USER_KEY, user);
+      const badge = document.getElementById('active-user-badge');
+      if (badge) {
+        badge.textContent = user === 'MMS' ? '👑 Mms' : '🎮 Drago';
+      }
+      document.querySelectorAll('.drago-only').forEach(el => {
+        if (user === 'DRAGO') {
+          el.classList.remove('hidden');
+          if (el.id === 'backup-modal-btn') el.classList.add('inline-flex');
+        } else {
+          el.classList.add('hidden');
+          el.classList.remove('inline-flex');
+        }
+      });
+      const modal = document.getElementById('user-select-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function openUserSelectModal() {
+      const modal = document.getElementById('user-select-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    }
+
+    function addActivityLog(actionText) {
+      const who = currentUser === 'MMS' ? 'Mms 👑' : 'Drago 🎮';
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) + ' - ' + now.toLocaleDateString('ar-EG');
+      activityLogs.unshift({
+        id: 'log-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
+        user: who,
+        text: actionText,
+        time: timeStr
+      });
+      if (activityLogs.length > 60) activityLogs.length = 60;
+      renderLogs();
+    }
+
+    function triggerRoleNotification() {
+      const pool = currentUser === 'MMS' ? MMS_ACTION_MESSAGES : DRAGO_ACTION_MESSAGES;
+      const msg = pool[Math.floor(Math.random() * pool.length)];
+      showToast(msg, currentUser === 'MMS' ? 'love' : 'success');
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const el = document.createElement('div');
+      const styles = {
+        love: 'bg-gradient-to-r from-rose-500 to-pink-500 text-white border-rose-300',
+        success: 'bg-slate-900 text-white border-teal-400',
+        info: 'bg-white text-slate-800 border-slate-200'
+      };
+      el.className = `pointer-events-auto border-2 px-4 py-3 rounded-2xl shadow-xl text-xs sm:text-sm font-extrabold text-center transition-all duration-300 transform translate-y-2 opacity-0 ${styles[type] || styles.info}`;
+      el.textContent = message;
+      container.appendChild(el);
+      requestAnimationFrame(() => {
+        el.classList.remove('translate-y-2', 'opacity-0');
+      });
+      setTimeout(() => {
+        el.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => el.remove(), 300);
+      }, 3600);
+    }
+
+    function triggerJoyBurst(originEl) {
+      let idx;
+      do {
+        idx = Math.floor(Math.random() * JOY_MESSAGES_30.length);
+      } while (idx === lastJoyIdx && JOY_MESSAGES_30.length > 1);
+      lastJoyIdx = idx;
+      showToast(JOY_MESSAGES_30[idx], 'love');
+
+      const rect = originEl ? originEl.getBoundingClientRect() : { left: window.innerWidth / 2, top: 120, width: 0, height: 0 };
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const emojis = ['💖', '🌸', '✨', '👑', '🦋', '💕', '🌷', '🎉'];
+      for (let i = 0; i < 18; i++) {
+        const span = document.createElement('span');
+        span.className = 'joy-particle';
+        span.textContent = emojis[i % emojis.length];
+        span.style.left = cx + 'px';
+        span.style.top = cy + 'px';
+        const angle = (Math.PI * 2 * i) / 18 + (Math.random() - 0.5) * 0.4;
+        const dist = 80 + Math.random() * 140;
+        span.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+        span.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+        span.style.setProperty('--rot', (Math.random() * 360 - 180) + 'deg');
+        document.body.appendChild(span);
+        setTimeout(() => span.remove(), 1400);
+      }
+    }
+
+    function renderStorePhoto() {
+      const img = document.getElementById('store-photo-img');
+      const empty = document.getElementById('store-photo-empty');
+      const updated = document.getElementById('store-photo-updated');
+      if (!img || !empty) return;
+      if (storePhotoData && storePhotoData.dataUrl) {
+        img.src = storePhotoData.dataUrl;
+        img.classList.remove('hidden');
+        empty.classList.add('hidden');
+        if (updated && storePhotoData.updatedAt) {
+          updated.textContent = `آخر تحديث للصورة: ${storePhotoData.updatedAt}`;
+        }
+      } else {
+        img.classList.add('hidden');
+        empty.classList.remove('hidden');
+      }
+    }
+
+    function compressImageDataUrl(file, maxW, quality, cb) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const scale = img.width > maxW ? maxW / img.width : 1;
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          cb(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function compressStorePhoto(file) {
+      compressImageDataUrl(file, 960, 0.72, (dataUrl) => {
+        storePhotoData = {
+          dataUrl,
+          updatedAt: new Date().toLocaleString('ar-EG')
+        };
+        renderStorePhoto();
+        addActivityLog('تحديث الصورة العامة للمخزن 📷');
+        persistAll();
+        triggerRoleNotification();
       });
     }
 
-    async function decryptPayload(rawEnvelope, passphrase) {
-      const env = JSON.parse(rawEnvelope);
-      if (env.alg !== "AES-256-GCM") return env;
-      const salt = b64ToBytes(env.salt);
-      const iv = b64ToBytes(env.iv);
-      const data = b64ToBytes(env.data);
-      const key = await deriveAesKey(passphrase, salt);
-      const plainBuf = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, data);
-      return JSON.parse(new TextDecoder().decode(plainBuf));
-    }
+    function renderVipSubfilters() {
+      const homePills = document.getElementById('home-filter-pills');
+      const vipBox = document.getElementById('vip-subfilters');
+      const hint = document.getElementById('active-zone-hint');
+      const isSearching = Boolean(searchQuery.trim());
 
-    async function pushToGist() {
-      const cfg = getCloudCfg();
-      if (!cfg?.token || !cfg?.passphrase) return;
-      if (isPushing) {
-        isDirty = true;
+      if (isSearching || activeZone === 'ALL_HOME') {
+        homePills.classList.remove('hidden');
+        vipBox.classList.add('hidden');
+        vipBox.innerHTML = '';
+        hint.textContent = isSearching ? 'نتائج البحث الشامل في كل الأقسام 🔍' : '';
         return;
       }
 
-      isPushing = true;
-      isDirty = false;
+      homePills.classList.add('hidden');
+      vipBox.classList.remove('hidden');
 
-      try {
-        updateSyncIndicator("syncing");
-        const encryptedContent = await encryptPayload(vaultData, cfg.passphrase);
-        const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
-          method: "PATCH",
-          headers: {
-            "Authorization": `Bearer ${cfg.token}`,
-            "Accept": "application/vnd.github.v3+json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            files: {
-              [GIST_FILENAME]: { content: encryptedContent }
+      if (activeZone === 'BBW' || activeZone === 'VS') {
+        const brandLabel = activeZone === 'BBW' ? 'Bath & Body Works' : "Victoria's Secret";
+        hint.textContent = `ركن ${brandLabel} الخاص بـ Mms 💖`;
+        const opts = ['ALL', 'Body Mist', 'Body Cream', 'Body Butter'];
+        vipBox.innerHTML = `
+          <div class="flex flex-wrap gap-1.5">
+            ${opts.map(o => `
+              <button type="button" data-vip-sub="${escapeHtml(o)}" class="vip-sub-btn px-3 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer transition ${vipSubFilter === o ? 'bg-pink-600 text-white' : 'bg-pink-50 text-pink-800 hover:bg-pink-100'}">
+                ${o === 'ALL' ? 'الكل ✨' : escapeHtml(o)}
+              </button>
+            `).join('')}
+          </div>
+        `;
+      } else if (activeZone === 'MAKEUP') {
+        hint.textContent = 'ركن Makeup الخاص بـ Mms — متقسم حسب الفئة والمجموعة والنوع 💄✨';
+        const tiers = ['ALL', 'High End', 'Drugstore'];
+        const groups = ['ALL', ...Object.keys(MAKEUP_CATALOG)];
+        vipBox.innerHTML = `
+          <div class="flex flex-wrap gap-1.5">
+            ${tiers.map(t => `
+              <button type="button" data-makeup-tier="${escapeHtml(t)}" class="px-3 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer transition ${makeupTierFilter === t ? 'bg-fuchsia-700 text-white' : 'bg-fuchsia-50 text-fuchsia-800 hover:bg-fuchsia-100'}">
+                ${t === 'ALL' ? 'كل البراندات 💄' : t === 'High End' ? '💎 High End' : '🛍️ Drugstore'}
+              </button>
+            `).join('')}
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            ${groups.map(g => `
+              <button type="button" data-makeup-group="${escapeHtml(g)}" class="px-3 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer transition ${makeupGroupFilter === g ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}">
+                ${g === 'ALL' ? 'كل المجموعات' : escapeHtml(g)}
+              </button>
+            `).join('')}
+          </div>
+          ${makeupGroupFilter !== 'ALL' && MAKEUP_CATALOG[makeupGroupFilter] ? `
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              ${['ALL', ...MAKEUP_CATALOG[makeupGroupFilter]].map(sub => `
+                <button type="button" data-vip-sub="${escapeHtml(sub)}" class="vip-sub-btn px-2.5 py-1 rounded-xl text-[11px] font-extrabold cursor-pointer transition ${vipSubFilter === sub ? 'bg-rose-600 text-white' : 'bg-rose-50 text-rose-700 hover:bg-rose-100'}">
+                  ${sub === 'ALL' ? 'كل الأنواع' : escapeHtml(sub)}
+                </button>
+              `).join('')}
+            </div>
+          ` : ''}
+        `;
+      } else if (activeZone === 'PERFUME') {
+        hint.textContent = 'ركن Perfume الخاص بـ Mms — Original / Oil / Handmade 🌺✨';
+        const opts = ['ALL', 'Original', 'Oil', 'Handmade'];
+        vipBox.innerHTML = `
+          <div class="flex flex-wrap gap-1.5">
+            ${opts.map(o => `
+              <button type="button" data-vip-sub="${escapeHtml(o)}" class="vip-sub-btn px-3 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer transition ${vipSubFilter === o ? 'bg-purple-700 text-white' : 'bg-purple-50 text-purple-800 hover:bg-purple-100'}">
+                ${o === 'ALL' ? 'الكل 🌺' : o === 'Original' ? '💎 Original' : o === 'Oil' ? '💧 Oil' : '🎨 Handmade'}
+              </button>
+            `).join('')}
+          </div>
+        `;
+      }
+    }
+
+    function getFilteredItems() {
+      const q = searchQuery.trim().toLowerCase();
+      return items.filter(item => {
+        const itemZone = item.zone || 'ALL_HOME';
+
+        if (!q) {
+          if (activeZone === 'ALL_HOME') {
+            if (itemZone !== 'ALL_HOME') return false;
+            if (activeFilter === 'DRAGO' && item.owner !== 'DRAGO') return false;
+            if (activeFilter === 'HOME' && item.owner !== 'HOME') return false;
+            if (activeFilter === 'HOME_LIVE' && item.location !== 'HOME_LIVE') return false;
+            if (activeFilter === 'STORE_STOCK' && item.location !== 'STORE_STOCK') return false;
+          } else {
+            if (itemZone !== activeZone) return false;
+            if (activeZone === 'BBW' || activeZone === 'VS' || activeZone === 'PERFUME') {
+              if (vipSubFilter !== 'ALL' && item.vipSubType !== vipSubFilter) return false;
             }
-          })
-        });
-        if (!res.ok) throw new Error("Gist push failed");
-        updateSyncIndicator("online");
-      } catch (err) {
-        console.error(err);
-        isDirty = true;
-        updateSyncIndicator("error");
-      } finally {
-        isPushing = false;
-        if (isDirty) scheduleGistPush(1500);
-      }
+            if (activeZone === 'MAKEUP') {
+              if (makeupTierFilter !== 'ALL' && item.makeupTier !== makeupTierFilter) return false;
+              if (makeupGroupFilter !== 'ALL' && item.makeupGroup !== makeupGroupFilter) return false;
+              if (vipSubFilter !== 'ALL' && item.vipSubType !== vipSubFilter) return false;
+            }
+          }
+        }
+
+        if (activeCategory !== 'ALL' && item.category !== activeCategory) return false;
+
+        if (q) {
+          const hay = `${item.name || ''} ${item.spot || ''} ${item.details || ''} ${item.vipSubType || ''} ${item.makeupTier || ''} ${item.makeupGroup || ''} ${item.shade || ''} ${item.scentOrNotes || ''}`.toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
     }
 
-    async function pullFromGist(notify = false) {
-      const cfg = getCloudCfg();
-      if (!cfg?.token || !cfg?.passphrase) {
-        if (notify) showToast("⚠️ مفيش ربط سحابي متفعل على الجهاز ده");
+    function renderItems() {
+      const grid = document.getElementById('items-grid');
+      const summary = document.getElementById('results-summary');
+      const lowBanner = document.getElementById('low-stock-banner');
+      const lowText = document.getElementById('low-stock-text');
+      if (!grid) return;
+
+      const lowConsumables = items.filter(it => it.isConsumable && Number(it.qty) <= 1);
+      if (lowBanner && lowText) {
+        if (lowConsumables.length > 0) {
+          lowBanner.classList.remove('hidden');
+          lowText.textContent = lowConsumables.map(i => `${i.name} (المتبقي: ${i.qty})`).join(' • ');
+        } else {
+          lowBanner.classList.add('hidden');
+        }
+      }
+
+      const statTotal = document.getElementById('stat-total');
+      const statLive = document.getElementById('stat-live');
+      const statStore = document.getElementById('stat-store');
+      const statOwners = document.getElementById('stat-owners');
+      if (statTotal) statTotal.textContent = items.length;
+      if (statLive) statLive.textContent = items.filter(i => i.location === 'HOME_LIVE').length;
+      if (statStore) statStore.textContent = items.filter(i => i.location === 'STORE_STOCK').length;
+      if (statOwners) {
+        const mmsCount = items.filter(i => i.owner === 'HOME' || (i.zone && i.zone !== 'ALL_HOME')).length;
+        const dragoCount = items.filter(i => i.owner === 'DRAGO' && (!i.zone || i.zone === 'ALL_HOME')).length;
+        statOwners.textContent = `${mmsCount} / ${dragoCount}`;
+      }
+
+      const filtered = getFilteredItems();
+      if (summary) summary.textContent = `معروض ${filtered.length} من إجمالي ${items.length} حاجة`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full bg-white/90 border border-slate-200 rounded-3xl p-10 text-center space-y-2">
+            <div class="text-4xl">🔍</div>
+            <p class="font-extrabold text-slate-700">مفيش حاجة مطابقة للبحث أو الفلتر ده</p>
+            <p class="text-xs text-slate-400">جربي تكتبي كلمة تانية أو دوسي "إضافة حاجة جديدة"</p>
+          </div>
+        `;
         return;
       }
 
-      try {
-        updateSyncIndicator("syncing");
-        const res = await fetch(`https://api.github.com/gists/${GIST_ID}?t=${Date.now()}`, {
-          headers: {
-            "Authorization": `Bearer ${cfg.token}`,
-            "Accept": "application/vnd.github.v3+json"
+      grid.innerHTML = filtered.map(item => {
+        const itemZone = item.zone || 'ALL_HOME';
+        const catMeta = getCategoryMeta(item.category, itemZone);
+        const isDrago = item.owner === 'DRAGO';
+        const isLive = item.location === 'HOME_LIVE';
+        const isLow = item.isConsumable && Number(item.qty) <= 1;
+
+        const vipTags = [];
+        if (item.makeupTier) vipTags.push(item.makeupTier);
+        if (item.vipSubType) vipTags.push(item.vipSubType);
+        if (item.makeupGroup && itemZone === 'MAKEUP') vipTags.push(item.makeupGroup);
+        if (item.shade) vipTags.push(`درجة: ${item.shade}`);
+        if (item.scentOrNotes) vipTags.push(item.scentOrNotes);
+
+        return `
+          <div class="bg-white border-2 ${isLow ? 'border-amber-400' : 'border-slate-100 hover:border-teal-200'} rounded-3xl p-4 sm:p-5 shadow-xs transition flex flex-col justify-between gap-3">
+            <div class="space-y-2.5">
+              ${item.photo ? `
+                <div class="rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 h-36">
+                  <img data-zoom-src="${escapeHtml(item.photo)}" src="${item.photo}" alt="${escapeHtml(item.name || 'صورة')}" class="w-full h-full object-cover cursor-zoom-in" />
+                </div>
+              ` : ''}
+
+              <div class="flex items-start justify-between gap-2">
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[11px] font-extrabold border ${catMeta.badge}">
+                  ${catMeta.label}
+                </span>
+                <div class="flex items-center gap-1.5">
+                  ${isLow ? `<span title="قرب يخلص!" class="px-2 py-0.5 rounded-lg text-[10px] font-extrabold bg-amber-100 text-amber-800">🔔 قرب يخلص</span>` : ''}
+                  <span class="px-2.5 py-1 rounded-xl text-[11px] font-extrabold ${isDrago ? 'bg-amber-50 text-amber-800 border border-amber-200' : 'bg-rose-50 text-rose-700 border border-rose-200'}">
+                    ${isDrago ? '🎮 Drago' : '👑 Mms & البيت'}
+                  </span>
+                </div>
+              </div>
+
+              <h3 class="font-extrabold text-base sm:text-lg text-slate-800 leading-snug" dir="auto">${escapeHtml(item.name || 'منتج بالصورة 📸')}</h3>
+
+              ${vipTags.length > 0 ? `
+                <div class="flex flex-wrap gap-1.5">
+                  ${vipTags.map(t => `<span class="px-2.5 py-0.5 rounded-lg text-[11px] font-extrabold bg-pink-50 text-pink-800 border border-pink-200">${escapeHtml(t)}</span>`).join('')}
+                </div>
+              ` : ''}
+
+              ${item.spot ? `
+                <div class="p-3 rounded-2xl ${isLive ? 'bg-emerald-50/80 border border-emerald-200' : 'bg-teal-50/80 border border-teal-200'} space-y-1">
+                  <div class="flex items-center justify-between text-[11px] font-extrabold ${isLive ? 'text-emerald-800' : 'text-teal-800'}">
+                    <span>${isLive ? '🟢 شغال في البيت' : '📦 في المخزن'}</span>
+                    <span>المكان / Zone 📍</span>
+                  </div>
+                  <p class="text-xs sm:text-sm font-extrabold text-slate-800" dir="auto">${escapeHtml(item.spot)}</p>
+                </div>
+              ` : ''}
+
+              ${item.details ? `<p class="text-xs text-slate-500 leading-relaxed" dir="auto">${escapeHtml(item.details)}</p>` : ''}
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+              <div class="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-2xl p-1">
+                <button data-action="dec" data-id="${escapeHtml(item.id)}" type="button" class="w-7 h-7 rounded-xl bg-white hover:bg-rose-100 text-slate-700 font-extrabold text-sm shadow-2xs cursor-pointer">-</button>
+                <span class="px-2.5 text-xs sm:text-sm font-extrabold text-slate-800">${item.qty}</span>
+                <button data-action="inc" data-id="${escapeHtml(item.id)}" type="button" class="w-7 h-7 rounded-xl bg-white hover:bg-teal-100 text-slate-700 font-extrabold text-sm shadow-2xs cursor-pointer">+</button>
+              </div>
+
+              <div class="flex items-center gap-1.5">
+                <button data-action="duplicate" data-id="${escapeHtml(item.id)}" type="button" title="تكرار الكارت" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-amber-100 text-slate-600 hover:text-amber-700 flex items-center justify-center cursor-pointer transition">
+                  <i class="fa-solid fa-copy text-xs"></i>
+                </button>
+                <button data-action="edit" data-id="${escapeHtml(item.id)}" type="button" title="تعديل" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-teal-100 text-slate-600 hover:text-teal-700 flex items-center justify-center cursor-pointer transition">
+                  <i class="fa-solid fa-pen text-xs"></i>
+                </button>
+                <button data-action="delete" data-id="${escapeHtml(item.id)}" type="button" title="حذف" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-rose-100 text-slate-600 hover:text-rose-600 flex items-center justify-center cursor-pointer transition">
+                  <i class="fa-solid fa-trash text-xs"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderLogs() {
+      const list = document.getElementById('logs-list');
+      if (!list) return;
+      if (!activityLogs || activityLogs.length === 0) {
+        list.innerHTML = `<p class="text-xs text-slate-400 text-center py-3">مفيش حركات متسجلة لسه ✨</p>`;
+        return;
+      }
+      list.innerHTML = activityLogs.map(log => `
+        <div class="flex items-center justify-between gap-2 bg-slate-50/80 border border-slate-100 rounded-2xl px-3.5 py-2 text-xs">
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-rose-600 shrink-0">${escapeHtml(log.user)}</span>
+            <span class="text-slate-700 font-semibold" dir="auto">${escapeHtml(log.text)}</span>
+          </div>
+          <span class="text-[10px] text-slate-400 shrink-0">${escapeHtml(log.time)}</span>
+        </div>
+      `).join('');
+    }
+
+    function renderGroceryList() {
+      const statEl = document.getElementById('stat-grocery');
+      const pendingCount = groceryItems.filter(g => !g.done).length;
+      if (statEl) {
+        statEl.textContent = pendingCount > 0 ? `${pendingCount} مطلوب` : 'كله تمام ✨';
+      }
+
+      const listEl = document.getElementById('grocery-list');
+      if (!listEl) return;
+      if (groceryItems.length === 0) {
+        listEl.innerHTML = `
+          <div class="text-center py-8 space-y-1.5">
+            <div class="text-3xl">🧺</div>
+            <p class="text-xs font-bold text-slate-500">قائمة طلبات البيت فاضية حالياً</p>
+            <p class="text-[11px] text-slate-400">اكتبي أي حاجة ناقصة فوق وهتتحفظ على طول ✨</p>
+          </div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = groceryItems.map(g => `
+        <div class="flex items-center justify-between gap-2 p-3 rounded-2xl border ${g.done ? 'bg-slate-50 border-slate-100 opacity-65' : 'bg-amber-50/40 border-amber-200'}">
+          <button type="button" data-g-toggle="${escapeHtml(g.id)}" class="flex items-center gap-2.5 flex-1 text-right cursor-pointer">
+            <span class="w-6 h-6 rounded-lg border-2 flex items-center justify-center text-xs shrink-0 ${g.done ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-amber-400 bg-white'}">
+              ${g.done ? '✓' : ''}
+            </span>
+            <div class="min-w-0">
+              <p class="text-xs sm:text-sm font-extrabold ${g.done ? 'line-through text-slate-400' : 'text-slate-800'}" dir="auto">${escapeHtml(g.text)}</p>
+              <p class="text-[10px] text-slate-400">بواسطة ${escapeHtml(g.addedBy || '')}</p>
+            </div>
+          </button>
+          <button type="button" data-g-del="${escapeHtml(g.id)}" class="w-7 h-7 rounded-xl bg-white hover:bg-rose-100 text-slate-400 hover:text-rose-600 flex items-center justify-center cursor-pointer shrink-0">
+            <i class="fa-solid fa-trash text-[11px]"></i>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function populateMakeupModalSubs(selectedGroup, selectedSub) {
+      const groupSel = document.getElementById('makeup-group');
+      const subSel = document.getElementById('makeup-sub');
+      const groups = Object.keys(MAKEUP_CATALOG);
+      groupSel.innerHTML = groups.map(g => `<option value="${escapeHtml(g)}" ${g === selectedGroup ? 'selected' : ''}>${escapeHtml(g)}</option>`).join('');
+      const activeG = selectedGroup && MAKEUP_CATALOG[selectedGroup] ? selectedGroup : groups[0];
+      const subs = MAKEUP_CATALOG[activeG];
+      subSel.innerHTML = subs.map(s => `<option value="${escapeHtml(s)}" ${s === selectedSub ? 'selected' : ''}>${escapeHtml(s)}</option>`).join('');
+    }
+
+    function configureModalForZone(zone, item = null) {
+      const bodyFields = document.getElementById('vip-body-fields');
+      const makeupFields = document.getElementById('vip-makeup-fields');
+      const perfumeFields = document.getElementById('vip-perfume-fields');
+      const homeFields = document.getElementById('home-standard-fields');
+      const nameLabel = document.getElementById('item-name-label');
+      const spotInput = document.getElementById('item-spot');
+      const spotLabel = document.getElementById('item-spot-label');
+
+      bodyFields.classList.add('hidden');
+      makeupFields.classList.add('hidden');
+      perfumeFields.classList.add('hidden');
+
+      if (zone === 'ALL_HOME') {
+        homeFields.classList.remove('hidden');
+        nameLabel.textContent = 'اسم الحاجة إيه؟ *';
+        spotLabel.textContent = 'المكان بالظبط / الـ Zone 📍 *';
+        spotInput.required = true;
+      } else {
+        homeFields.classList.add('hidden');
+        nameLabel.textContent = 'اسم المنتج (اختياري لو فيه صورة)';
+        spotInput.required = false;
+
+        if (zone === 'BBW' || zone === 'VS') {
+          bodyFields.classList.remove('hidden');
+          document.getElementById('vip-body-type').value = item?.vipSubType || 'Body Mist';
+          document.getElementById('vip-scent').value = item?.scentOrNotes || '';
+        } else if (zone === 'MAKEUP') {
+          makeupFields.classList.remove('hidden');
+          document.getElementById('makeup-tier').value = item?.makeupTier || 'High End';
+          populateMakeupModalSubs(item?.makeupGroup || 'Face and Base', item?.vipSubType || '');
+          document.getElementById('makeup-shade').value = item?.shade || '';
+        } else if (zone === 'PERFUME') {
+          perfumeFields.classList.remove('hidden');
+          document.getElementById('perfume-type').value = item?.vipSubType || 'Original';
+          document.getElementById('perfume-notes').value = item?.scentOrNotes || '';
+        }
+      }
+    }
+
+    function setModalPhoto(dataUrl) {
+      pendingModalPhoto = dataUrl || '';
+      const wrap = document.getElementById('item-photo-preview-wrap');
+      const prev = document.getElementById('item-photo-preview');
+      if (pendingModalPhoto) {
+        prev.src = pendingModalPhoto;
+        wrap.classList.remove('hidden');
+        wrap.classList.add('flex');
+      } else {
+        prev.src = '';
+        wrap.classList.add('hidden');
+        wrap.classList.remove('flex');
+      }
+    }
+
+    function openItemModal(item = null) {
+      const modal = document.getElementById('item-modal');
+      const title = document.getElementById('modal-title');
+      if (!modal) return;
+
+      if (item) {
+        const z = item.zone || 'ALL_HOME';
+        title.textContent = 'تعديل بيانات الحاجة ✏️';
+        document.getElementById('item-id').value = item.id;
+        document.getElementById('item-zone').value = z;
+        document.getElementById('item-name').value = item.name || '';
+        document.getElementById('item-owner').value = item.owner || 'HOME';
+        document.getElementById('item-category').value = item.category || 'OTHER';
+        document.getElementById('item-location').value = item.location || 'HOME_LIVE';
+        document.getElementById('item-qty').value = item.qty ?? 1;
+        document.getElementById('item-spot').value = item.spot || '';
+        document.getElementById('item-details').value = item.details || '';
+        document.getElementById('item-consumable').checked = Boolean(item.isConsumable);
+        setModalPhoto(item.photo || '');
+        configureModalForZone(z, item);
+      } else {
+        const z = activeZone;
+        title.textContent = 'إضافة حاجة جديدة ✨';
+        document.getElementById('item-form').reset();
+        document.getElementById('item-id').value = '';
+        document.getElementById('item-zone').value = z;
+        document.getElementById('item-qty').value = 1;
+        if (currentUser === 'MMS' && z !== 'ALL_HOME') {
+          document.getElementById('item-owner').value = 'HOME';
+        }
+        setModalPhoto('');
+        configureModalForZone(z, null);
+      }
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeItemModal() {
+      const modal = document.getElementById('item-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function askConfirm(text, onYes) {
+      const modal = document.getElementById('confirm-modal');
+      document.getElementById('confirm-text').textContent = text;
+      pendingConfirmFn = onYes;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeConfirm() {
+      const modal = document.getElementById('confirm-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      pendingConfirmFn = null;
+    }
+
+    function bindEvents() {
+      // Zone Tabs
+      document.getElementById('zone-tabs').addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-zone]');
+        if (!btn) return;
+        activeZone = btn.dataset.zone;
+        vipSubFilter = 'ALL';
+        makeupTierFilter = 'ALL';
+        makeupGroupFilter = 'ALL';
+        document.querySelectorAll('.zone-tab').forEach(b => {
+          b.classList.remove('bg-slate-800', 'text-white');
+        });
+        btn.classList.add('bg-slate-800', 'text-white');
+        renderVipSubfilters();
+        renderItems();
+      });
+
+      // VIP Sub-filters
+      document.getElementById('vip-subfilters').addEventListener('click', (e) => {
+        const subBtn = e.target.closest('button[data-vip-sub]');
+        if (subBtn) {
+          vipSubFilter = subBtn.dataset.vipSub;
+          renderVipSubfilters();
+          renderItems();
+          return;
+        }
+        const tierBtn = e.target.closest('button[data-makeup-tier]');
+        if (tierBtn) {
+          makeupTierFilter = tierBtn.dataset.makeupTier;
+          renderVipSubfilters();
+          renderItems();
+          return;
+        }
+        const grpBtn = e.target.closest('button[data-makeup-group]');
+        if (grpBtn) {
+          makeupGroupFilter = grpBtn.dataset.makeupGroup;
+          vipSubFilter = 'ALL';
+          renderVipSubfilters();
+          renderItems();
+        }
+      });
+
+      // Modal zone switcher
+      document.getElementById('item-zone').addEventListener('change', (e) => {
+        configureModalForZone(e.target.value, null);
+      });
+      document.getElementById('makeup-group').addEventListener('change', (e) => {
+        populateMakeupModalSubs(e.target.value, '');
+      });
+      document.getElementById('item-photo-input').addEventListener('change', (e) => {
+        const f = e.target.files && e.target.files[0];
+        if (!f) return;
+        compressImageDataUrl(f, 440, 0.64, (dataUrl) => setModalPhoto(dataUrl));
+        e.target.value = '';
+      });
+      document.getElementById('remove-item-photo-btn').addEventListener('click', () => setModalPhoto(''));
+
+      // Grocery Modal
+      const groceryModal = document.getElementById('grocery-modal');
+      const openGroceryBtn = document.getElementById('open-grocery-btn');
+      if (openGroceryBtn && groceryModal) {
+        openGroceryBtn.addEventListener('click', () => {
+          renderGroceryList();
+          groceryModal.classList.remove('hidden');
+          groceryModal.classList.add('flex');
+        });
+        document.getElementById('close-grocery-btn').addEventListener('click', () => {
+          groceryModal.classList.add('hidden');
+          groceryModal.classList.remove('flex');
+        });
+        document.getElementById('grocery-form').addEventListener('submit', (e) => {
+          e.preventDefault();
+          const input = document.getElementById('grocery-input');
+          const text = input.value.trim();
+          if (!text) return;
+          const who = currentUser === 'MMS' ? 'Mms 👑' : 'Drago 🎮';
+          groceryItems.unshift({
+            id: 'groc-' + Date.now(),
+            text,
+            done: false,
+            addedBy: who
+          });
+          input.value = '';
+          addActivityLog(`إضافة لطلبات البيت: ${text} 🛒`);
+          renderGroceryList();
+          persistAll();
+          triggerRoleNotification();
+        });
+        document.getElementById('grocery-list').addEventListener('click', (e) => {
+          const toggleBtn = e.target.closest('button[data-g-toggle]');
+          if (toggleBtn) {
+            const g = groceryItems.find(x => x.id === toggleBtn.dataset.gToggle);
+            if (g) {
+              g.done = !g.done;
+              addActivityLog(`${g.done ? 'تم شراء' : 'إعادة طلب'}: ${g.text} 🛒`);
+              renderGroceryList();
+              persistAll();
+              triggerRoleNotification();
+            }
+            return;
+          }
+          const delBtn = e.target.closest('button[data-g-del]');
+          if (delBtn) {
+            const g = groceryItems.find(x => x.id === delBtn.dataset.gDel);
+            groceryItems = groceryItems.filter(x => x.id !== delBtn.dataset.gDel);
+            if (g) addActivityLog(`حذف من طلبات البيت: ${g.text}`);
+            renderGroceryList();
+            persistAll();
           }
         });
-        if (!res.ok) throw new Error("Gist fetch failed");
-        const gist = await res.json();
-        const fileObj = gist.files?.[GIST_FILENAME] || Object.values(gist.files || {})[0];
-
-        if (!fileObj || (fileObj.size === 0 && !fileObj.content)) {
-          if (vaultData.items?.length) {
-            await pushToGist();
+        document.getElementById('copy-grocery-wa-btn').addEventListener('click', () => {
+          const pending = groceryItems.filter(g => !g.done);
+          if (!pending.length) {
+            showToast('مفيش طلبات ناقصة حالياً ✨', 'info');
+            return;
           }
-          updateSyncIndicator("online");
+          const msg = "🛒 طلبات البيت المطلوبة:\n" + pending.map(g => `- ${g.text}`).join('\n');
+          if (navigator.clipboard) navigator.clipboard.writeText(msg).catch(() => {});
+          showToast('تم نسخ قائمة طلبات البيت للواتساب 📋💬', 'success');
+        });
+        document.getElementById('clear-bought-grocery-btn').addEventListener('click', () => {
+          groceryItems = groceryItems.filter(g => !g.done);
+          renderGroceryList();
+          persistAll();
+          showToast('تم مسح الطلبات اللي اتجابت ✅', 'info');
+        });
+      }
+
+      // Backup Modal
+      const backupBtn = document.getElementById('backup-modal-btn');
+      const backupModal = document.getElementById('backup-modal');
+      async function loadServerBackupsList() {
+        const listEl = document.getElementById('server-backups-list');
+        if (!listEl) return;
+        const reachable = await findReachableNode();
+        if (!reachable) {
+          listEl.innerHTML = `<p class="text-slate-400 text-center py-2">السيرفر غير متصل حالياً — تقدر تحمل أو ترفع ملف JSON من جهازك عادي 💾</p>`;
+          return;
+        }
+        try {
+          const res = await fetchWithTimeout(`${reachable.base}/api/backups`, {}, 2000);
+          const json = await res.json();
+          if (json.ok && json.backups && json.backups.length > 0) {
+            listEl.innerHTML = json.backups.map(fn => `
+              <div class="flex items-center justify-between bg-white border border-slate-200 rounded-xl px-3 py-2">
+                <span class="font-mono text-[11px] text-slate-700 truncate" dir="ltr">${escapeHtml(fn)}</span>
+                <button type="button" data-restore-file="${escapeHtml(fn)}" class="px-2.5 py-1 rounded-lg bg-teal-50 hover:bg-teal-600 text-teal-700 hover:text-white font-bold text-[11px] cursor-pointer transition shrink-0">استرجاع ⏪</button>
+              </div>
+            `).join('');
+          } else {
+            listEl.innerHTML = `<p class="text-slate-400 text-center py-2">لسه مفيش نسخ احتياطية على السيرفر</p>`;
+          }
+        } catch (e) {
+          listEl.innerHTML = `<p class="text-rose-500 text-center py-2">تعذر قراءة قائمة النسخ الاحتياطية</p>`;
+        }
+      }
+
+      if (backupBtn && backupModal) {
+        backupBtn.addEventListener('click', () => {
+          backupModal.classList.remove('hidden');
+          backupModal.classList.add('flex');
+          loadServerBackupsList();
+        });
+        document.getElementById('close-backup-btn').addEventListener('click', () => {
+          backupModal.classList.add('hidden');
+          backupModal.classList.remove('flex');
+        });
+        document.getElementById('refresh-server-backups-btn').addEventListener('click', loadServerBackupsList);
+
+        document.getElementById('download-backup-btn').addEventListener('click', () => {
+          const blob = new Blob([JSON.stringify({
+            exportedAt: new Date().toISOString(),
+            items,
+            groceryItems,
+            storePhotoData,
+            activityLogs,
+            archivedLogs: archivedLogsBuffer
+          }, null, 2)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `mms_drago_backup_${new Date().toISOString().slice(0, 10)}.json`;
+          a.click();
+          URL.revokeObjectURL(url);
+          showToast('تم تحميل ملف النسخة الاحتياطية بنجاح 💾✨', 'success');
+        });
+
+        document.getElementById('upload-backup-input').addEventListener('change', (e) => {
+          const file = e.target.files && e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            try {
+              const parsed = JSON.parse(ev.target.result);
+              if (!Array.isArray(parsed.items)) throw new Error('Invalid backup');
+              items = mergeItemsByTimestamp(items, parsed.items);
+              if (Array.isArray(parsed.groceryItems)) groceryItems = parsed.groceryItems;
+              if (parsed.storePhotoData !== undefined) storePhotoData = parsed.storePhotoData;
+              if (Array.isArray(parsed.activityLogs)) activityLogs = parsed.activityLogs;
+              addActivityLog('استرجاع نسخة احتياطية من ملف JSON ⏪');
+              renderStorePhoto();
+              renderItems();
+              renderGroceryList();
+              renderLogs();
+              persistAll();
+              backupModal.classList.add('hidden');
+              backupModal.classList.remove('flex');
+              showToast('تم استرجاع النسخة الاحتياطية بنجاح! 🎉', 'success');
+            } catch (err) {
+              showToast('الملف ده مش نسخة احتياطية صالحة ❌', 'info');
+            }
+          };
+          reader.readAsText(file);
+          e.target.value = '';
+        });
+
+        document.getElementById('server-backups-list').addEventListener('click', (e) => {
+          const btn = e.target.closest('button[data-restore-file]');
+          if (!btn) return;
+          const filename = btn.dataset.restoreFile;
+          askConfirm(`متأكدين إننا عايزين نرجع للنسخة (${filename})؟`, async () => {
+            const reachable = await findReachableNode();
+            if (!reachable) return;
+            const res = await fetchWithTimeout(`${reachable.base}/api/restore`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ filename })
+            }, 3000);
+            const json = await res.json();
+            if (json.ok && json.data) {
+              items = json.data.items || items;
+              groceryItems = json.data.groceryItems || [];
+              storePhotoData = json.data.storePhotoData || null;
+              activityLogs = json.data.activityLogs || [];
+              saveLocalCacheOnly();
+              renderStorePhoto();
+              renderItems();
+              renderGroceryList();
+              renderLogs();
+              backupModal.classList.add('hidden');
+              backupModal.classList.remove('flex');
+              showToast('تم استرجاع النسخة من السيرفر بنجاح! ⏪🚀', 'success');
+            }
+          });
+        });
+      }
+
+      // Cloud & Nodes Settings
+      const nodesBtn = document.getElementById('nodes-settings-btn');
+      const nodesModal = document.getElementById('nodes-modal');
+      if (nodesBtn && nodesModal) {
+        nodesBtn.addEventListener('click', () => {
+          let saved = {};
+          try { saved = JSON.parse(safeStorage.getItem(NODES_CONFIG_KEY) || '{}'); } catch (e) {}
+          const gistCfg = getGistConfig();
+          document.getElementById('gist-id-input').value = gistCfg.gistId || DEFAULT_GIST_ID;
+          document.getElementById('gist-token-input').value = gistCfg.token || '';
+          document.getElementById('gist-secret-input').value = gistCfg.secret || '';
+          document.getElementById('node-ubuntu-url').value = saved.ubuntu || '';
+          document.getElementById('node-pc-url').value = saved.pc || '';
+          nodesModal.classList.remove('hidden');
+          nodesModal.classList.add('flex');
+        });
+        document.getElementById('close-nodes-btn').addEventListener('click', () => {
+          nodesModal.classList.add('hidden');
+          nodesModal.classList.remove('flex');
+        });
+        document.getElementById('save-nodes-btn').addEventListener('click', async () => {
+          const gistId = document.getElementById('gist-id-input').value.trim() || DEFAULT_GIST_ID;
+          const token = document.getElementById('gist-token-input').value.trim();
+          const secret = document.getElementById('gist-secret-input').value.trim();
+          const ubuntu = document.getElementById('node-ubuntu-url').value.trim();
+          const pc = document.getElementById('node-pc-url').value.trim();
+          safeStorage.setItem(GIST_CONFIG_KEY, JSON.stringify({ gistId, token, secret }));
+          safeStorage.setItem(NODES_CONFIG_KEY, JSON.stringify({ ubuntu, pc }));
+          nodesModal.classList.add('hidden');
+          nodesModal.classList.remove('flex');
+          showToast('جاري الاتصال وتشفير الداتا بـ AES-256... 🔐☁️', 'info');
+          await loadStateFromServerOrLocal();
+          renderStorePhoto();
+          renderItems();
+          renderGroceryList();
+          renderLogs();
+          pollServerUpdates();
+        });
+      }
+
+      // Direct User Selection (No password on Drago)
+      document.getElementById('choose-mms-btn').addEventListener('click', () => {
+        setActiveUser('MMS');
+        triggerJoyBurst(document.getElementById('joy-burst-btn'));
+      });
+      document.getElementById('choose-drago-btn').addEventListener('click', () => {
+        setActiveUser('DRAGO');
+        showToast('أهلاً يا معلم Drago، Reven جاهز وفي الخدمة 😎🔥', 'success');
+      });
+      document.getElementById('switch-user-btn').addEventListener('click', openUserSelectModal);
+
+      document.getElementById('joy-burst-btn').addEventListener('click', (e) => triggerJoyBurst(e.currentTarget));
+
+      document.getElementById('store-photo-input').addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+          compressStorePhoto(e.target.files[0]);
+          e.target.value = '';
+        }
+      });
+
+      const lightbox = document.getElementById('photo-lightbox');
+      const lightboxImg = document.getElementById('lightbox-img');
+      document.getElementById('store-photo-img').addEventListener('click', (e) => {
+        lightboxImg.src = e.target.src;
+        lightbox.classList.remove('hidden');
+        lightbox.classList.add('flex');
+      });
+      document.getElementById('close-lightbox-btn').addEventListener('click', () => {
+        lightbox.classList.add('hidden');
+        lightbox.classList.remove('flex');
+      });
+
+      const copyShoppingBtn = document.getElementById('copy-shopping-btn');
+      if (copyShoppingBtn) {
+        copyShoppingBtn.addEventListener('click', () => {
+          const lowConsumables = items.filter(it => it.isConsumable && Number(it.qty) <= 1);
+          if (!lowConsumables.length) return;
+          const msg = "🔔 حاجات استهلاكية قربت تخلص في البيت:\n" + lowConsumables.map(i => `- ${i.name} (المتبقي: ${i.qty})`).join('\n');
+          if (navigator.clipboard) navigator.clipboard.writeText(msg).catch(() => {});
+          showToast('تم نسخ قائمة النواقص للواتساب 📋💬', 'success');
+        });
+      }
+
+      const searchInput = document.getElementById('search-input');
+      const clearSearchBtn = document.getElementById('clear-search-btn');
+      searchInput.addEventListener('input', (e) => {
+        searchQuery = e.target.value;
+        clearSearchBtn.classList.toggle('hidden', !searchQuery);
+        clearSearchBtn.classList.toggle('flex', Boolean(searchQuery));
+        renderVipSubfilters();
+        renderItems();
+      });
+      clearSearchBtn.addEventListener('click', () => {
+        searchQuery = '';
+        searchInput.value = '';
+        clearSearchBtn.classList.add('hidden');
+        clearSearchBtn.classList.remove('flex');
+        renderVipSubfilters();
+        renderItems();
+      });
+
+      document.getElementById('category-select').addEventListener('change', (e) => {
+        activeCategory = e.target.value;
+        renderItems();
+      });
+
+      document.querySelectorAll('.filter-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-pill').forEach(b => {
+            b.classList.remove('bg-slate-800', 'text-white');
+          });
+          btn.classList.add('bg-slate-800', 'text-white');
+          activeFilter = btn.dataset.filter;
+          renderItems();
+        });
+      });
+
+      document.getElementById('open-add-modal-btn').addEventListener('click', () => openItemModal(null));
+      document.getElementById('close-modal-btn').addEventListener('click', closeItemModal);
+      document.getElementById('cancel-modal-btn').addEventListener('click', closeItemModal);
+
+      document.getElementById('item-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const id = document.getElementById('item-id').value;
+        const zone = document.getElementById('item-zone').value || 'ALL_HOME';
+        const name = document.getElementById('item-name').value.trim();
+        const spot = document.getElementById('item-spot').value.trim();
+
+        if (zone === 'ALL_HOME') {
+          if (!name || !spot) {
+            return showToast('اكتب اسم الحاجة والمكان بالظبط الأول ⚠️', 'info');
+          }
+        } else if (!name && !pendingModalPhoto) {
+          return showToast('اكتب اسم المنتج أو ارفع صورة على الأقل ⚠️', 'info');
+        }
+
+        let category = document.getElementById('item-category').value;
+        let vipSubType = '';
+        let makeupTier = '';
+        let makeupGroup = '';
+        let shade = '';
+        let scentOrNotes = '';
+
+        if (zone === 'BBW' || zone === 'VS') {
+          category = 'BATH_BODY';
+          vipSubType = document.getElementById('vip-body-type').value;
+          scentOrNotes = document.getElementById('vip-scent').value.trim();
+        } else if (zone === 'MAKEUP') {
+          category = 'MAKEUP';
+          makeupTier = document.getElementById('makeup-tier').value;
+          makeupGroup = document.getElementById('makeup-group').value;
+          vipSubType = document.getElementById('makeup-sub').value;
+          shade = document.getElementById('makeup-shade').value.trim();
+        } else if (zone === 'PERFUME') {
+          category = 'PERFUME';
+          vipSubType = document.getElementById('perfume-type').value;
+          scentOrNotes = document.getElementById('perfume-notes').value.trim();
+        }
+
+        const payload = {
+          id: id || ('item-' + Date.now()),
+          zone,
+          name,
+          owner: zone === 'ALL_HOME' ? document.getElementById('item-owner').value : 'HOME',
+          category,
+          location: zone === 'ALL_HOME' ? document.getElementById('item-location').value : 'HOME_LIVE',
+          qty: Math.max(0, parseInt(document.getElementById('item-qty').value, 10) || 1),
+          spot: zone === 'ALL_HOME' ? spot : (spot || (zone === 'BBW' ? 'Bath & Body Works' : zone === 'VS' ? "Victoria's Secret" : zone === 'MAKEUP' ? 'ركن الميكب' : 'ركن العطور')),
+          details: document.getElementById('item-details').value.trim(),
+          isConsumable: document.getElementById('item-consumable').checked,
+          vipSubType,
+          makeupTier,
+          makeupGroup,
+          shade,
+          scentOrNotes,
+          photo: pendingModalPhoto || '',
+          updatedAt: Date.now()
+        };
+
+        if (id) {
+          const idx = items.findIndex(x => x.id === id);
+          if (idx !== -1) items[idx] = payload;
+          addActivityLog(`تعديل بيانات: ${payload.name || 'منتج'}`);
+        } else {
+          items.unshift(payload);
+          addActivityLog(`إضافة حاجة جديدة: ${payload.name || 'منتج'} (${payload.spot})`);
+        }
+
+        closeItemModal();
+        renderItems();
+        persistAll();
+        triggerRoleNotification();
+      });
+
+      document.getElementById('items-grid').addEventListener('click', (e) => {
+        const zoomImg = e.target.closest('img[data-zoom-src]');
+        if (zoomImg) {
+          lightboxImg.src = zoomImg.dataset.zoomSrc;
+          lightbox.classList.remove('hidden');
+          lightbox.classList.add('flex');
           return;
         }
 
-        let contentStr = fileObj.content;
-        if ((fileObj.truncated || !contentStr) && fileObj.raw_url) {
-          const rawRes = await fetch(`${fileObj.raw_url}?t=${Date.now()}`);
-          if (rawRes.ok) contentStr = await rawRes.text();
-        }
+        const btn = e.target.closest('button[data-action]');
+        if (!btn) return;
+        const action = btn.dataset.action;
+        const id = btn.dataset.id;
+        const item = items.find(x => x.id === id);
+        if (!item) return;
 
-        if (contentStr && contentStr.trim()) {
-          const remoteData = await decryptPayload(contentStr, cfg.passphrase);
-          if (remoteData && Array.isArray(remoteData.items)) {
-            vaultData.items = mergeVaultItems(vaultData.items, remoteData.items);
-            vaultData.updatedAt = Math.max(vaultData.updatedAt || 0, remoteData.updatedAt || 0, Date.now());
-            saveLocalVaultSafely();
-            renderCurrentView();
-            if (isDirty) await pushToGist();
+        if (action === 'inc') {
+          item.qty = Number(item.qty) + 1;
+          item.updatedAt = Date.now();
+          addActivityLog(`زيادة عدد "${item.name || 'منتج'}" إلى ${item.qty}`);
+          renderItems();
+          persistAll();
+          triggerRoleNotification();
+        } else if (action === 'dec') {
+          if (Number(item.qty) > 0) {
+            item.qty = Number(item.qty) - 1;
+            item.updatedAt = Date.now();
+            addActivityLog(`سحب 1 من "${item.name || 'منتج'}" (المتبقي: ${item.qty})`);
+            renderItems();
+            persistAll();
+            triggerRoleNotification();
           }
-        } else if (vaultData.items?.length) {
-          await pushToGist();
+        } else if (action === 'edit') {
+          openItemModal(item);
+        } else if (action === 'duplicate') {
+          const copy = {
+            ...item,
+            id: 'item-' + Date.now(),
+            name: (item.name || 'منتج') + ' (نسخة)',
+            updatedAt: Date.now()
+          };
+          items.unshift(copy);
+          addActivityLog(`تكرار كارت: ${item.name || 'منتج'}`);
+          renderItems();
+          persistAll();
+          triggerRoleNotification();
+        } else if (action === 'delete') {
+          askConfirm(`متأكدين إننا عايزين نشيل "${item.name || 'العنصر ده'}" من القائمة؟`, () => {
+            items = items.filter(x => x.id !== id);
+            addActivityLog(`حذف "${item.name || 'عنصر'}" من القائمة`);
+            renderItems();
+            persistAll();
+            triggerRoleNotification();
+          });
         }
+      });
 
-        updateSyncIndicator("online");
-        if (notify) showToast("✅ تمت المزامنة المشفرة بنجاح!");
-      } catch (err) {
-        console.error(err);
-        updateSyncIndicator("error");
-        if (notify) showToast("❌ فشل فك التشفير أو الاتصال — اتأكد من الباسفريز والتوكن");
+      document.getElementById('clear-logs-btn').addEventListener('click', () => {
+        askConfirm('نخفي السجل من الشاشة؟ (هيفضل محفوظ عندك في أرشيف السيرفر 🔒)', () => {
+          archivedLogsBuffer = [...activityLogs, ...archivedLogsBuffer].slice(0, 500);
+          activityLogs = [];
+          clearVisibleLogsPending = true;
+          renderLogs();
+          persistAll();
+          showToast('تم إخفاء السجل من الشاشة وحفظه في أرشيف السيرفر عندك 🔒✅', 'success');
+        });
+      });
+
+      document.getElementById('confirm-no-btn').addEventListener('click', closeConfirm);
+      document.getElementById('confirm-yes-btn').addEventListener('click', () => {
+        if (pendingConfirmFn) pendingConfirmFn();
+        closeConfirm();
+      });
+    }
+
+    async function init() {
+      await loadStateFromServerOrLocal();
+      bindEvents();
+      renderVipSubfilters();
+      renderStorePhoto();
+      renderItems();
+      renderGroceryList();
+      renderLogs();
+
+      const savedUser = safeStorage.getItem(ACTIVE_USER_KEY);
+      if (savedUser === 'MMS' || savedUser === 'DRAGO') {
+        setActiveUser(savedUser);
+      } else {
+        openUserSelectModal();
       }
+
+      setInterval(pollServerUpdates, 4000);
     }
 
-    function syncNow() {
-      const cfg = getCloudCfg();
-      if (!cfg?.token || !cfg?.passphrase) {
-        if (currentRole === "drago") openCloudModal();
-        else showToast("☁️ اطلب من Drago تفعيل الربط السحابي على الجهاز ده");
-        return;
-      }
-      pullFromGist(true);
-    }
-
-    function exportBackup() {
-      const blob = new Blob([JSON.stringify(vaultData, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `mms_drago_backup_${new Date().toISOString().slice(0, 10)}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-      showToast("💾 تم تصدير نسخة الباك اب!");
-    }
-
-    function importBackup(event) {
-      const file = event.target.files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = e => {
-        try {
-          const parsed = JSON.parse(e.target.result);
-          if (!parsed || !Array.isArray(parsed.items)) {
-            return showToast("❌ ملف الباك اب مش بصيغة صحيحة");
-          }
-          vaultData.items = mergeVaultItems(vaultData.items, parsed.items);
-          persistVault();
-          renderCurrentView();
-          showToast("📥 تم استيراد الباك اب ودمجه بنجاح!");
-        } catch (err) {
-          console.error(err);
-          showToast("❌ تعذر قراءة ملف الباك اب");
-        } finally {
-          event.target.value = "";
-        }
-      };
-      reader.readAsText(file);
-    }
-
-    // ==========================================
-    // 8. HELPERS
-    // ==========================================
-    function closeModal(id) {
-      document.getElementById(id).classList.remove("open");
-    }
-
-    function showToast(msg, withUndo = false) {
-      const t = document.getElementById("toast");
-      const txt = document.getElementById("toast-text");
-      const undoBtn = document.getElementById("toast-undo-btn");
-      txt.textContent = msg;
-      undoBtn.style.display = withUndo ? "inline-block" : "none";
-      t.classList.add("show");
-      clearTimeout(window.__toastTimer);
-      window.__toastTimer = setTimeout(() => {
-        t.classList.remove("show");
-        lastDeletedItem = null;
-      }, withUndo ? 4500 : 2800);
-    }
-
-    function escapeHtml(str) {
-      return String(str)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
-    }
+    init();
   </script>
 </body>
 </html>
