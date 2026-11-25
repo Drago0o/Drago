@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0f172a" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <title>Mms & Drago | مملكتنا الذكية 👑🎮</title>
@@ -12,10 +12,10 @@
   <style>
     :root {
       --bg: #0b1120;
-      --surface: rgba(30, 41, 59, 0.82);
+      --surface: rgba(30, 41, 59, 0.84);
       --surface-solid: #1e293b;
-      --surface-2: rgba(51, 65, 85, 0.65);
-      --border: rgba(255, 255, 255, 0.1);
+      --surface-2: rgba(51, 65, 85, 0.68);
+      --border: rgba(255, 255, 255, 0.12);
       --text: #f8fafc;
       --text-muted: #94a3b8;
       --primary: #38bdf8;
@@ -30,9 +30,9 @@
 
     body.theme-mms {
       --bg: #1d1024;
-      --surface: rgba(49, 23, 62, 0.84);
+      --surface: rgba(49, 23, 62, 0.86);
       --surface-solid: #31173e;
-      --surface-2: rgba(82, 37, 102, 0.62);
+      --surface-2: rgba(82, 37, 102, 0.65);
       --border: rgba(244, 114, 182, 0.25);
       --text: #fdf2f8;
       --text-muted: #f5d0fe;
@@ -54,12 +54,12 @@
       background: var(--bg);
       background-image: var(--bg-gradient);
       color: var(--text);
-      min-height: 100vh;
+      min-height: 100dvh;
       overflow-x: hidden;
-      transition: background 0.4s ease;
+      transition: background 0.35s ease;
     }
 
-    /* Floating Background Layer */
+    /* Floating Background Layer (Battery-friendly) */
     #ambient-layer {
       position: fixed;
       inset: 0;
@@ -70,53 +70,58 @@
 
     #ambient-layer.paused .ambient-item {
       animation-play-state: paused !important;
-      opacity: 0.15;
+      opacity: 0.12;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ambient-item {
+        animation: none !important;
+        opacity: 0.2 !important;
+      }
     }
 
     .ambient-item {
       position: absolute;
       user-select: none;
-      will-change: transform, opacity;
-      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.25));
     }
 
     .ambient-star {
-      animation: twinkleFloat var(--dur, 7s) ease-in-out infinite;
+      animation: twinkleFloat var(--dur, 8s) ease-in-out infinite;
       animation-delay: var(--delay, 0s);
     }
 
     .ambient-critter {
-      animation: driftUp var(--dur, 18s) linear infinite;
+      animation: driftUp var(--dur, 19s) linear infinite;
       animation-delay: var(--delay, 0s);
     }
 
     @keyframes twinkleFloat {
       0%, 100% {
-        transform: translate3d(0, 0, 0) scale(0.85) rotate(0deg);
+        transform: translate3d(0, 0, 0) scale(0.85);
         opacity: 0.25;
       }
       50% {
-        transform: translate3d(10px, -16px, 0) scale(1.25) rotate(15deg);
-        opacity: 0.9;
+        transform: translate3d(8px, -14px, 0) scale(1.2);
+        opacity: 0.85;
       }
     }
 
     @keyframes driftUp {
       0% {
-        transform: translate3d(0, 108vh, 0) rotate(-8deg) scale(0.95);
+        transform: translate3d(0, 108dvh, 0) rotate(-6deg);
         opacity: 0;
       }
       12% {
         opacity: 0.85;
       }
       50% {
-        transform: translate3d(var(--sway, 35px), 50vh, 0) rotate(10deg) scale(1.05);
+        transform: translate3d(var(--sway, 30px), 50dvh, 0) rotate(8deg);
       }
       88% {
         opacity: 0.85;
       }
       100% {
-        transform: translate3d(calc(var(--sway, 35px) * -0.7), -14vh, 0) rotate(-6deg) scale(0.95);
+        transform: translate3d(calc(var(--sway, 30px) * -0.7), -14dvh, 0) rotate(-5deg);
         opacity: 0;
       }
     }
@@ -170,12 +175,12 @@
     }
 
     .role-card {
-      background: rgba(30, 41, 59, 0.72);
+      background: rgba(30, 41, 59, 0.75);
       border: 1.5px solid rgba(255, 255, 255, 0.12);
       border-radius: 24px;
       padding: 26px 16px;
       cursor: pointer;
-      transition: all 0.25s ease;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
       backdrop-filter: blur(12px);
       display: flex;
       flex-direction: column;
@@ -184,19 +189,19 @@
     }
 
     .role-card:hover, .role-card:active {
-      transform: translateY(-5px) scale(1.02);
+      transform: translateY(-4px) scale(1.02);
     }
 
     .role-card.mms:hover {
       border-color: #f472b6;
-      box-shadow: 0 12px 30px rgba(244, 114, 182, 0.3);
-      background: rgba(74, 21, 75, 0.75);
+      box-shadow: 0 12px 30px rgba(244, 114, 182, 0.28);
+      background: rgba(74, 21, 75, 0.78);
     }
 
     .role-card.drago:hover {
       border-color: #38bdf8;
-      box-shadow: 0 12px 30px rgba(56, 189, 248, 0.3);
-      background: rgba(15, 23, 42, 0.9);
+      box-shadow: 0 12px 30px rgba(56, 189, 248, 0.28);
+      background: rgba(15, 23, 42, 0.92);
     }
 
     .role-emoji {
@@ -287,7 +292,7 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.2s ease;
+      transition: filter 0.2s ease, transform 0.2s ease;
     }
 
     .btn:hover {
@@ -300,12 +305,6 @@
       border: none;
       color: #fff;
       box-shadow: 0 4px 15px var(--primary-glow);
-    }
-
-    .btn-danger {
-      background: rgba(239, 68, 68, 0.18);
-      border-color: rgba(239, 68, 68, 0.4);
-      color: #fca5a5;
     }
 
     .sync-dot {
@@ -617,7 +616,7 @@
       border-radius: 22px;
       width: 100%;
       max-width: 470px;
-      max-height: 90vh;
+      max-height: 90dvh;
       overflow-y: auto;
       padding: 20px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
@@ -674,24 +673,40 @@
     /* Toast */
     #toast {
       position: fixed;
-      bottom: 22px;
+      bottom: 20px;
       left: 50%;
-      transform: translateX(-50%) translateY(100px);
+      max-width: 92vw;
+      width: max-content;
+      text-align: center;
+      transform: translateX(-50%) translateY(140px);
       background: #0f172a;
       color: #fff;
       border: 1px solid var(--primary);
-      padding: 10px 20px;
-      border-radius: 999px;
-      font-size: 0.88rem;
+      padding: 10px 18px;
+      border-radius: 18px;
+      font-size: 0.85rem;
       font-weight: 700;
+      line-height: 1.4;
       z-index: 3000;
-      transition: transform 0.3s ease;
+      transition: transform 0.28s ease;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
-      white-space: nowrap;
     }
 
     #toast.show {
       transform: translateX(-50%) translateY(0);
+    }
+
+    #toast-undo-btn {
+      background: var(--primary);
+      color: #0b1120;
+      border: none;
+      border-radius: 8px;
+      padding: 2px 9px;
+      margin-right: 8px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: none;
     }
 
     .admin-only {
@@ -765,8 +780,12 @@
           ☁️ الربط السحابي
         </button>
         <button class="btn admin-only" onclick="exportBackup()">
-          💾 باك اب
+          💾 تصدير باك اب
         </button>
+        <button class="btn admin-only" onclick="document.getElementById('import-backup-input').click()">
+          📥 استيراد باك اب
+        </button>
+        <input type="file" id="import-backup-input" accept="application/json,.json" style="display:none;" onchange="importBackup(event)" />
 
         <button class="btn" onclick="switchAccount()">
           🔄 تبديل الحساب
@@ -799,7 +818,7 @@
   </main>
 
   <!-- Add / Edit Item Modal -->
-  <div id="item-modal" class="modal-backdrop">
+  <div id="item-modal" class="modal-backdrop" onclick="if(event.target===this) closeModal('item-modal')">
     <div class="modal-card">
       <div class="modal-header">
         <span class="modal-title" id="item-modal-title">➕ إضافة عنصر جديد</span>
@@ -847,7 +866,7 @@
   </div>
 
   <!-- Cloud Sync Settings Modal (Admin Only) -->
-  <div id="cloud-modal" class="modal-backdrop">
+  <div id="cloud-modal" class="modal-backdrop" onclick="if(event.target===this) closeModal('cloud-modal')">
     <div class="modal-card">
       <div class="modal-header">
         <span class="modal-title">☁️ إعدادات الربط السحابي المشفر (AES-256)</span>
@@ -878,10 +897,13 @@
 
   <!-- Image Lightbox Modal -->
   <div id="lightbox-modal" class="modal-backdrop" onclick="closeModal('lightbox-modal')">
-    <img id="lightbox-img" src="" alt="تكبير الصورة" style="max-width:94vw; max-height:88vh; border-radius:18px; box-shadow:0 20px 60px rgba(0,0,0,0.7);" />
+    <img id="lightbox-img" src="" alt="تكبير الصورة" style="max-width:94vw; max-height:88dvh; border-radius:18px; box-shadow:0 20px 60px rgba(0,0,0,0.7);" />
   </div>
 
-  <div id="toast"></div>
+  <div id="toast">
+    <span id="toast-text"></span>
+    <button id="toast-undo-btn" onclick="undoLastDelete()">↩️ تراجع</button>
+  </div>
 
   <script>
     // ==========================================
@@ -889,8 +911,9 @@
     // ==========================================
     const GIST_ID = "cd7c92ad27b7eea98ff2c38ccaaa2682";
     const GIST_FILENAME = "mms_drago_vault.json";
-    const STORAGE_KEY = "mms_drago_vault_v3";
+    const STORAGE_KEY = "mms_drago_vault_v4";
     const CLOUD_CFG_KEY = "mms_drago_cloud_cfg_v1";
+    const PBKDF2_ITERATIONS = 300000;
 
     const MAKEUP_CATALOG = {
       "Face and Base": [
@@ -932,12 +955,17 @@
     };
 
     // ==========================================
-    // 2. APP STATE (Never auto-locks into a role)
+    // 2. APP STATE
     // ==========================================
-    let currentRole = null; // Always starts null so Role Gate shows first
+    let currentRole = null;
     let currentTab = "grocery";
     let animationsEnabled = true;
     let pendingImageBase64 = "";
+    let lastDeletedItem = null;
+
+    let pushTimer = null;
+    let isDirty = false;
+    let isPushing = false;
 
     let filters = {
       bbw: "All",
@@ -954,17 +982,29 @@
     };
 
     // ==========================================
-    // 3. INITIALIZATION & AMBIENT ANIMATIONS
+    // 3. INITIALIZATION & BATTERY-SAFE AMBIENT
     // ==========================================
     window.addEventListener("DOMContentLoaded", () => {
-      try {
-        localStorage.removeItem("selectedRole");
-        sessionStorage.removeItem("selectedRole");
-      } catch (e) {}
-
       loadLocalVault();
       buildAmbientLayer("gate");
       updateSyncIndicator();
+    });
+
+    window.addEventListener("keydown", e => {
+      if (e.key === "Escape") {
+        document.querySelectorAll(".modal-backdrop.open").forEach(m => m.classList.remove("open"));
+      }
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      const layer = document.getElementById("ambient-layer");
+      if (!layer) return;
+      if (document.hidden) {
+        layer.classList.add("paused");
+      } else if (animationsEnabled) {
+        layer.classList.remove("paused");
+        if (isDirty) scheduleGistPush(300);
+      }
     });
 
     function buildAmbientLayer(mode) {
@@ -972,14 +1012,14 @@
       layer.innerHTML = "";
 
       const starIcons = ["✨", "⭐", "🌟", "💫"];
-      for (let i = 0; i < 18; i++) {
+      for (let i = 0; i < 14; i++) {
         const el = document.createElement("span");
         el.className = "ambient-item ambient-star";
         el.textContent = starIcons[i % starIcons.length];
         el.style.left = `${Math.random() * 96}%`;
         el.style.top = `${Math.random() * 94}%`;
-        el.style.fontSize = `${11 + Math.random() * 11}px`;
-        el.style.setProperty("--dur", `${5 + Math.random() * 6}s`);
+        el.style.fontSize = `${11 + Math.random() * 10}px`;
+        el.style.setProperty("--dur", `${6 + Math.random() * 6}s`);
         el.style.setProperty("--delay", `${-Math.random() * 6}s`);
         layer.appendChild(el);
       }
@@ -988,16 +1028,16 @@
         ? ["✨", "⭐", "🛸"]
         : ["🦋", "🧸", "🐼", "🐧", "🦋", "🌸", "🧸", "🐼", "🐧", "🦋"];
 
-      const count = mode === "drago" ? 6 : 16;
+      const count = mode === "drago" ? 5 : 12;
       for (let i = 0; i < count; i++) {
         const el = document.createElement("span");
         el.className = "ambient-item ambient-critter";
         el.textContent = critters[i % critters.length];
         el.style.left = `${3 + Math.random() * 92}%`;
-        el.style.fontSize = `${18 + Math.random() * 12}px`;
-        el.style.setProperty("--dur", `${14 + Math.random() * 12}s`);
+        el.style.fontSize = `${18 + Math.random() * 11}px`;
+        el.style.setProperty("--dur", `${15 + Math.random() * 12}s`);
         el.style.setProperty("--delay", `${-Math.random() * 18}s`);
-        el.style.setProperty("--sway", `${(Math.random() > 0.5 ? 1 : -1) * (25 + Math.random() * 35)}px`);
+        el.style.setProperty("--sway", `${(Math.random() > 0.5 ? 1 : -1) * (25 + Math.random() * 30)}px`);
         layer.appendChild(el);
       }
     }
@@ -1011,7 +1051,7 @@
     }
 
     // ==========================================
-    // 4. ROLE GATE (DIRECT ENTRY)
+    // 4. ROLE GATE
     // ==========================================
     function selectRole(role) {
       currentRole = role;
@@ -1139,7 +1179,7 @@
       const grid = document.getElementById("items-grid");
       const query = document.getElementById("global-search").value.trim().toLowerCase();
 
-      let list = vaultData.items || [];
+      let list = (vaultData.items || []).filter(item => !item.deleted);
 
       if (query) {
         list = list.filter(item => {
@@ -1258,7 +1298,7 @@
     }
 
     function openEditModal(id) {
-      const item = vaultData.items.find(i => i.id === id);
+      const item = vaultData.items.find(i => i.id === id && !i.deleted);
       if (!item) return;
 
       document.getElementById("item-modal-title").textContent = "✏️ تعديل العنصر";
@@ -1361,7 +1401,7 @@
         const img = new Image();
         img.onload = () => {
           const canvas = document.createElement("canvas");
-          const MAX_DIM = 560;
+          const MAX_DIM = 420;
           let w = img.width;
           let h = img.height;
           if (w > h && w > MAX_DIM) {
@@ -1375,7 +1415,7 @@
           canvas.height = h;
           const ctx = canvas.getContext("2d");
           ctx.drawImage(img, 0, 0, w, h);
-          pendingImageBase64 = canvas.toDataURL("image/jpeg", 0.72);
+          pendingImageBase64 = canvas.toDataURL("image/jpeg", 0.62);
 
           const prev = document.getElementById("item-img-preview");
           prev.src = pendingImageBase64;
@@ -1405,13 +1445,16 @@
         return showToast("⚠️ اكتب اسم المنتج أو ارفع صورة على الأقل!");
       }
 
+      const now = Date.now();
       const itemObj = {
-        id: id || ("item_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6)),
+        id: id || ("item_" + now + "_" + Math.random().toString(36).slice(2, 6)),
         tab,
         name,
         note,
         image: pendingImageBase64 || "",
-        createdAt: Date.now()
+        deleted: false,
+        createdAt: now,
+        updatedAt: now
       };
 
       if (tab === "bbw" || tab === "vs" || tab === "perfume") {
@@ -1426,7 +1469,7 @@
         const idx = vaultData.items.findIndex(i => i.id === id);
         if (idx !== -1) {
           itemObj.bought = !!vaultData.items[idx].bought;
-          itemObj.createdAt = vaultData.items[idx].createdAt || Date.now();
+          itemObj.createdAt = vaultData.items[idx].createdAt || now;
           vaultData.items[idx] = itemObj;
         }
       } else {
@@ -1443,16 +1486,36 @@
       const item = vaultData.items.find(i => i.id === id);
       if (!item) return;
       item.bought = !item.bought;
+      item.updatedAt = Date.now();
       persistVault();
       renderCurrentView();
     }
 
     function deleteItem(id) {
-      if (!confirm("متأكد إنك عايز تمسح العنصر ده؟")) return;
-      vaultData.items = vaultData.items.filter(i => i.id !== id);
+      const item = vaultData.items.find(i => i.id === id && !i.deleted);
+      if (!item) return;
+      lastDeletedItem = { ...item };
+      item.deleted = true;
+      item.updatedAt = Date.now();
       persistVault();
       renderCurrentView();
-      showToast("🗑️ اتمسح بنجاح");
+      showToast("🗑️ اتمسح العنصر", true);
+    }
+
+    function undoLastDelete() {
+      if (!lastDeletedItem) return;
+      const existing = vaultData.items.find(i => i.id === lastDeletedItem.id);
+      if (existing) {
+        existing.deleted = false;
+        existing.updatedAt = Date.now();
+      } else {
+        vaultData.items.unshift({ ...lastDeletedItem, deleted: false, updatedAt: Date.now() });
+      }
+      lastDeletedItem = null;
+      document.getElementById("toast").classList.remove("show");
+      persistVault();
+      renderCurrentView();
+      showToast("↩️ تم التراجع عن المسح!");
     }
 
     function openLightbox(id) {
@@ -1463,8 +1526,25 @@
     }
 
     // ==========================================
-    // 7. LOCAL STORAGE & AES-256-GCM GIST SYNC
+    // 7. SAFE STORAGE, CHUNKED AES-256 & MERGE
     // ==========================================
+    function bytesToB64(bytes) {
+      let bin = "";
+      for (let i = 0; i < bytes.length; i += 0x8000) {
+        bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+      }
+      return btoa(bin);
+    }
+
+    function b64ToBytes(b64) {
+      const bin = atob(b64);
+      const out = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) {
+        out[i] = bin.charCodeAt(i);
+      }
+      return out;
+    }
+
     function loadLocalVault() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
@@ -1475,14 +1555,51 @@
           }
         }
       } catch (e) {
-        console.error("Vault load error:", e);
+        console.error("Local vault load error:", e);
+      }
+    }
+
+    function saveLocalVaultSafely() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(vaultData));
+      } catch (e) {
+        console.warn("localStorage quota reached; keeping latest state in memory & syncing to cloud:", e);
       }
     }
 
     function persistVault() {
       vaultData.updatedAt = Date.now();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(vaultData));
-      pushToGist();
+      isDirty = true;
+      saveLocalVaultSafely();
+      scheduleGistPush(1500);
+    }
+
+    function scheduleGistPush(delayMs = 1500) {
+      clearTimeout(pushTimer);
+      pushTimer = setTimeout(() => {
+        pushToGist();
+      }, delayMs);
+    }
+
+    function mergeVaultItems(localItems, remoteItems) {
+      const map = new Map();
+      for (const item of (localItems || [])) {
+        if (item?.id) map.set(item.id, { ...item });
+      }
+      for (const rem of (remoteItems || [])) {
+        if (!rem?.id) continue;
+        const loc = map.get(rem.id);
+        if (!loc) {
+          map.set(rem.id, { ...rem });
+        } else {
+          const locTs = loc.updatedAt || loc.createdAt || 0;
+          const remTs = rem.updatedAt || rem.createdAt || 0;
+          if (remTs >= locTs) {
+            map.set(rem.id, { ...loc, ...rem });
+          }
+        }
+      }
+      return Array.from(map.values());
     }
 
     function getCloudCfg() {
@@ -1506,7 +1623,11 @@
       if (!token || !passphrase) {
         return showToast("⚠️ اكتب الـ Token وكلمة سر التشفير");
       }
-      localStorage.setItem(CLOUD_CFG_KEY, JSON.stringify({ token, passphrase }));
+      try {
+        localStorage.setItem(CLOUD_CFG_KEY, JSON.stringify({ token, passphrase }));
+      } catch (e) {
+        console.error(e);
+      }
       closeModal("cloud-modal");
       updateSyncIndicator();
       pullFromGist(true);
@@ -1544,7 +1665,7 @@
         ["deriveKey"]
       );
       return crypto.subtle.deriveKey(
-        { name: "PBKDF2", salt: saltBytes, iterations: 100000, hash: "SHA-256" },
+        { name: "PBKDF2", salt: saltBytes, iterations: PBKDF2_ITERATIONS, hash: "SHA-256" },
         baseKey,
         { name: "AES-GCM", length: 256 },
         false,
@@ -1561,18 +1682,19 @@
 
       return JSON.stringify({
         alg: "AES-256-GCM",
-        salt: btoa(String.fromCharCode(...salt)),
-        iv: btoa(String.fromCharCode(...iv)),
-        data: btoa(String.fromCharCode(...new Uint8Array(cipher)))
+        iter: PBKDF2_ITERATIONS,
+        salt: bytesToB64(salt),
+        iv: bytesToB64(iv),
+        data: bytesToB64(new Uint8Array(cipher))
       });
     }
 
     async function decryptPayload(rawEnvelope, passphrase) {
       const env = JSON.parse(rawEnvelope);
       if (env.alg !== "AES-256-GCM") return env;
-      const salt = Uint8Array.from(atob(env.salt), c => c.charCodeAt(0));
-      const iv = Uint8Array.from(atob(env.iv), c => c.charCodeAt(0));
-      const data = Uint8Array.from(atob(env.data), c => c.charCodeAt(0));
+      const salt = b64ToBytes(env.salt);
+      const iv = b64ToBytes(env.iv);
+      const data = b64ToBytes(env.data);
       const key = await deriveAesKey(passphrase, salt);
       const plainBuf = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, data);
       return JSON.parse(new TextDecoder().decode(plainBuf));
@@ -1581,6 +1703,13 @@
     async function pushToGist() {
       const cfg = getCloudCfg();
       if (!cfg?.token || !cfg?.passphrase) return;
+      if (isPushing) {
+        isDirty = true;
+        return;
+      }
+
+      isPushing = true;
+      isDirty = false;
 
       try {
         updateSyncIndicator("syncing");
@@ -1588,7 +1717,7 @@
         const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
           method: "PATCH",
           headers: {
-            "Authorization": `token ${cfg.token}`,
+            "Authorization": `Bearer ${cfg.token}`,
             "Accept": "application/vnd.github.v3+json",
             "Content-Type": "application/json"
           },
@@ -1602,7 +1731,11 @@
         updateSyncIndicator("online");
       } catch (err) {
         console.error(err);
+        isDirty = true;
         updateSyncIndicator("error");
+      } finally {
+        isPushing = false;
+        if (isDirty) scheduleGistPush(1500);
       }
     }
 
@@ -1617,25 +1750,41 @@
         updateSyncIndicator("syncing");
         const res = await fetch(`https://api.github.com/gists/${GIST_ID}?t=${Date.now()}`, {
           headers: {
-            "Authorization": `token ${cfg.token}`,
+            "Authorization": `Bearer ${cfg.token}`,
             "Accept": "application/vnd.github.v3+json"
           }
         });
         if (!res.ok) throw new Error("Gist fetch failed");
         const gist = await res.json();
         const fileObj = gist.files?.[GIST_FILENAME] || Object.values(gist.files || {})[0];
-        if (fileObj?.content) {
-          const remoteData = await decryptPayload(fileObj.content, cfg.passphrase);
-          if (remoteData && Array.isArray(remoteData.items)) {
-            if ((remoteData.updatedAt || 0) >= (vaultData.updatedAt || 0)) {
-              vaultData = remoteData;
-              localStorage.setItem(STORAGE_KEY, JSON.stringify(vaultData));
-              renderCurrentView();
-            } else {
-              await pushToGist();
-            }
+
+        if (!fileObj || (fileObj.size === 0 && !fileObj.content)) {
+          if (vaultData.items?.length) {
+            await pushToGist();
           }
+          updateSyncIndicator("online");
+          return;
         }
+
+        let contentStr = fileObj.content;
+        if ((fileObj.truncated || !contentStr) && fileObj.raw_url) {
+          const rawRes = await fetch(`${fileObj.raw_url}?t=${Date.now()}`);
+          if (rawRes.ok) contentStr = await rawRes.text();
+        }
+
+        if (contentStr && contentStr.trim()) {
+          const remoteData = await decryptPayload(contentStr, cfg.passphrase);
+          if (remoteData && Array.isArray(remoteData.items)) {
+            vaultData.items = mergeVaultItems(vaultData.items, remoteData.items);
+            vaultData.updatedAt = Math.max(vaultData.updatedAt || 0, remoteData.updatedAt || 0, Date.now());
+            saveLocalVaultSafely();
+            renderCurrentView();
+            if (isDirty) await pushToGist();
+          }
+        } else if (vaultData.items?.length) {
+          await pushToGist();
+        }
+
         updateSyncIndicator("online");
         if (notify) showToast("✅ تمت المزامنة المشفرة بنجاح!");
       } catch (err) {
@@ -1663,7 +1812,31 @@
       a.download = `mms_drago_backup_${new Date().toISOString().slice(0, 10)}.json`;
       a.click();
       URL.revokeObjectURL(url);
-      showToast("💾 تم تحميل نسخة الباك اب!");
+      showToast("💾 تم تصدير نسخة الباك اب!");
+    }
+
+    function importBackup(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (!parsed || !Array.isArray(parsed.items)) {
+            return showToast("❌ ملف الباك اب مش بصيغة صحيحة");
+          }
+          vaultData.items = mergeVaultItems(vaultData.items, parsed.items);
+          persistVault();
+          renderCurrentView();
+          showToast("📥 تم استيراد الباك اب ودمجه بنجاح!");
+        } catch (err) {
+          console.error(err);
+          showToast("❌ تعذر قراءة ملف الباك اب");
+        } finally {
+          event.target.value = "";
+        }
+      };
+      reader.readAsText(file);
     }
 
     // ==========================================
@@ -1673,12 +1846,18 @@
       document.getElementById(id).classList.remove("open");
     }
 
-    function showToast(msg) {
+    function showToast(msg, withUndo = false) {
       const t = document.getElementById("toast");
-      t.textContent = msg;
+      const txt = document.getElementById("toast-text");
+      const undoBtn = document.getElementById("toast-undo-btn");
+      txt.textContent = msg;
+      undoBtn.style.display = withUndo ? "inline-block" : "none";
       t.classList.add("show");
       clearTimeout(window.__toastTimer);
-      window.__toastTimer = setTimeout(() => t.classList.remove("show"), 2800);
+      window.__toastTimer = setTimeout(() => {
+        t.classList.remove("show");
+        lastDeletedItem = null;
+      }, withUndo ? 4500 : 2800);
     }
 
     function escapeHtml(str) {
