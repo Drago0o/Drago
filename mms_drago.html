@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0f172a" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <title>Mms & Drago v1.0.7 | مملكتنا الذكية 👑🎮</title>
+  <title>Mms & Drago v1.0.8 | مملكتنا الذكية 👑🎮</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -590,6 +590,11 @@
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
+    .item-card.low-alert {
+      border-color: rgba(245, 158, 11, 0.65);
+      box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.2);
+    }
+
     .item-card:hover {
       transform: translateY(-3px);
       box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
@@ -645,6 +650,20 @@
       left: 9px;
       background: rgba(244, 114, 182, 0.88);
       color: #1d1024;
+    }
+
+    .low-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(245, 158, 11, 0.2);
+      color: #fde68a;
+      border: 1px solid rgba(245, 158, 11, 0.5);
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      width: fit-content;
     }
 
     .item-body {
@@ -953,7 +972,7 @@
         <div>
           <div class="brand-title">
             <span id="user-greeting">أهلاً يا Mms 👑</span>
-            <span class="ver-pill">v1.0.7</span>
+            <span class="ver-pill">v1.0.8</span>
           </div>
           <div class="brand-sub" id="user-subtitle">كل حاجتك متنظمة ومحمية ✨</div>
         </div>
@@ -1015,6 +1034,11 @@
       <button class="btn btn-primary" style="padding:6px 12px; font-size:0.8rem;" onclick="copyGroceryForWhatsApp()">
         📋 نسخ للواتساب
       </button>
+    </section>
+
+    <!-- VIP Low-Stock Banner (Makeup / Perfume / BBW / VS) -->
+    <section class="alert-banner" id="vip-low-banner">
+      <div style="font-size:0.84rem; font-weight:800; color:#fde68a;" id="vip-low-text"></div>
     </section>
 
     <!-- Store Overview Photo Box (Storage Tab) -->
@@ -1086,8 +1110,8 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">ملاحظة / الكمية (اختياري)</label>
-        <input type="text" id="item-note-input" class="form-control" placeholder="مثلاً: ريحته تحفة / قرب يخلص / عدد 2..." />
+        <label class="form-label">ملاحظة / الكمية (اختياري — اكتب "قرب يخلص" أو "آخر حبة" للتنبيه)</label>
+        <input type="text" id="item-note-input" class="form-control" placeholder="مثلاً: قرب يخلص / آخر حبة / ريحته تحفة..." />
       </div>
 
       <div class="form-group">
@@ -1246,6 +1270,20 @@
       home: { title: "🏠 أغراض البيت", placeholder: "🏡" },
       storage: { title: "📦 المخزن", placeholder: "📦" }
     };
+
+    const VIP_TABS = new Set(["bbw", "vs", "makeup", "perfume"]);
+    const LOW_STOCK_KEYWORDS = [
+      "قرب يخلص",
+      "قربت تخلص",
+      "قرب ينتهي",
+      "آخر حبة",
+      "اخر حبه",
+      "آخر واحدة",
+      "اخر واحده",
+      "شبه خلص",
+      "نصها",
+      "low"
+    ];
 
     // ==========================================
     // 2. APP STATE
@@ -1487,8 +1525,17 @@
     }
 
     // ==========================================
-    // 5. SEARCH, TABS, FILTERS, STORE PHOTO & RENDERING
+    // 5. SEARCH, TABS, FILTERS, ALERTS & RENDERING
     // ==========================================
+    function isVipLowStock(item) {
+      if (!item || !VIP_TABS.has(item.tab)) return false;
+      const hay = [item.name, item.note, item.shade, item.scent, item.subCategory]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+      return LOW_STOCK_KEYWORDS.some(kw => hay.includes(kw.toLowerCase()));
+    }
+
     function onSearchInput() {
       const val = document.getElementById("global-search").value;
       const btn = document.getElementById("clear-search-btn");
@@ -1579,19 +1626,31 @@
       document.getElementById("lightbox-modal").classList.add("open");
     }
 
-    function renderGroceryBanner() {
-      const banner = document.getElementById("grocery-alert-banner");
-      const textEl = document.getElementById("grocery-alert-text");
-      if (!banner || !textEl) return;
-
+    function renderAlerts() {
+      const groceryBanner = document.getElementById("grocery-alert-banner");
+      const groceryText = document.getElementById("grocery-alert-text");
+      const vipBanner = document.getElementById("vip-low-banner");
+      const vipText = document.getElementById("vip-low-text");
       const query = document.getElementById("global-search")?.value.trim() || "";
-      const pending = (vaultData.items || []).filter(i => !i.deleted && i.tab === "grocery" && !i.bought);
 
-      if (currentTab === "grocery" && !query && pending.length > 0) {
-        banner.classList.add("show");
-        textEl.textContent = `🛒 في ${pending.length} طلب ناقص في البيت: ${pending.map(p => p.name || "طلب").join(" • ")}`;
-      } else {
-        banner.classList.remove("show");
+      if (groceryBanner && groceryText) {
+        const pending = (vaultData.items || []).filter(i => !i.deleted && i.tab === "grocery" && !i.bought);
+        if (currentTab === "grocery" && !query && pending.length > 0) {
+          groceryBanner.classList.add("show");
+          groceryText.textContent = `🛒 في ${pending.length} طلب ناقص في البيت: ${pending.map(p => p.name || "طلب").join(" • ")}`;
+        } else {
+          groceryBanner.classList.remove("show");
+        }
+      }
+
+      if (vipBanner && vipText) {
+        const lowVip = (vaultData.items || []).filter(i => !i.deleted && i.tab === currentTab && isVipLowStock(i));
+        if (VIP_TABS.has(currentTab) && !query && lowVip.length > 0) {
+          vipBanner.classList.add("show");
+          vipText.textContent = `🔔 تنبيه تجديد (${lowVip.length}): ${lowVip.map(x => x.name || x.shade || x.scent || "منتج").join(" • ")}`;
+        } else {
+          vipBanner.classList.remove("show");
+        }
       }
     }
 
@@ -1683,7 +1742,7 @@
     }
 
     function renderCurrentView() {
-      renderGroceryBanner();
+      renderAlerts();
       const grid = document.getElementById("items-grid");
       const query = document.getElementById("global-search").value.trim().toLowerCase();
 
@@ -1765,6 +1824,7 @@
         else if (item.makeupGroup) subBadges.push(item.makeupGroup);
 
         const metaLine = subBadges.join(" • ");
+        const lowFlag = isVipLowStock(item);
 
         let extraLines = [];
         if (item.shade) extraLines.push(`🎨 الدرجة: ${item.shade}`);
@@ -1772,7 +1832,7 @@
         if (item.zone) extraLines.push(`📍 المكان: ${item.zone}`);
 
         return `
-          <article class="item-card ${item.bought ? "bought" : ""}">
+          <article class="item-card ${item.bought ? "bought" : ""} ${lowFlag ? "low-alert" : ""}">
             <div class="item-img-box" onclick="${item.image ? `openLightbox('${item.id}')` : ""}">
               ${item.image
                 ? `<img src="${item.image}" alt="${escapeHtml(item.name || "صورة المنتج")}" loading="lazy" />`
@@ -1783,6 +1843,7 @@
             </div>
 
             <div class="item-body">
+              ${lowFlag ? `<span class="low-tag">🔔 قرب يخلص</span>` : ""}
               <div class="item-name">${escapeHtml(item.name || "منتج بدون اسم 📸")}</div>
               ${metaLine ? `<div class="item-meta">${escapeHtml(metaLine)}</div>` : ""}
               ${extraLines.length ? `<div class="item-extra">${escapeHtml(extraLines.join(" | "))}</div>` : ""}
