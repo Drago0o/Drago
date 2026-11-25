@@ -731,32 +731,13 @@
         <div class="role-desc">عالمك الخاص، الميكب، العطور، وطلبات البيت 🌸</div>
       </div>
 
-      <div class="role-card drago" onclick="openAdminPinModal()">
+      <div class="role-card drago" onclick="selectRole('drago')">
         <div class="role-emoji">🎮</div>
         <div class="role-name">Drago</div>
-        <div class="role-desc">لوحة الأدمن، المخزن، الباك اب، والمزامنة 🔐</div>
+        <div class="role-desc">لوحة الأدمن، المخزن، الباك اب، والمزامنة 🚀</div>
       </div>
     </div>
   </section>
-
-  <!-- Admin Password Modal -->
-  <div id="pin-modal" class="modal-backdrop">
-    <div class="modal-card" style="max-width: 360px; text-align: center;">
-      <div class="modal-header">
-        <span class="modal-title">🔐 دخول الأدمن (Drago)</span>
-        <button class="icon-btn" onclick="closeModal('pin-modal')">✕</button>
-      </div>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">
-        اكتب باسورد الأدمن للوصول لصلاحيات الإدارة:
-      </p>
-      <div class="form-group">
-        <input type="password" id="admin-pin-input" class="form-control" placeholder="••••••••" style="text-align:center; font-size:1.2rem; letter-spacing:4px;" onkeydown="if(event.key==='Enter') verifyAdminPin()" />
-      </div>
-      <button class="btn btn-primary" style="width:100%; justify-content:center; padding:11px;" onclick="verifyAdminPin()">
-        دخول لوحة Drago 🚀
-      </button>
-    </div>
-  </div>
 
   <!-- Main App Shell -->
   <main id="app-shell">
@@ -910,8 +891,6 @@
     const GIST_FILENAME = "mms_drago_vault.json";
     const STORAGE_KEY = "mms_drago_vault_v3";
     const CLOUD_CFG_KEY = "mms_drago_cloud_cfg_v1";
-    // SHA-256 hash of "19891989"
-    const ADMIN_PIN_HASH = "47c454a7e703cf426e984688894c05c4d21159843b30e043e0fe05c65c537e6c";
 
     const MAKEUP_CATALOG = {
       "Face and Base": [
@@ -1032,35 +1011,8 @@
     }
 
     // ==========================================
-    // 4. ROLE GATE & ADMIN SHA-256 AUTH
+    // 4. ROLE GATE (DIRECT ENTRY)
     // ==========================================
-    async function sha256Hex(str) {
-      const buf = new TextEncoder().encode(str);
-      const hashBuf = await crypto.subtle.digest("SHA-256", buf);
-      return Array.from(new Uint8Array(hashBuf))
-        .map(b => b.toString(16).padStart(2, "0"))
-        .join("");
-    }
-
-    function openAdminPinModal() {
-      document.getElementById("admin-pin-input").value = "";
-      document.getElementById("pin-modal").classList.add("open");
-      setTimeout(() => document.getElementById("admin-pin-input").focus(), 100);
-    }
-
-    async function verifyAdminPin() {
-      const raw = document.getElementById("admin-pin-input").value.trim();
-      if (!raw) return showToast("⚠️ اكتب الباسورد الأول");
-      const hashed = await sha256Hex(raw);
-      if (hashed === ADMIN_PIN_HASH) {
-        closeModal("pin-modal");
-        selectRole("drago");
-      } else {
-        showToast("❌ الباسورد غلط يا بطل!");
-        document.getElementById("admin-pin-input").value = "";
-      }
-    }
-
     function selectRole(role) {
       currentRole = role;
       document.getElementById("role-gate").style.display = "none";
