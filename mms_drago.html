@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0f172a" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <title>Mms & Drago v1.0.2 | مملكتنا الذكية 👑🎮</title>
+  <title>Mms & Drago v1.0.3 | مملكتنا الذكية 👑🎮</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -628,6 +628,64 @@
       border-color: rgba(239, 68, 68, 0.35);
     }
 
+    /* Activity Log Section */
+    .activity-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px 16px;
+      margin-top: 20px;
+      backdrop-filter: blur(12px);
+    }
+
+    .activity-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .activity-title {
+      font-size: 0.98rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .activity-list {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .activity-row {
+      background: rgba(15, 23, 42, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .activity-actor {
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    .activity-time {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      white-space: nowrap;
+    }
+
     /* Empty State */
     .empty-box {
       grid-column: 1 / -1;
@@ -819,7 +877,7 @@
         <div>
           <div class="brand-title">
             <span id="user-greeting">أهلاً يا Mms 👑</span>
-            <span class="ver-pill">v1.0.2</span>
+            <span class="ver-pill">v1.0.3</span>
           </div>
           <div class="brand-sub" id="user-subtitle">كل حاجتك متنظمة ومحمية ✨</div>
         </div>
@@ -879,6 +937,17 @@
 
     <!-- Items Grid -->
     <section class="items-grid" id="items-grid"></section>
+
+    <!-- Activity Log Section -->
+    <section class="activity-box">
+      <div class="activity-header">
+        <div class="activity-title">📋 سجل الحركات (Activity Log)</div>
+        <button class="btn admin-only" style="padding:5px 10px; font-size:0.76rem;" onclick="clearActivityLog()">
+          🧹 مسح السجل
+        </button>
+      </div>
+      <div class="activity-list" id="activity-list"></div>
+    </section>
   </main>
 
   <!-- Add / Edit Item Modal -->
@@ -1098,7 +1167,8 @@
 
     let vaultData = {
       updatedAt: 0,
-      items: []
+      items: [],
+      logs: []
     };
 
     // ==========================================
@@ -1108,6 +1178,7 @@
       loadLocalVault();
       buildAmbientLayer("gate");
       updateSyncIndicator();
+      renderActivityLog();
     });
 
     window.addEventListener("keydown", e => {
@@ -1212,6 +1283,47 @@
       }
     }
 
+    function recordLog(text) {
+      if (!Array.isArray(vaultData.logs)) vaultData.logs = [];
+      const actor = currentRole === "mms" ? "Mms 👑" : "Drago 🎮";
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" }) + " • " + now.toLocaleDateString("ar-EG");
+      vaultData.logs.unshift({
+        id: "log_" + Date.now() + "_" + Math.random().toString(36).slice(2, 5),
+        actor,
+        text,
+        time: timeStr
+      });
+      if (vaultData.logs.length > 50) vaultData.logs.length = 50;
+      renderActivityLog();
+    }
+
+    function renderActivityLog() {
+      const box = document.getElementById("activity-list");
+      if (!box) return;
+      const logs = Array.isArray(vaultData.logs) ? vaultData.logs : [];
+      if (!logs.length) {
+        box.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:0.82rem; padding:12px;">مفيش حركات متسجلة لسه ✨</div>`;
+        return;
+      }
+      box.innerHTML = logs.map(l => `
+        <div class="activity-row">
+          <div>
+            <span class="activity-actor">${escapeHtml(l.actor)}</span>:
+            <span>${escapeHtml(l.text)}</span>
+          </div>
+          <span class="activity-time">${escapeHtml(l.time)}</span>
+        </div>
+      `).join("");
+    }
+
+    function clearActivityLog() {
+      vaultData.logs = [];
+      persistVault();
+      renderActivityLog();
+      showToast("🧹 تم مسح سجل الحركات");
+    }
+
     // ==========================================
     // 4. ROLE GATE (No password)
     // ==========================================
@@ -1240,6 +1352,7 @@
       }
 
       setTab(currentTab);
+      renderActivityLog();
       pullFromGist(false);
     }
 
@@ -1665,6 +1778,9 @@
         itemObj.zone = document.getElementById("zone-input")?.value.trim() || "";
       }
 
+      const tabLabel = TAB_META[tab]?.title || tab;
+      const displayTitle = itemObj.name || "منتج بالصورة 📸";
+
       if (id) {
         const idx = vaultData.items.findIndex(i => i.id === id);
         if (idx !== -1) {
@@ -1672,8 +1788,10 @@
           itemObj.createdAt = vaultData.items[idx].createdAt || now;
           vaultData.items[idx] = itemObj;
         }
+        recordLog(`عدّل "${displayTitle}" في ${tabLabel}`);
       } else {
         vaultData.items.unshift(itemObj);
+        recordLog(`أضاف "${displayTitle}" في ${tabLabel}`);
       }
 
       persistVault();
@@ -1687,6 +1805,8 @@
       if (!item) return;
       item.bought = !item.bought;
       item.updatedAt = Date.now();
+      const label = item.name || "عنصر";
+      recordLog(item.bought ? `علّم "${label}" إنه اتجاب ✅` : `رجّع "${label}" لطلبات البيت 🛒`);
       persistVault();
       renderCurrentView();
       notifyRoleAction();
@@ -1698,6 +1818,7 @@
       lastDeletedItem = { ...item };
       item.deleted = true;
       item.updatedAt = Date.now();
+      recordLog(`حذف "${item.name || "عنصر"}" 🗑️`);
       persistVault();
       renderCurrentView();
       showToast("🗑️ اتمسح العنصر", true);
@@ -1712,6 +1833,7 @@
       } else {
         vaultData.items.unshift({ ...lastDeletedItem, deleted: false, updatedAt: Date.now() });
       }
+      recordLog(`تراجع عن حذف "${lastDeletedItem.name || "عنصر"}" ↩️`);
       lastDeletedItem = null;
       document.getElementById("toast").classList.remove("show");
       persistVault();
@@ -1752,7 +1874,11 @@
         if (raw) {
           const parsed = JSON.parse(raw);
           if (parsed && Array.isArray(parsed.items)) {
-            vaultData = parsed;
+            vaultData = {
+              updatedAt: parsed.updatedAt || 0,
+              items: parsed.items,
+              logs: Array.isArray(parsed.logs) ? parsed.logs : []
+            };
           }
         }
       } catch (e) {
@@ -1801,6 +1927,14 @@
         }
       }
       return Array.from(map.values());
+    }
+
+    function mergeLogs(localLogs, remoteLogs) {
+      const map = new Map();
+      for (const l of [...(remoteLogs || []), ...(localLogs || [])]) {
+        if (l?.id) map.set(l.id, l);
+      }
+      return Array.from(map.values()).slice(0, 50);
     }
 
     function getCloudCfg() {
@@ -1989,9 +2123,11 @@
           const remoteData = await decryptPayload(contentStr, cfg.passphrase);
           if (remoteData && Array.isArray(remoteData.items)) {
             vaultData.items = mergeVaultItems(vaultData.items, remoteData.items);
+            vaultData.logs = mergeLogs(vaultData.logs, remoteData.logs);
             vaultData.updatedAt = Math.max(vaultData.updatedAt || 0, remoteData.updatedAt || 0, Date.now());
             saveLocalVaultSafely();
             renderCurrentView();
+            renderActivityLog();
             if (isDirty) await pushToGist();
           }
         } else if (vaultData.items?.length) {
@@ -2039,8 +2175,11 @@
             return showToast("❌ ملف الباك اب مش بصيغة صحيحة");
           }
           vaultData.items = mergeVaultItems(vaultData.items, parsed.items);
+          vaultData.logs = mergeLogs(vaultData.logs, parsed.logs);
+          recordLog("استورد نسخة باك اب ودمجها 📥");
           persistVault();
           renderCurrentView();
+          renderActivityLog();
           showToast("📥 تم استيراد الباك اب ودمجه بنجاح!");
         } catch (err) {
           console.error(err);
