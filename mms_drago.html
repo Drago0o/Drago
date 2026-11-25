@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0f172a" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <title>Mms & Drago v1.0.8 | مملكتنا الذكية 👑🎮</title>
+  <title>Mms & Drago v1.0.9 | مملكتنا الذكية 👑🎮</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -666,6 +666,32 @@
       width: fit-content;
     }
 
+    .look-box {
+      background: rgba(244, 114, 182, 0.12);
+      border: 1px solid rgba(244, 114, 182, 0.32);
+      border-radius: 12px;
+      padding: 7px 10px;
+      font-size: 0.76rem;
+      color: var(--text);
+      line-height: 1.45;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .look-copy-btn {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 2px 7px;
+      border-radius: 7px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
     .item-body {
       padding: 12px 14px;
       flex: 1;
@@ -972,7 +998,7 @@
         <div>
           <div class="brand-title">
             <span id="user-greeting">أهلاً يا Mms 👑</span>
-            <span class="ver-pill">v1.0.8</span>
+            <span class="ver-pill">v1.0.9</span>
           </div>
           <div class="brand-sub" id="user-subtitle">كل حاجتك متنظمة ومحمية ✨</div>
         </div>
@@ -1525,7 +1551,7 @@
     }
 
     // ==========================================
-    // 5. SEARCH, TABS, FILTERS, ALERTS & RENDERING
+    // 5. SEARCH, TABS, LOOK BUILDER & RENDERING
     // ==========================================
     function isVipLowStock(item) {
       if (!item || !VIP_TABS.has(item.tab)) return false;
@@ -1534,6 +1560,38 @@
         .join(" ")
         .toLowerCase();
       return LOW_STOCK_KEYWORDS.some(kw => hay.includes(kw.toLowerCase()));
+    }
+
+    function buildLookSuggestion(item) {
+      if (!item || !VIP_TABS.has(item.tab)) return "";
+      if (item.matchWith && item.matchWith.trim()) {
+        const baseLabel = item.name || item.shade || item.scent || "قطعتك";
+        return `لو نازلة النهاردة: ${baseLabel} + ${item.matchWith.trim()}`;
+      }
+
+      const activeItems = (vaultData.items || []).filter(x => !x.deleted && x.id !== item.id);
+      if (item.tab === "makeup") {
+        const scentCandidate = activeItems.find(x => (x.tab === "perfume" || x.tab === "bbw" || x.tab === "vs") && (x.scent || x.name));
+        if (scentCandidate) {
+          const leftPart = item.shade ? `${item.name || "ميكب"} (${item.shade})` : (item.name || "ميكب");
+          const rightPart = scentCandidate.scent ? `${scentCandidate.name || "عطر"} (${scentCandidate.scent})` : (scentCandidate.name || "عطر");
+          return `لو نازلة النهاردة: ${leftPart} + ${rightPart}`;
+        }
+      } else {
+        const makeupCandidate = activeItems.find(x => x.tab === "makeup" && (x.shade || x.name));
+        if (makeupCandidate) {
+          const leftPart = item.scent ? `${item.name || "عطر"} (${item.scent})` : (item.name || "عطر");
+          const rightPart = makeupCandidate.shade ? `${makeupCandidate.name || "ميكب"} (${makeupCandidate.shade})` : (makeupCandidate.name || "ميكب");
+          return `لو نازلة النهاردة: ${leftPart} + ${rightPart}`;
+        }
+      }
+      return "";
+    }
+
+    function copyLookText(encodedText) {
+      const txt = decodeURIComponent(encodedText);
+      if (navigator.clipboard) navigator.clipboard.writeText(txt).catch(() => {});
+      showToast("✨ تم نسخ اقتراح اللوك!");
     }
 
     function onSearchInput() {
@@ -1756,6 +1814,7 @@
             item.shade,
             item.scent,
             item.zone,
+            item.matchWith,
             item.subCategory,
             item.tier,
             item.makeupGroup,
@@ -1825,6 +1884,7 @@
 
         const metaLine = subBadges.join(" • ");
         const lowFlag = isVipLowStock(item);
+        const lookText = buildLookSuggestion(item);
 
         let extraLines = [];
         if (item.shade) extraLines.push(`🎨 الدرجة: ${item.shade}`);
@@ -1847,6 +1907,12 @@
               <div class="item-name">${escapeHtml(item.name || "منتج بدون اسم 📸")}</div>
               ${metaLine ? `<div class="item-meta">${escapeHtml(metaLine)}</div>` : ""}
               ${extraLines.length ? `<div class="item-extra">${escapeHtml(extraLines.join(" | "))}</div>` : ""}
+              ${lookText ? `
+                <div class="look-box">
+                  <span>✨ ${escapeHtml(lookText)}</span>
+                  <button type="button" class="look-copy-btn" onclick="copyLookText('${encodeURIComponent(lookText)}')">نسخ</button>
+                </div>
+              ` : ""}
               ${item.note ? `<div class="item-note">${escapeHtml(item.note)}</div>` : ""}
 
               <div class="item-actions">
@@ -1908,6 +1974,7 @@
     function updateModalSubfields(existing = null) {
       const tab = document.getElementById("item-tab-select").value;
       const box = document.getElementById("dynamic-subfields");
+      const matchVal = existing?.matchWith || "";
 
       if (tab === "bbw" || tab === "vs") {
         const val = existing?.subCategory || (filters[tab] !== "All" ? filters[tab] : "Body Mist");
@@ -1925,6 +1992,10 @@
             <label class="form-label">الرائحة / النوتة العطرية (اختياري)</label>
             <input type="text" id="scent-input" class="form-control" value="${escapeHtml(scentVal)}" placeholder="مثلاً: فانيليا / توت / كراميل..." />
           </div>
+          <div class="form-group">
+            <label class="form-label">يمشي مع إيه؟ — لوك / تناسق (اختياري)</label>
+            <input type="text" id="match-input" class="form-control" value="${escapeHtml(matchVal)}" placeholder="مثلاً: روج نود أو خروجة بليل..." />
+          </div>
         `;
       } else if (tab === "perfume") {
         const val = existing?.subCategory || (filters.perfume !== "All" ? filters.perfume : "Original");
@@ -1941,6 +2012,10 @@
           <div class="form-group">
             <label class="form-label">النوتة العطرية / التركيز (اختياري)</label>
             <input type="text" id="scent-input" class="form-control" value="${escapeHtml(scentVal)}" placeholder="مثلاً: عود عنبر / فواكه / تركيب..." />
+          </div>
+          <div class="form-group">
+            <label class="form-label">يمشي مع إيه؟ — لوك / تناسق (اختياري)</label>
+            <input type="text" id="match-input" class="form-control" value="${escapeHtml(matchVal)}" placeholder="مثلاً: ميكب سهرة أو مناسبة..." />
           </div>
         `;
       } else if (tab === "makeup") {
@@ -1972,6 +2047,10 @@
           <div class="form-group">
             <label class="form-label">الدرجة / اللون — Shade (اختياري)</label>
             <input type="text" id="shade-input" class="form-control" value="${escapeHtml(shadeVal)}" placeholder="مثلاً: Velvet Teddy / Shade 220..." />
+          </div>
+          <div class="form-group">
+            <label class="form-label">يمشي مع ريحة إيه؟ — لوك اليوم (اختياري)</label>
+            <input type="text" id="match-input" class="form-control" value="${escapeHtml(matchVal)}" placeholder="مثلاً: برفيوم فانيليا أو بودي ميست..." />
           </div>
         `;
         populateMakeupTypes(typeVal);
@@ -2065,11 +2144,13 @@
       if (tab === "bbw" || tab === "vs" || tab === "perfume") {
         itemObj.subCategory = document.getElementById("sub-cat-select").value;
         itemObj.scent = document.getElementById("scent-input")?.value.trim() || "";
+        itemObj.matchWith = document.getElementById("match-input")?.value.trim() || "";
       } else if (tab === "makeup") {
         itemObj.tier = document.getElementById("makeup-tier-select").value;
         itemObj.makeupGroup = document.getElementById("makeup-group-select").value;
         itemObj.makeupType = document.getElementById("makeup-type-select").value;
         itemObj.shade = document.getElementById("shade-input")?.value.trim() || "";
+        itemObj.matchWith = document.getElementById("match-input")?.value.trim() || "";
       } else if (tab === "home" || tab === "storage") {
         itemObj.zone = document.getElementById("zone-input")?.value.trim() || "";
       }
