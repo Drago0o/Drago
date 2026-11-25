@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0f172a" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <title>Mms & Drago v1.0.4 | مملكتنا الذكية 👑🎮</title>
+  <title>Mms & Drago v1.0.5 | مملكتنا الذكية 👑🎮</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -920,7 +920,7 @@
         <div>
           <div class="brand-title">
             <span id="user-greeting">أهلاً يا Mms 👑</span>
-            <span class="ver-pill">v1.0.4</span>
+            <span class="ver-pill">v1.0.5</span>
           </div>
           <div class="brand-sub" id="user-subtitle">كل حاجتك متنظمة ومحمية ✨</div>
         </div>
@@ -931,7 +931,7 @@
           ✨ رشة بهجة
         </button>
 
-        <button class="btn" id="anim-toggle-btn" onclick="toggleAnimations()" title="تشغيل/إيقاف حركة الخلفية">
+        <button class="btn" id="anim-toggle-btn" onclick="toggleAnimations()" title="تشغيل/إيقاف الأنيميشن">
           🦋 الحركة: شغالة
         </button>
 
@@ -1244,11 +1244,12 @@
     };
 
     // ==========================================
-    // 3. INITIALIZATION & BATTERY-SAFE AMBIENT
+    // 3. INITIALIZATION & ANIMATION CONTROL
     // ==========================================
     window.addEventListener("DOMContentLoaded", () => {
       loadLocalVault();
       buildAmbientLayer("gate");
+      applyAnimationState();
       updateSyncIndicator();
       renderActivityLog();
       renderStoreOverview();
@@ -1261,15 +1262,21 @@
     });
 
     document.addEventListener("visibilitychange", () => {
-      const layer = document.getElementById("ambient-layer");
-      if (!layer) return;
-      if (document.hidden) {
-        layer.classList.add("paused");
-      } else if (animationsEnabled) {
-        layer.classList.remove("paused");
-        if (isDirty) scheduleGistPush(300);
+      if (!document.hidden && isDirty) {
+        scheduleGistPush(300);
       }
+      applyAnimationState();
     });
+
+    function applyAnimationState() {
+      const layer = document.getElementById("ambient-layer");
+      const btn = document.getElementById("anim-toggle-btn");
+      const shouldPause = !animationsEnabled || document.hidden;
+      if (layer) layer.classList.toggle("paused", shouldPause);
+      if (btn) {
+        btn.textContent = animationsEnabled ? "🦋 الحركة: شغالة" : "⏸️ الحركة: متوقفة";
+      }
+    }
 
     function buildAmbientLayer(mode) {
       const layer = document.getElementById("ambient-layer");
@@ -1304,14 +1311,18 @@
         el.style.setProperty("--sway", `${(Math.random() > 0.5 ? 1 : -1) * (25 + Math.random() * 30)}px`);
         layer.appendChild(el);
       }
+
+      applyAnimationState();
     }
 
     function toggleAnimations() {
       animationsEnabled = !animationsEnabled;
-      const layer = document.getElementById("ambient-layer");
-      const btn = document.getElementById("anim-toggle-btn");
-      layer.classList.toggle("paused", !animationsEnabled);
-      btn.textContent = animationsEnabled ? "🦋 الحركة: شغالة" : "⏸️ الحركة: متوقفة";
+      applyAnimationState();
+      showToast(
+        animationsEnabled
+          ? "🦋 تم تشغيل الأنيميشن والحركة بالكامل"
+          : "⏸️ تم إيقاف الأنيميشن (الرسائل شغالة من غير طرطشة)"
+      );
     }
 
     function triggerJoyBurst(originEl = null) {
@@ -1322,6 +1333,8 @@
       lastJoyIdx = idx;
 
       showToast(JOY_MESSAGES_30[idx], false, "love");
+
+      if (!animationsEnabled || document.hidden) return;
 
       const rect = originEl
         ? originEl.getBoundingClientRect()
