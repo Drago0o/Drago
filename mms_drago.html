@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#e11d48" />
-  <title>v1.1 | أهلاً بيكي يا Mms 👑✨ — بيتنا ومخزننا</title>
+  <title>أهلاً بيكي يا Mms 👑✨ — بيتنا ومخزننا</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +18,7 @@
         radial-gradient(circle at 12% 10%, rgba(251, 207, 232, 0.35), transparent 38%),
         radial-gradient(circle at 88% 15%, rgba(167, 243, 208, 0.35), transparent 40%),
         radial-gradient(circle at 50% 90%, rgba(254, 240, 138, 0.3), transparent 45%);
-      min-height: 100dvh;
+      min-height: 100vh;
       overflow-x: hidden;
     }
 
@@ -40,9 +40,6 @@
       font-size: 1.5rem;
       animation: burstFly 1.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
-
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { scrollbar-width: none; }
   </style>
 </head>
 <body class="text-slate-800 antialiased pb-16">
@@ -55,7 +52,7 @@
     <span class="absolute bottom-36 left-8 text-2xl animate-float-slow">🦋</span>
   </div>
 
-  <!-- Active User Selector Modal (Mms vs Drago — Direct entry, no password) -->
+  <!-- Active User Selector Modal (Mms vs Drago) -->
   <div id="user-select-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md">
     <div class="bg-white border-2 border-rose-200 rounded-3xl w-full max-w-md p-6 sm:p-8 shadow-2xl text-center space-y-5">
       <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-rose-500 to-amber-400 text-white flex items-center justify-center text-3xl shadow-lg">
@@ -94,7 +91,6 @@
             <h1 class="text-lg sm:text-2xl font-extrabold text-slate-800">
               أهلاً بيكي يا <span class="text-rose-600">Mms</span> ✨ — بيتنا ومخزننا
             </h1>
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-50 text-rose-600 border border-rose-200">v1.1</span>
             <span id="pc-sync-badge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-slate-100 text-slate-600 border border-slate-200">
               <span class="w-2 h-2 rounded-full bg-slate-400"></span>
               <span>جاري الفحص...</span>
@@ -241,26 +237,8 @@
       </div>
     </section>
 
-    <!-- Smart Search, Zone Tabs & Filters -->
+    <!-- Smart Search & Quick Filters -->
     <section class="bg-white/95 border border-rose-100 rounded-3xl p-4 sm:p-6 shadow-sm space-y-4">
-      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 border-b border-slate-100" id="zone-tabs">
-        <button type="button" data-zone="ALL_HOME" class="zone-tab active shrink-0 px-3.5 py-2 rounded-2xl text-xs font-extrabold bg-slate-800 text-white cursor-pointer transition">
-          🏡 البيت والمخزن
-        </button>
-        <button type="button" data-zone="BBW" class="zone-tab shrink-0 px-3.5 py-2 rounded-2xl text-xs font-extrabold bg-pink-50 text-pink-700 hover:bg-pink-100 border border-pink-200 cursor-pointer transition">
-          🧴 Bath & Body Works
-        </button>
-        <button type="button" data-zone="VS" class="zone-tab shrink-0 px-3.5 py-2 rounded-2xl text-xs font-extrabold bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 cursor-pointer transition">
-          🪽 Victoria's Secret
-        </button>
-        <button type="button" data-zone="MAKEUP" class="zone-tab shrink-0 px-3.5 py-2 rounded-2xl text-xs font-extrabold bg-fuchsia-50 text-fuchsia-800 hover:bg-fuchsia-100 border border-fuchsia-200 cursor-pointer transition">
-          💄 Makeup
-        </button>
-        <button type="button" data-zone="PERFUME" class="zone-tab shrink-0 px-3.5 py-2 rounded-2xl text-xs font-extrabold bg-purple-50 text-purple-800 hover:bg-purple-100 border border-purple-200 cursor-pointer transition">
-          🌺 Perfume
-        </button>
-      </div>
-
       <div class="flex flex-col md:flex-row gap-3">
         <div class="relative flex-1">
           <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-rose-400 text-base"></i>
@@ -268,7 +246,7 @@
             type="text"
             id="search-input"
             dir="auto"
-            placeholder="ابحثي في كل حاجة (PS4، شاشة، بودي ميست، ميكب، درجة لون، برفيوم...)"
+            placeholder="ابحثي عن أي حاجة هنا (مثلاً: PS4، شاشة، شاحن، سويتش، كابل)..."
             class="w-full bg-rose-50/40 border-2 border-rose-100 focus:border-rose-400 focus:bg-white rounded-2xl pr-11 pl-10 py-3 text-sm sm:text-base font-bold text-slate-800 outline-none transition"
           />
           <button id="clear-search-btn" type="button" class="hidden absolute left-3 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-slate-200 hover:bg-rose-200 text-slate-600 items-center justify-center text-xs cursor-pointer">
@@ -283,25 +261,19 @@
           <option value="SMART_HOME">سمارت هوم 🏠</option>
           <option value="POWER">شواحن وبطاريات 🔌</option>
           <option value="CABLES">كابلات ووصلات 🧵</option>
-          <option value="BATH_BODY">Bath & Body / VS 🧴</option>
-          <option value="MAKEUP">Makeup 💄</option>
-          <option value="PERFUME">Perfume 🌺</option>
           <option value="OTHER">حاجات متنوعة ✨</option>
         </select>
       </div>
 
-      <div id="home-filter-pills" class="flex flex-wrap items-center gap-2">
-        <button data-filter="ALL" class="filter-pill active px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-slate-800 text-white cursor-pointer transition">الكل</button>
-        <button data-filter="HOME" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-rose-50 text-rose-700 hover:bg-rose-100 cursor-pointer transition">حاجات Mms والبيت 🏡</button>
-        <button data-filter="DRAGO" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-amber-50 text-amber-800 hover:bg-amber-100 cursor-pointer transition">حاجات Drago 🎮</button>
-        <button data-filter="HOME_LIVE" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 cursor-pointer transition">شغال في البيت 🟢</button>
-        <button data-filter="STORE_STOCK" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-teal-50 text-teal-700 hover:bg-teal-100 cursor-pointer transition">في المخزن 📦</button>
-      </div>
-
-      <div id="vip-subfilters" class="hidden space-y-2.5 pt-2 border-t border-rose-100"></div>
-
-      <div class="flex items-center justify-between gap-2">
-        <span id="active-zone-hint" class="text-xs font-bold text-rose-600"></span>
+      <!-- Filter Pills -->
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-2" id="filter-pills">
+          <button data-filter="ALL" class="filter-pill active px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-slate-800 text-white cursor-pointer transition">الكل</button>
+          <button data-filter="HOME" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-rose-50 text-rose-700 hover:bg-rose-100 cursor-pointer transition">حاجات Mms والبيت 🏡</button>
+          <button data-filter="DRAGO" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-amber-50 text-amber-800 hover:bg-amber-100 cursor-pointer transition">حاجات Drago 🎮</button>
+          <button data-filter="HOME_LIVE" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 cursor-pointer transition">شغال في البيت 🟢</button>
+          <button data-filter="STORE_STOCK" class="filter-pill px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-teal-50 text-teal-700 hover:bg-teal-100 cursor-pointer transition">في المخزن 📦</button>
+        </div>
         <span id="results-summary" class="text-xs font-bold text-slate-400"></span>
       </div>
     </section>
@@ -372,6 +344,7 @@
         </button>
       </div>
 
+      <!-- Encrypted GitHub Secret Gist Section -->
       <div class="p-3.5 rounded-2xl bg-rose-50/60 border border-rose-200 space-y-3">
         <div class="flex items-center justify-between">
           <span class="text-xs font-extrabold text-rose-800">1. المزامنة السحابية 24/7 (AES-256 🔐)</span>
@@ -391,6 +364,7 @@
         </div>
       </div>
 
+      <!-- Local Home Lab Nodes -->
       <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5">
         <span class="block text-xs font-extrabold text-slate-700">2. سيرفرات البيت (اختياري للنسخ المحلي 🖥️🐧)</span>
         <div>
@@ -459,132 +433,53 @@
         <input type="hidden" id="item-id" />
 
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">التاب / المكان المخصص</label>
-          <select id="item-zone" class="w-full bg-rose-50/50 border border-rose-200 rounded-2xl px-3 py-2.5 text-xs sm:text-sm font-extrabold text-slate-800 outline-none">
-            <option value="ALL_HOME">🏡 البيت والمخزن</option>
-            <option value="BBW">🧴 Bath & Body Works</option>
-            <option value="VS">🪽 Victoria's Secret</option>
-            <option value="MAKEUP">💄 Makeup</option>
-            <option value="PERFUME">🌺 Perfume</option>
-          </select>
+          <label class="block text-xs font-bold text-slate-700 mb-1">اسم الحاجة إيه؟ *</label>
+          <input type="text" id="item-name" dir="auto" required placeholder="مثلاً: شاحن سامسونج 45W / بلايستيشن 4" class="w-full bg-slate-50 border border-slate-200 focus:border-teal-500 rounded-2xl px-3.5 py-2.5 text-sm font-bold outline-none" />
         </div>
 
-        <div>
-          <label id="item-name-label" class="block text-xs font-bold text-slate-700 mb-1">اسم الحاجة إيه؟ *</label>
-          <input type="text" id="item-name" dir="auto" placeholder="مثلاً: شاحن سامسونج 45W / بلايستيشن 4" class="w-full bg-slate-50 border border-slate-200 focus:border-teal-500 rounded-2xl px-3.5 py-2.5 text-sm font-bold outline-none" />
-        </div>
-
-        <div id="vip-body-fields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-2xl bg-pink-50/60 border border-pink-200">
+        <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-pink-900 mb-1">النوع</label>
-            <select id="vip-body-type" class="w-full bg-white border border-pink-200 rounded-xl px-3 py-2 text-xs sm:text-sm font-bold outline-none">
-              <option value="Body Mist">Body Mist</option>
-              <option value="Body Cream">Body Cream</option>
-              <option value="Body Butter">Body Butter</option>
+            <label class="block text-xs font-bold text-slate-700 mb-1">تبع مين؟</label>
+            <select id="item-owner" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2.5 text-xs sm:text-sm font-bold outline-none">
+              <option value="HOME">حاجات Mms والبيت 🏡</option>
+              <option value="DRAGO">حاجات Drago 🎮</option>
             </select>
           </div>
           <div>
-            <label class="block text-xs font-bold text-pink-900 mb-1">الرائحة / النوتة العطرية</label>
-            <input type="text" id="vip-scent" dir="auto" placeholder="مثلاً: فانيليا / توت / كراميل" class="w-full bg-white border border-pink-200 rounded-xl px-3 py-2 text-xs sm:text-sm font-bold outline-none" />
+            <label class="block text-xs font-bold text-slate-700 mb-1">القسم</label>
+            <select id="item-category" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2.5 text-xs sm:text-sm font-bold outline-none">
+              <option value="GAMING">ألعاب وكونسول 🎮</option>
+              <option value="TV">شاشات وتلفزيون 📺</option>
+              <option value="SMART_HOME">سمارت هوم 🏠</option>
+              <option value="POWER">شواحن وبطاريات 🔌</option>
+              <option value="CABLES">كابلات ووصلات 🧵</option>
+              <option value="OTHER">حاجات متنوعة ✨</option>
+            </select>
           </div>
         </div>
 
-        <div id="vip-makeup-fields" class="hidden space-y-3 p-3.5 rounded-2xl bg-fuchsia-50/60 border border-fuchsia-200">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs font-bold text-fuchsia-950 mb-1">الفئة</label>
-              <select id="makeup-tier" class="w-full bg-white border border-fuchsia-200 rounded-xl px-3 py-2 text-xs sm:text-sm font-bold outline-none">
-                <option value="High End">💎 High End</option>
-                <option value="Drugstore">🛍️ Drugstore</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-fuchsia-950 mb-1">المجموعة الرئيسية</label>
-              <select id="makeup-group" class="w-full bg-white border border-fuchsia-200 rounded-xl px-3 py-2 text-xs sm:text-sm font-bold outline-none"></select>
-            </div>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs font-bold text-fuchsia-950 mb-1">النوع الفرعي</label>
-              <select id="makeup-sub" class="w-full bg-white border border-fuchsia-200 rounded-xl px-3 py-2 text-xs sm:text-sm font-bold outline-none"></select>
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-fuchsia-950 mb-1">الدرجة / اللون (Shade)</label>
-              <input type="text" id="makeup-shade" dir="auto" placeholder="مثلاً: Velvet Teddy / Shade 220" class="w-full bg-white border border-fuchsia-200 rounded-xl px-3 py-2 text-xs sm:text-sm font-bold outline-none" />
-            </div>
-          </div>
-        </div>
-
-        <div id="vip-perfume-fields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-2xl bg-purple-50/60 border border-purple-200">
+        <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-bold text-purple-950 mb-1">نوع البرفيوم</label>
-            <select id="perfume-type" class="w-full bg-white border border-purple-200 rounded-xl px-3 py-2 text-xs sm:text-sm font-bold outline-none">
-              <option value="Original">💎 Original</option>
-              <option value="Oil">💧 Oil</option>
-              <option value="Handmade">🎨 Handmade</option>
+            <label class="block text-xs font-bold text-slate-700 mb-1">الحالة / المكان الرئيسي</label>
+            <select id="item-location" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2.5 text-xs sm:text-sm font-bold outline-none">
+              <option value="HOME_LIVE">شغال في البيت 🟢</option>
+              <option value="STORE_STOCK">متشال في المخزن 📦</option>
             </select>
           </div>
           <div>
-            <label class="block text-xs font-bold text-purple-950 mb-1">النوتة / التركيز / المصدر</label>
-            <input type="text" id="perfume-notes" dir="auto" placeholder="مثلاً: عود عنبر / تركيب خاص" class="w-full bg-white border border-purple-200 rounded-xl px-3 py-2 text-xs sm:text-sm font-bold outline-none" />
+            <label class="block text-xs font-bold text-slate-700 mb-1">العدد الموجود</label>
+            <input type="number" id="item-qty" min="0" value="1" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-3.5 py-2.5 text-sm font-bold outline-none" />
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">صورة المنتج (اختياري — بتتضغط أوتوماتيك 📸)</label>
-          <input type="file" id="item-photo-input" accept="image/*" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2 text-xs font-bold text-slate-600 cursor-pointer" />
-          <div id="item-photo-preview-wrap" class="hidden mt-2 relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 p-2 flex items-center justify-between gap-3">
-            <img id="item-photo-preview" src="" alt="معاينة" class="w-16 h-16 rounded-xl object-cover shrink-0" />
-            <span class="text-xs font-bold text-slate-600 flex-1">صورة جاهزة للحفظ ✅</span>
-            <button type="button" id="remove-item-photo-btn" class="px-2.5 py-1 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold cursor-pointer">إزالة</button>
-          </div>
-        </div>
-
-        <div id="home-standard-fields" class="space-y-3.5">
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">تبع مين؟</label>
-              <select id="item-owner" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2.5 text-xs sm:text-sm font-bold outline-none">
-                <option value="HOME">حاجات Mms والبيت 🏡</option>
-                <option value="DRAGO">حاجات Drago 🎮</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">القسم</label>
-              <select id="item-category" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2.5 text-xs sm:text-sm font-bold outline-none">
-                <option value="GAMING">ألعاب وكونسول 🎮</option>
-                <option value="TV">شاشات وتلفزيون 📺</option>
-                <option value="SMART_HOME">سمارت هوم 🏠</option>
-                <option value="POWER">شواحن وبطاريات 🔌</option>
-                <option value="CABLES">كابلات ووصلات 🧵</option>
-                <option value="OTHER">حاجات متنوعة ✨</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">الحالة / المكان الرئيسي</label>
-              <select id="item-location" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-3 py-2.5 text-xs sm:text-sm font-bold outline-none">
-                <option value="HOME_LIVE">شغال في البيت 🟢</option>
-                <option value="STORE_STOCK">متشال في المخزن 📦</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1">العدد الموجود</label>
-              <input type="number" id="item-qty" min="0" value="1" required class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-3.5 py-2.5 text-sm font-bold outline-none" />
-            </div>
-          </div>
-
-          <div>
-            <label id="item-spot-label" class="block text-xs font-bold text-slate-700 mb-1">المكان بالظبط / الـ Zone 📍 *</label>
-            <input type="text" id="item-spot" dir="auto" placeholder="مثلاً: المخزن - الرف التاني - بوكس الكابلات" class="w-full bg-slate-50 border border-slate-200 focus:border-teal-500 rounded-2xl px-3.5 py-2.5 text-sm font-bold outline-none" />
-          </div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">المكان بالظبط / الـ Zone 📍 *</label>
+          <input type="text" id="item-spot" dir="auto" required placeholder="مثلاً: المخزن - الرف التاني - بوكس الكابلات" class="w-full bg-slate-50 border border-slate-200 focus:border-teal-500 rounded-2xl px-3.5 py-2.5 text-sm font-bold outline-none" />
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">تفاصيل ومواصفات أو ملاحظات</label>
-          <input type="text" id="item-details" dir="auto" placeholder="مثلاً: Samsung 43 بوصة 4K LED أو ملاحظة خاصة..." class="w-full bg-slate-50 border border-slate-200 focus:border-teal-500 rounded-2xl px-3.5 py-2.5 text-sm outline-none" />
+          <label class="block text-xs font-bold text-slate-700 mb-1">تفاصيل ومواصفات (الموديل / المقاس / الحالة)</label>
+          <input type="text" id="item-details" dir="auto" placeholder="مثلاً: Samsung 43 بوصة 4K LED + الريموت" class="w-full bg-slate-50 border border-slate-200 focus:border-teal-500 rounded-2xl px-3.5 py-2.5 text-sm outline-none" />
         </div>
 
         <label class="flex items-center gap-2.5 p-3 rounded-2xl bg-amber-50/80 border border-amber-200 cursor-pointer">
@@ -600,13 +495,13 @@
     </div>
   </div>
 
-  <!-- Fullscreen Photo Lightbox Modal -->
+  <!-- Store Fullscreen Photo Lightbox Modal -->
   <div id="photo-lightbox" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm">
     <div class="relative max-w-4xl w-full">
       <button id="close-lightbox-btn" type="button" class="absolute -top-11 left-0 w-9 h-9 rounded-full bg-white text-slate-800 flex items-center justify-center shadow-lg cursor-pointer">
         <i class="fa-solid fa-xmark"></i>
       </button>
-      <img id="lightbox-img" src="" alt="صورة كاملة" class="w-full max-h-[82vh] object-contain rounded-2xl bg-black" />
+      <img id="lightbox-img" src="" alt="صورة المخزن كاملة" class="w-full max-h-[82vh] object-contain rounded-2xl bg-black" />
     </div>
   </div>
 
@@ -626,6 +521,7 @@
   <div id="toast-container" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2 w-[92%] max-w-md pointer-events-none"></div>
 
   <script>
+    // Safe Storage Wrapper
     const memoryFallback = {};
     const safeStorage = {
       getItem(key) {
@@ -639,7 +535,7 @@
       }
     };
 
-    const STORAGE_KEY = 'drago_friendly_home_v2';
+    const STORAGE_KEY = 'drago_friendly_home_v1';
     const STORE_PHOTO_KEY = 'drago_friendly_store_photo_v1';
     const LOGS_KEY = 'drago_friendly_logs_v1';
     const ARCHIVED_LOGS_KEY = 'drago_friendly_archived_logs_v1';
@@ -650,35 +546,6 @@
     const GIST_CONFIG_KEY = 'drago_friendly_gist_v1';
     const DEFAULT_GIST_ID = 'cd7c92ad27b7eea98ff2c38ccaaa2682';
     const GIST_FILENAME = 'mms_drago_home.json';
-
-    const MAKEUP_CATALOG = {
-      'Face and Base': [
-        'Primer',
-        'Foundation or Skin Tint',
-        'Concealer',
-        'Setting Powder',
-        'Blush',
-        'Bronzer or Contour',
-        'Highlighter',
-        'Setting Spray'
-      ],
-      'Eye and Brow': [
-        'Eyebrow Pencil or Gel',
-        'Eyeshadow Palette',
-        'Eyeliner',
-        'Mascara'
-      ],
-      'Lip Products': [
-        'Lip Balm or Oil',
-        'Lip Liner',
-        'Lipstick, Gloss, or Stain'
-      ],
-      'Essential Tools': [
-        'Makeup Sponge',
-        'Brushes',
-        'Eyelash Curler'
-      ]
-    };
 
     const JOY_MESSAGES_30 = [
       "أهلاً بأجمل Mms في الدنيا، نورتي بيتك ومكانك كله 🌸👑",
@@ -730,15 +597,15 @@
     ];
 
     const DEFAULT_INVENTORY = [
-      { id: 'item-1', zone: 'ALL_HOME', name: 'PlayStation 4 (PS4)', owner: 'DRAGO', category: 'GAMING', location: 'HOME_LIVE', qty: 1, spot: 'أوضة المعيشة - تحت التلفزيون', details: 'جهاز PS4 الأساسي + الكابلات متوصلة', isConsumable: false, updatedAt: 1700000001000 },
-      { id: 'item-2', zone: 'ALL_HOME', name: 'Nintendo Switch 1', owner: 'DRAGO', category: 'GAMING', location: 'HOME_LIVE', qty: 1, spot: 'ركن الجيمنج - على الدوك', details: 'النسخة الأولى + Joy-Cons', isConsumable: false, updatedAt: 1700000002000 },
-      { id: 'item-3', zone: 'ALL_HOME', name: 'PlayStation 3 (PS3)', owner: 'DRAGO', category: 'GAMING', location: 'STORE_STOCK', qty: 1, spot: 'المخزن - الرف الأول (ركن الكونسول)', details: 'متشال بحالة ممتازة في الكرتونة', isConsumable: false, updatedAt: 1700000003000 },
-      { id: 'item-4', zone: 'ALL_HOME', name: 'PlayStation 2 (PS2)', owner: 'DRAGO', category: 'GAMING', location: 'STORE_STOCK', qty: 1, spot: 'المخزن - الرف الأول (ركن الكونسول)', details: 'كلاسيك + كارت الميموري', isConsumable: false, updatedAt: 1700000004000 },
-      { id: 'item-5', zone: 'ALL_HOME', name: 'دراعات ألعاب إضافية (Extra Controllers)', owner: 'DRAGO', category: 'GAMING', location: 'STORE_STOCK', qty: 4, spot: 'المخزن - بوكس الجيمنج', details: 'دراعات PS4 / PS3 / PS2 احتياطي', isConsumable: false, updatedAt: 1700000005000 },
-      { id: 'item-6', zone: 'ALL_HOME', name: 'تلفزيون إضافي (Extra TV)', owner: 'HOME', category: 'TV', location: 'STORE_STOCK', qty: 1, spot: 'المخزن - الركن اليمين (مغلف)', details: 'شاشة احتياطية بالريموت والقاعدة', isConsumable: false, updatedAt: 1700000006000 },
-      { id: 'item-7', zone: 'ALL_HOME', name: 'أجهزة Smart Home متنوعة', owner: 'HOME', category: 'SMART_HOME', location: 'HOME_LIVE', qty: 5, spot: 'متوزعة في الصالة والأوض', details: 'فيش ذكية ولمبات سمارت', isConsumable: false, updatedAt: 1700000007000 },
-      { id: 'item-8', zone: 'ALL_HOME', name: 'شواحن ووصلات USB / Type-C', owner: 'HOME', category: 'POWER', location: 'STORE_STOCK', qty: 3, spot: 'المخزن - بوكس الكابلات والشواحن', details: 'شواحن احتياطي للموبايلات والتابلت', isConsumable: true, updatedAt: 1700000008000 },
-      { id: 'item-9', zone: 'ALL_HOME', name: 'كابلات HDMI وباور إضافية', owner: 'HOME', category: 'CABLES', location: 'STORE_STOCK', qty: 4, spot: 'المخزن - بوكس الكابلات والشواحن', details: 'كابلات HDMI للشاشات والكونسولز', isConsumable: true, updatedAt: 1700000009000 }
+      { id: 'item-1', name: 'PlayStation 4 (PS4)', owner: 'DRAGO', category: 'GAMING', location: 'HOME_LIVE', qty: 1, spot: 'أوضة المعيشة - تحت التلفزيون', details: 'جهاز PS4 الأساسي + الكابلات متوصلة', isConsumable: false },
+      { id: 'item-2', name: 'Nintendo Switch 1', owner: 'DRAGO', category: 'GAMING', location: 'HOME_LIVE', qty: 1, spot: 'ركن الجيمنج - على الدوك', details: 'النسخة الأولى + Joy-Cons', isConsumable: false },
+      { id: 'item-3', name: 'PlayStation 3 (PS3)', owner: 'DRAGO', category: 'GAMING', location: 'STORE_STOCK', qty: 1, spot: 'المخزن - الرف الأول (ركن الكونسول)', details: 'متشال بحالة ممتازة في الكرتونة', isConsumable: false },
+      { id: 'item-4', name: 'PlayStation 2 (PS2)', owner: 'DRAGO', category: 'GAMING', location: 'STORE_STOCK', qty: 1, spot: 'المخزن - الرف الأول (ركن الكونسول)', details: 'كلاسيك + كارت الميموري', isConsumable: false },
+      { id: 'item-5', name: 'دراعات ألعاب إضافية (Extra Controllers)', owner: 'DRAGO', category: 'GAMING', location: 'STORE_STOCK', qty: 4, spot: 'المخزن - بوكس الجيمنج', details: 'دراعات PS4 / PS3 / PS2 احتياطي', isConsumable: false },
+      { id: 'item-6', name: 'تلفزيون إضافي (Extra TV)', owner: 'HOME', category: 'TV', location: 'STORE_STOCK', qty: 1, spot: 'المخزن - الركن اليمين (مغلف)', details: 'شاشة احتياطية بالريموت والقاعدة', isConsumable: false },
+      { id: 'item-7', name: 'أجهزة Smart Home متنوعة', owner: 'HOME', category: 'SMART_HOME', location: 'HOME_LIVE', qty: 5, spot: 'متوزعة في الصالة والأوض', details: 'فيش ذكية ولمبات سمارت', isConsumable: false },
+      { id: 'item-8', name: 'شواحن ووصلات USB / Type-C', owner: 'HOME', category: 'POWER', location: 'STORE_STOCK', qty: 3, spot: 'المخزن - بوكس الكابلات والشواحن', details: 'شواحن احتياطي للموبايلات والتابلت', isConsumable: true },
+      { id: 'item-9', name: 'كابلات HDMI وباور إضافية', owner: 'HOME', category: 'CABLES', location: 'STORE_STOCK', qty: 4, spot: 'المخزن - بوكس الكابلات والشواحن', details: 'كابلات HDMI للشاشات والكونسولز', isConsumable: true }
     ];
 
     let items = [];
@@ -748,16 +615,9 @@
     let clearVisibleLogsPending = false;
     let storePhotoData = null;
     let currentUser = null;
-
-    let activeZone = 'ALL_HOME';
     let activeFilter = 'ALL';
     let activeCategory = 'ALL';
-    let vipSubFilter = 'ALL';
-    let makeupTierFilter = 'ALL';
-    let makeupGroupFilter = 'ALL';
     let searchQuery = '';
-
-    let pendingModalPhoto = '';
     let pendingConfirmFn = null;
     let isServerConnected = false;
     let isCloudConnected = false;
@@ -766,7 +626,6 @@
     let hasPendingSync = false;
     let lastSyncedHash = '';
     let lastJoyIdx = -1;
-    let syncDebounceTimer = null;
 
     function escapeHtml(str) {
       return String(str ?? '')
@@ -777,38 +636,13 @@
         .replace(/'/g, '&#39;');
     }
 
-    function bytesToB64(bytes) {
-      let bin = '';
-      for (let i = 0; i < bytes.length; i += 0x8000) {
-        bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
-      }
-      return btoa(bin);
-    }
-
-    function b64ToBytes(b64) {
-      const bin = atob(b64);
-      const out = new Uint8Array(bin.length);
-      for (let i = 0; i < bin.length; i++) {
-        out[i] = bin.charCodeAt(i);
-      }
-      return out;
-    }
-
-    function getCategoryMeta(cat, zone) {
-      if (zone === 'BBW') return { label: '🧴 Bath & Body Works', badge: 'bg-pink-50 text-pink-700 border-pink-200' };
-      if (zone === 'VS') return { label: "🪽 Victoria's Secret", badge: 'bg-rose-50 text-rose-700 border-rose-200' };
-      if (zone === 'MAKEUP') return { label: '💄 Makeup', badge: 'bg-fuchsia-50 text-fuchsia-800 border-fuchsia-200' };
-      if (zone === 'PERFUME') return { label: '🌺 Perfume', badge: 'bg-purple-50 text-purple-800 border-purple-200' };
-
+    function getCategoryMeta(cat) {
       const map = {
         GAMING: { label: 'ألعاب وكونسول 🎮', badge: 'bg-purple-50 text-purple-700 border-purple-200' },
         TV: { label: 'شاشات وتلفزيون 📺', badge: 'bg-sky-50 text-sky-700 border-sky-200' },
         SMART_HOME: { label: 'سمارت هوم 🏠', badge: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
         POWER: { label: 'شواحن وبطاريات 🔌', badge: 'bg-amber-50 text-amber-800 border-amber-200' },
         CABLES: { label: 'كابلات ووصلات 🧵', badge: 'bg-indigo-50 text-indigo-700 border-indigo-200' },
-        BATH_BODY: { label: 'Bath & Body / VS 🧴', badge: 'bg-pink-50 text-pink-700 border-pink-200' },
-        MAKEUP: { label: 'Makeup 💄', badge: 'bg-fuchsia-50 text-fuchsia-800 border-fuchsia-200' },
-        PERFUME: { label: 'Perfume 🌺', badge: 'bg-purple-50 text-purple-800 border-purple-200' },
         OTHER: { label: 'حاجات متنوعة ✨', badge: 'bg-slate-100 text-slate-700 border-slate-200' }
       };
       return map[cat] || map.OTHER;
@@ -844,6 +678,7 @@
       }
     }
 
+    // Client-Side AES-256-GCM Encryption & Decryption
     async function deriveAesKey(passphrase, saltBytes) {
       const enc = new TextEncoder();
       const keyMaterial = await crypto.subtle.importKey(
@@ -854,7 +689,7 @@
         ['deriveKey']
       );
       return crypto.subtle.deriveKey(
-        { name: 'PBKDF2', salt: saltBytes, iterations: 250000, hash: 'SHA-256' },
+        { name: 'PBKDF2', salt: saltBytes, iterations: 100000, hash: 'SHA-256' },
         keyMaterial,
         { name: 'AES-GCM', length: 256 },
         false,
@@ -871,12 +706,13 @@
       const key = await deriveAesKey(passphrase, salt);
       const encoded = new TextEncoder().encode(JSON.stringify(obj));
       const cipherBuf = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, encoded);
+      const toB64 = (u8) => btoa(String.fromCharCode(...u8));
       return JSON.stringify({
         encrypted: true,
         alg: 'AES-256-GCM',
-        salt: bytesToB64(salt),
-        iv: bytesToB64(iv),
-        data: bytesToB64(new Uint8Array(cipherBuf))
+        salt: toB64(salt),
+        iv: toB64(iv),
+        data: toB64(new Uint8Array(cipherBuf))
       });
     }
 
@@ -884,9 +720,10 @@
       const parsed = JSON.parse(rawStr);
       if (!parsed || !parsed.encrypted) return parsed;
       if (!passphrase) throw new Error('Passphrase required');
-      const salt = b64ToBytes(parsed.salt);
-      const iv = b64ToBytes(parsed.iv);
-      const data = b64ToBytes(parsed.data);
+      const fromB64 = (b64) => Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+      const salt = fromB64(parsed.salt);
+      const iv = fromB64(parsed.iv);
+      const data = fromB64(parsed.data);
       const key = await deriveAesKey(passphrase, salt);
       const plainBuf = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, data);
       return JSON.parse(new TextDecoder().decode(plainBuf));
@@ -900,7 +737,7 @@
         const res = await fetchWithTimeout(`https://api.github.com/gists/${gistId}`, {
           method: 'PATCH',
           headers: {
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `token ${token}`,
             'Accept': 'application/vnd.github.v3+json',
             'Content-Type': 'application/json'
           },
@@ -909,7 +746,7 @@
               [GIST_FILENAME]: { content: contentStr }
             }
           })
-        }, 5000);
+        }, 4500);
         return res.ok;
       } catch (e) {
         return false;
@@ -922,27 +759,19 @@
       try {
         const res = await fetchWithTimeout(`https://api.github.com/gists/${gistId}?t=${Date.now()}`, {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `token ${token}`,
             'Accept': 'application/vnd.github.v3+json'
           },
           cache: 'no-store'
-        }, 4500);
+        }, 4000);
         if (!res.ok) return null;
         const gist = await res.json();
         const files = gist.files || {};
         const fileObj = files[GIST_FILENAME] || Object.values(files)[0];
-        if (!fileObj) return { empty: true };
-
-        let contentStr = fileObj.content;
-        if ((fileObj.truncated || !contentStr) && fileObj.raw_url) {
-          const rawRes = await fetchWithTimeout(`${fileObj.raw_url}?t=${Date.now()}`, { cache: 'no-store' }, 5000);
-          if (rawRes.ok) contentStr = await rawRes.text();
-        }
-
-        if (!contentStr || contentStr.trim() === '{}' || contentStr.trim() === '') {
+        if (!fileObj || !fileObj.content || fileObj.content.trim() === '{}') {
           return { empty: true };
         }
-        const data = await decryptPayload(contentStr, secret);
+        const data = await decryptPayload(fileObj.content, secret);
         return { empty: false, data };
       } catch (e) {
         return null;
@@ -965,41 +794,21 @@
       return null;
     }
 
-    function mergeItemsByTimestamp(localList, remoteList) {
-      const map = new Map();
-      for (const it of (localList || [])) {
-        if (it?.id) map.set(it.id, { ...it });
-      }
-      for (const rem of (remoteList || [])) {
-        if (!rem?.id) continue;
-        const loc = map.get(rem.id);
-        if (!loc) {
-          map.set(rem.id, { ...rem });
-        } else {
-          const locTs = loc.updatedAt || 0;
-          const remTs = rem.updatedAt || 0;
-          if (remTs >= locTs) {
-            map.set(rem.id, { ...loc, ...rem });
-          }
-        }
-      }
-      return Array.from(map.values());
-    }
-
     function saveLocalCacheOnly() {
-      try { safeStorage.setItem(STORAGE_KEY, JSON.stringify(items)); } catch (e) {}
-      try { safeStorage.setItem(GROCERY_KEY, JSON.stringify(groceryItems)); } catch (e) {}
-      try { safeStorage.setItem(LOGS_KEY, JSON.stringify(activityLogs)); } catch (e) {}
-      try { safeStorage.setItem(ARCHIVED_LOGS_KEY, JSON.stringify(archivedLogsBuffer)); } catch (e) {}
-      try {
-        if (storePhotoData) safeStorage.setItem(STORE_PHOTO_KEY, JSON.stringify(storePhotoData));
-        else safeStorage.removeItem(STORE_PHOTO_KEY);
-      } catch (e) {}
+      safeStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      safeStorage.setItem(GROCERY_KEY, JSON.stringify(groceryItems));
+      safeStorage.setItem(LOGS_KEY, JSON.stringify(activityLogs));
+      safeStorage.setItem(ARCHIVED_LOGS_KEY, JSON.stringify(archivedLogsBuffer));
+      if (storePhotoData) {
+        safeStorage.setItem(STORE_PHOTO_KEY, JSON.stringify(storePhotoData));
+      } else {
+        safeStorage.removeItem(STORE_PHOTO_KEY);
+      }
     }
 
     function setPendingSyncFlag(flag) {
       hasPendingSync = flag;
-      try { safeStorage.setItem(PENDING_SYNC_KEY, flag ? '1' : '0'); } catch (e) {}
+      safeStorage.setItem(PENDING_SYNC_KEY, flag ? '1' : '0');
     }
 
     function updateSyncBadge(connected) {
@@ -1109,17 +918,18 @@
         if (cloudRes) {
           isCloudConnected = true;
           if (!cloudRes.empty && cloudRes.data) {
-            const merged = mergeItemsByTimestamp(items, cloudRes.data.items || []);
-            const nextGrocery = cloudRes.data.groceryItems || groceryItems;
-            const nextPhoto = cloudRes.data.storePhotoData || storePhotoData;
-            const nextLogs = cloudRes.data.activityLogs || activityLogs;
-            const incomingHash = JSON.stringify({ items: merged, groceryItems: nextGrocery, storePhotoData: nextPhoto, activityLogs: nextLogs });
+            const incomingHash = JSON.stringify({
+              items: cloudRes.data.items || [],
+              groceryItems: cloudRes.data.groceryItems || [],
+              storePhotoData: cloudRes.data.storePhotoData || null,
+              activityLogs: cloudRes.data.activityLogs || []
+            });
             if (incomingHash !== lastSyncedHash) {
               lastSyncedHash = incomingHash;
-              items = merged;
-              groceryItems = nextGrocery;
-              storePhotoData = nextPhoto;
-              activityLogs = nextLogs;
+              items = cloudRes.data.items || items;
+              groceryItems = cloudRes.data.groceryItems || groceryItems;
+              storePhotoData = cloudRes.data.storePhotoData || null;
+              activityLogs = cloudRes.data.activityLogs || [];
               saveLocalCacheOnly();
               renderStorePhoto();
               renderItems();
@@ -1143,17 +953,18 @@
       const json = reachable.json;
 
       if (json && json.ok && json.data) {
-        const merged = mergeItemsByTimestamp(items, json.data.items || []);
-        const nextGrocery = json.data.groceryItems || groceryItems;
-        const nextPhoto = json.data.storePhotoData || storePhotoData;
-        const nextLogs = json.data.activityLogs || activityLogs;
-        const incomingHash = JSON.stringify({ items: merged, groceryItems: nextGrocery, storePhotoData: nextPhoto, activityLogs: nextLogs });
+        const incomingHash = JSON.stringify({
+          items: json.data.items || [],
+          groceryItems: json.data.groceryItems || [],
+          storePhotoData: json.data.storePhotoData || null,
+          activityLogs: json.data.activityLogs || []
+        });
         if (incomingHash !== lastSyncedHash) {
           lastSyncedHash = incomingHash;
-          items = merged;
-          groceryItems = nextGrocery;
-          storePhotoData = nextPhoto;
-          activityLogs = nextLogs;
+          items = json.data.items || items;
+          groceryItems = json.data.groceryItems || groceryItems;
+          storePhotoData = json.data.storePhotoData || null;
+          activityLogs = json.data.activityLogs || [];
           saveLocalCacheOnly();
           renderStorePhoto();
           renderItems();
@@ -1187,7 +998,7 @@
         if (cloudRes) {
           isCloudConnected = true;
           if (!cloudRes.empty && cloudRes.data && Array.isArray(cloudRes.data.items)) {
-            items = mergeItemsByTimestamp(items, cloudRes.data.items);
+            items = cloudRes.data.items;
             groceryItems = cloudRes.data.groceryItems || groceryItems;
             storePhotoData = cloudRes.data.storePhotoData || null;
             activityLogs = cloudRes.data.activityLogs || [];
@@ -1196,7 +1007,9 @@
             updateSyncBadge(false);
             return;
           } else if (cloudRes.empty) {
-            if (!items || items.length === 0) items = JSON.parse(JSON.stringify(DEFAULT_INVENTORY));
+            if (!items || items.length === 0) {
+              items = JSON.parse(JSON.stringify(DEFAULT_INVENTORY));
+            }
             saveLocalCacheOnly();
             await syncFullStateToPC(false);
             return;
@@ -1209,7 +1022,7 @@
         const json = reachable.json;
         updateSyncBadge(true);
         if (json && json.ok && json.data && Array.isArray(json.data.items)) {
-          items = mergeItemsByTimestamp(items, json.data.items);
+          items = json.data.items;
           groceryItems = json.data.groceryItems || groceryItems;
           storePhotoData = json.data.storePhotoData || null;
           activityLogs = json.data.activityLogs || [];
@@ -1217,7 +1030,9 @@
           saveLocalCacheOnly();
           return;
         } else {
-          if (!items || items.length === 0) items = JSON.parse(JSON.stringify(DEFAULT_INVENTORY));
+          if (!items || items.length === 0) {
+            items = JSON.parse(JSON.stringify(DEFAULT_INVENTORY));
+          }
           saveLocalCacheOnly();
           await syncFullStateToPC(false);
           return;
@@ -1234,12 +1049,7 @@
 
     function persistAll() {
       saveLocalCacheOnly();
-      setPendingSyncFlag(true);
-      updateSyncBadge(isServerConnected);
-      clearTimeout(syncDebounceTimer);
-      syncDebounceTimer = setTimeout(() => {
-        syncFullStateToPC(false);
-      }, 900);
+      syncFullStateToPC(false);
     }
 
     function setActiveUser(user) {
@@ -1360,140 +1170,43 @@
       }
     }
 
-    function compressImageDataUrl(file, maxW, quality, cb) {
+    function compressStorePhoto(file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const img = new Image();
         img.onload = () => {
           const canvas = document.createElement('canvas');
+          const maxW = 1280;
           const scale = img.width > maxW ? maxW / img.width : 1;
           canvas.width = Math.round(img.width * scale);
           canvas.height = Math.round(img.height * scale);
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          cb(canvas.toDataURL('image/jpeg', quality));
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.78);
+          storePhotoData = {
+            dataUrl,
+            updatedAt: new Date().toLocaleString('ar-EG')
+          };
+          renderStorePhoto();
+          addActivityLog('تحديث الصورة العامة للمخزن 📷');
+          persistAll();
+          triggerRoleNotification();
         };
         img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     }
 
-    function compressStorePhoto(file) {
-      compressImageDataUrl(file, 960, 0.72, (dataUrl) => {
-        storePhotoData = {
-          dataUrl,
-          updatedAt: new Date().toLocaleString('ar-EG')
-        };
-        renderStorePhoto();
-        addActivityLog('تحديث الصورة العامة للمخزن 📷');
-        persistAll();
-        triggerRoleNotification();
-      });
-    }
-
-    function renderVipSubfilters() {
-      const homePills = document.getElementById('home-filter-pills');
-      const vipBox = document.getElementById('vip-subfilters');
-      const hint = document.getElementById('active-zone-hint');
-      const isSearching = Boolean(searchQuery.trim());
-
-      if (isSearching || activeZone === 'ALL_HOME') {
-        homePills.classList.remove('hidden');
-        vipBox.classList.add('hidden');
-        vipBox.innerHTML = '';
-        hint.textContent = isSearching ? 'نتائج البحث الشامل في كل الأقسام 🔍' : '';
-        return;
-      }
-
-      homePills.classList.add('hidden');
-      vipBox.classList.remove('hidden');
-
-      if (activeZone === 'BBW' || activeZone === 'VS') {
-        const brandLabel = activeZone === 'BBW' ? 'Bath & Body Works' : "Victoria's Secret";
-        hint.textContent = `ركن ${brandLabel} الخاص بـ Mms 💖`;
-        const opts = ['ALL', 'Body Mist', 'Body Cream', 'Body Butter'];
-        vipBox.innerHTML = `
-          <div class="flex flex-wrap gap-1.5">
-            ${opts.map(o => `
-              <button type="button" data-vip-sub="${escapeHtml(o)}" class="vip-sub-btn px-3 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer transition ${vipSubFilter === o ? 'bg-pink-600 text-white' : 'bg-pink-50 text-pink-800 hover:bg-pink-100'}">
-                ${o === 'ALL' ? 'الكل ✨' : escapeHtml(o)}
-              </button>
-            `).join('')}
-          </div>
-        `;
-      } else if (activeZone === 'MAKEUP') {
-        hint.textContent = 'ركن Makeup الخاص بـ Mms — متقسم حسب الفئة والمجموعة والنوع 💄✨';
-        const tiers = ['ALL', 'High End', 'Drugstore'];
-        const groups = ['ALL', ...Object.keys(MAKEUP_CATALOG)];
-        vipBox.innerHTML = `
-          <div class="flex flex-wrap gap-1.5">
-            ${tiers.map(t => `
-              <button type="button" data-makeup-tier="${escapeHtml(t)}" class="px-3 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer transition ${makeupTierFilter === t ? 'bg-fuchsia-700 text-white' : 'bg-fuchsia-50 text-fuchsia-800 hover:bg-fuchsia-100'}">
-                ${t === 'ALL' ? 'كل البراندات 💄' : t === 'High End' ? '💎 High End' : '🛍️ Drugstore'}
-              </button>
-            `).join('')}
-          </div>
-          <div class="flex flex-wrap gap-1.5">
-            ${groups.map(g => `
-              <button type="button" data-makeup-group="${escapeHtml(g)}" class="px-3 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer transition ${makeupGroupFilter === g ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}">
-                ${g === 'ALL' ? 'كل المجموعات' : escapeHtml(g)}
-              </button>
-            `).join('')}
-          </div>
-          ${makeupGroupFilter !== 'ALL' && MAKEUP_CATALOG[makeupGroupFilter] ? `
-            <div class="flex flex-wrap gap-1.5 pt-1">
-              ${['ALL', ...MAKEUP_CATALOG[makeupGroupFilter]].map(sub => `
-                <button type="button" data-vip-sub="${escapeHtml(sub)}" class="vip-sub-btn px-2.5 py-1 rounded-xl text-[11px] font-extrabold cursor-pointer transition ${vipSubFilter === sub ? 'bg-rose-600 text-white' : 'bg-rose-50 text-rose-700 hover:bg-rose-100'}">
-                  ${sub === 'ALL' ? 'كل الأنواع' : escapeHtml(sub)}
-                </button>
-              `).join('')}
-            </div>
-          ` : ''}
-        `;
-      } else if (activeZone === 'PERFUME') {
-        hint.textContent = 'ركن Perfume الخاص بـ Mms — Original / Oil / Handmade 🌺✨';
-        const opts = ['ALL', 'Original', 'Oil', 'Handmade'];
-        vipBox.innerHTML = `
-          <div class="flex flex-wrap gap-1.5">
-            ${opts.map(o => `
-              <button type="button" data-vip-sub="${escapeHtml(o)}" class="vip-sub-btn px-3 py-1.5 rounded-xl text-xs font-extrabold cursor-pointer transition ${vipSubFilter === o ? 'bg-purple-700 text-white' : 'bg-purple-50 text-purple-800 hover:bg-purple-100'}">
-                ${o === 'ALL' ? 'الكل 🌺' : o === 'Original' ? '💎 Original' : o === 'Oil' ? '💧 Oil' : '🎨 Handmade'}
-              </button>
-            `).join('')}
-          </div>
-        `;
-      }
-    }
-
     function getFilteredItems() {
       const q = searchQuery.trim().toLowerCase();
       return items.filter(item => {
-        const itemZone = item.zone || 'ALL_HOME';
-
-        if (!q) {
-          if (activeZone === 'ALL_HOME') {
-            if (itemZone !== 'ALL_HOME') return false;
-            if (activeFilter === 'DRAGO' && item.owner !== 'DRAGO') return false;
-            if (activeFilter === 'HOME' && item.owner !== 'HOME') return false;
-            if (activeFilter === 'HOME_LIVE' && item.location !== 'HOME_LIVE') return false;
-            if (activeFilter === 'STORE_STOCK' && item.location !== 'STORE_STOCK') return false;
-          } else {
-            if (itemZone !== activeZone) return false;
-            if (activeZone === 'BBW' || activeZone === 'VS' || activeZone === 'PERFUME') {
-              if (vipSubFilter !== 'ALL' && item.vipSubType !== vipSubFilter) return false;
-            }
-            if (activeZone === 'MAKEUP') {
-              if (makeupTierFilter !== 'ALL' && item.makeupTier !== makeupTierFilter) return false;
-              if (makeupGroupFilter !== 'ALL' && item.makeupGroup !== makeupGroupFilter) return false;
-              if (vipSubFilter !== 'ALL' && item.vipSubType !== vipSubFilter) return false;
-            }
-          }
-        }
-
+        if (activeFilter === 'DRAGO' && item.owner !== 'DRAGO') return false;
+        if (activeFilter === 'HOME' && item.owner !== 'HOME') return false;
+        if (activeFilter === 'HOME_LIVE' && item.location !== 'HOME_LIVE') return false;
+        if (activeFilter === 'STORE_STOCK' && item.location !== 'STORE_STOCK') return false;
         if (activeCategory !== 'ALL' && item.category !== activeCategory) return false;
-
         if (q) {
-          const hay = `${item.name || ''} ${item.spot || ''} ${item.details || ''} ${item.vipSubType || ''} ${item.makeupTier || ''} ${item.makeupGroup || ''} ${item.shade || ''} ${item.scentOrNotes || ''}`.toLowerCase();
+          const hay = `${item.name} ${item.spot} ${item.details || ''}`.toLowerCase();
           if (!hay.includes(q)) return false;
         }
         return true;
@@ -1525,8 +1238,8 @@
       if (statLive) statLive.textContent = items.filter(i => i.location === 'HOME_LIVE').length;
       if (statStore) statStore.textContent = items.filter(i => i.location === 'STORE_STOCK').length;
       if (statOwners) {
-        const mmsCount = items.filter(i => i.owner === 'HOME' || (i.zone && i.zone !== 'ALL_HOME')).length;
-        const dragoCount = items.filter(i => i.owner === 'DRAGO' && (!i.zone || i.zone === 'ALL_HOME')).length;
+        const mmsCount = items.filter(i => i.owner === 'HOME').length;
+        const dragoCount = items.filter(i => i.owner === 'DRAGO').length;
         statOwners.textContent = `${mmsCount} / ${dragoCount}`;
       }
 
@@ -1537,7 +1250,7 @@
         grid.innerHTML = `
           <div class="col-span-full bg-white/90 border border-slate-200 rounded-3xl p-10 text-center space-y-2">
             <div class="text-4xl">🔍</div>
-            <p class="font-extrabold text-slate-700">مفيش حاجة مطابقة للبحث أو الفلتر ده</p>
+            <p class="font-extrabold text-slate-700">مفيش حاجة مطابقة للبحث ده</p>
             <p class="text-xs text-slate-400">جربي تكتبي كلمة تانية أو دوسي "إضافة حاجة جديدة"</p>
           </div>
         `;
@@ -1545,28 +1258,14 @@
       }
 
       grid.innerHTML = filtered.map(item => {
-        const itemZone = item.zone || 'ALL_HOME';
-        const catMeta = getCategoryMeta(item.category, itemZone);
+        const catMeta = getCategoryMeta(item.category);
         const isDrago = item.owner === 'DRAGO';
         const isLive = item.location === 'HOME_LIVE';
         const isLow = item.isConsumable && Number(item.qty) <= 1;
 
-        const vipTags = [];
-        if (item.makeupTier) vipTags.push(item.makeupTier);
-        if (item.vipSubType) vipTags.push(item.vipSubType);
-        if (item.makeupGroup && itemZone === 'MAKEUP') vipTags.push(item.makeupGroup);
-        if (item.shade) vipTags.push(`درجة: ${item.shade}`);
-        if (item.scentOrNotes) vipTags.push(item.scentOrNotes);
-
         return `
           <div class="bg-white border-2 ${isLow ? 'border-amber-400' : 'border-slate-100 hover:border-teal-200'} rounded-3xl p-4 sm:p-5 shadow-xs transition flex flex-col justify-between gap-3">
             <div class="space-y-2.5">
-              ${item.photo ? `
-                <div class="rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 h-36">
-                  <img data-zoom-src="${escapeHtml(item.photo)}" src="${item.photo}" alt="${escapeHtml(item.name || 'صورة')}" class="w-full h-full object-cover cursor-zoom-in" />
-                </div>
-              ` : ''}
-
               <div class="flex items-start justify-between gap-2">
                 <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[11px] font-extrabold border ${catMeta.badge}">
                   ${catMeta.label}
@@ -1579,23 +1278,15 @@
                 </div>
               </div>
 
-              <h3 class="font-extrabold text-base sm:text-lg text-slate-800 leading-snug" dir="auto">${escapeHtml(item.name || 'منتج بالصورة 📸')}</h3>
+              <h3 class="font-extrabold text-base sm:text-lg text-slate-800 leading-snug" dir="auto">${escapeHtml(item.name)}</h3>
 
-              ${vipTags.length > 0 ? `
-                <div class="flex flex-wrap gap-1.5">
-                  ${vipTags.map(t => `<span class="px-2.5 py-0.5 rounded-lg text-[11px] font-extrabold bg-pink-50 text-pink-800 border border-pink-200">${escapeHtml(t)}</span>`).join('')}
+              <div class="p-3 rounded-2xl ${isLive ? 'bg-emerald-50/80 border border-emerald-200' : 'bg-teal-50/80 border border-teal-200'} space-y-1">
+                <div class="flex items-center justify-between text-[11px] font-extrabold ${isLive ? 'text-emerald-800' : 'text-teal-800'}">
+                  <span>${isLive ? '🟢 شغال في البيت' : '📦 في المخزن'}</span>
+                  <span>المكان / Zone 📍</span>
                 </div>
-              ` : ''}
-
-              ${item.spot ? `
-                <div class="p-3 rounded-2xl ${isLive ? 'bg-emerald-50/80 border border-emerald-200' : 'bg-teal-50/80 border border-teal-200'} space-y-1">
-                  <div class="flex items-center justify-between text-[11px] font-extrabold ${isLive ? 'text-emerald-800' : 'text-teal-800'}">
-                    <span>${isLive ? '🟢 شغال في البيت' : '📦 في المخزن'}</span>
-                    <span>المكان / Zone 📍</span>
-                  </div>
-                  <p class="text-xs sm:text-sm font-extrabold text-slate-800" dir="auto">${escapeHtml(item.spot)}</p>
-                </div>
-              ` : ''}
+                <p class="text-xs sm:text-sm font-extrabold text-slate-800" dir="auto">${escapeHtml(item.spot)}</p>
+              </div>
 
               ${item.details ? `<p class="text-xs text-slate-500 leading-relaxed" dir="auto">${escapeHtml(item.details)}</p>` : ''}
             </div>
@@ -1680,82 +1371,14 @@
       `).join('');
     }
 
-    function populateMakeupModalSubs(selectedGroup, selectedSub) {
-      const groupSel = document.getElementById('makeup-group');
-      const subSel = document.getElementById('makeup-sub');
-      const groups = Object.keys(MAKEUP_CATALOG);
-      groupSel.innerHTML = groups.map(g => `<option value="${escapeHtml(g)}" ${g === selectedGroup ? 'selected' : ''}>${escapeHtml(g)}</option>`).join('');
-      const activeG = selectedGroup && MAKEUP_CATALOG[selectedGroup] ? selectedGroup : groups[0];
-      const subs = MAKEUP_CATALOG[activeG];
-      subSel.innerHTML = subs.map(s => `<option value="${escapeHtml(s)}" ${s === selectedSub ? 'selected' : ''}>${escapeHtml(s)}</option>`).join('');
-    }
-
-    function configureModalForZone(zone, item = null) {
-      const bodyFields = document.getElementById('vip-body-fields');
-      const makeupFields = document.getElementById('vip-makeup-fields');
-      const perfumeFields = document.getElementById('vip-perfume-fields');
-      const homeFields = document.getElementById('home-standard-fields');
-      const nameLabel = document.getElementById('item-name-label');
-      const spotInput = document.getElementById('item-spot');
-      const spotLabel = document.getElementById('item-spot-label');
-
-      bodyFields.classList.add('hidden');
-      makeupFields.classList.add('hidden');
-      perfumeFields.classList.add('hidden');
-
-      if (zone === 'ALL_HOME') {
-        homeFields.classList.remove('hidden');
-        nameLabel.textContent = 'اسم الحاجة إيه؟ *';
-        spotLabel.textContent = 'المكان بالظبط / الـ Zone 📍 *';
-        spotInput.required = true;
-      } else {
-        homeFields.classList.add('hidden');
-        nameLabel.textContent = 'اسم المنتج (اختياري لو فيه صورة)';
-        spotInput.required = false;
-
-        if (zone === 'BBW' || zone === 'VS') {
-          bodyFields.classList.remove('hidden');
-          document.getElementById('vip-body-type').value = item?.vipSubType || 'Body Mist';
-          document.getElementById('vip-scent').value = item?.scentOrNotes || '';
-        } else if (zone === 'MAKEUP') {
-          makeupFields.classList.remove('hidden');
-          document.getElementById('makeup-tier').value = item?.makeupTier || 'High End';
-          populateMakeupModalSubs(item?.makeupGroup || 'Face and Base', item?.vipSubType || '');
-          document.getElementById('makeup-shade').value = item?.shade || '';
-        } else if (zone === 'PERFUME') {
-          perfumeFields.classList.remove('hidden');
-          document.getElementById('perfume-type').value = item?.vipSubType || 'Original';
-          document.getElementById('perfume-notes').value = item?.scentOrNotes || '';
-        }
-      }
-    }
-
-    function setModalPhoto(dataUrl) {
-      pendingModalPhoto = dataUrl || '';
-      const wrap = document.getElementById('item-photo-preview-wrap');
-      const prev = document.getElementById('item-photo-preview');
-      if (pendingModalPhoto) {
-        prev.src = pendingModalPhoto;
-        wrap.classList.remove('hidden');
-        wrap.classList.add('flex');
-      } else {
-        prev.src = '';
-        wrap.classList.add('hidden');
-        wrap.classList.remove('flex');
-      }
-    }
-
     function openItemModal(item = null) {
       const modal = document.getElementById('item-modal');
       const title = document.getElementById('modal-title');
       if (!modal) return;
-
       if (item) {
-        const z = item.zone || 'ALL_HOME';
         title.textContent = 'تعديل بيانات الحاجة ✏️';
         document.getElementById('item-id').value = item.id;
-        document.getElementById('item-zone').value = z;
-        document.getElementById('item-name').value = item.name || '';
+        document.getElementById('item-name').value = item.name;
         document.getElementById('item-owner').value = item.owner || 'HOME';
         document.getElementById('item-category').value = item.category || 'OTHER';
         document.getElementById('item-location').value = item.location || 'HOME_LIVE';
@@ -1763,22 +1386,12 @@
         document.getElementById('item-spot').value = item.spot || '';
         document.getElementById('item-details').value = item.details || '';
         document.getElementById('item-consumable').checked = Boolean(item.isConsumable);
-        setModalPhoto(item.photo || '');
-        configureModalForZone(z, item);
       } else {
-        const z = activeZone;
         title.textContent = 'إضافة حاجة جديدة ✨';
         document.getElementById('item-form').reset();
         document.getElementById('item-id').value = '';
-        document.getElementById('item-zone').value = z;
         document.getElementById('item-qty').value = 1;
-        if (currentUser === 'MMS' && z !== 'ALL_HOME') {
-          document.getElementById('item-owner').value = 'HOME';
-        }
-        setModalPhoto('');
-        configureModalForZone(z, null);
       }
-
       modal.classList.remove('hidden');
       modal.classList.add('flex');
     }
@@ -1807,59 +1420,6 @@
     }
 
     function bindEvents() {
-      document.getElementById('zone-tabs').addEventListener('click', (e) => {
-        const btn = e.target.closest('button[data-zone]');
-        if (!btn) return;
-        activeZone = btn.dataset.zone;
-        vipSubFilter = 'ALL';
-        makeupTierFilter = 'ALL';
-        makeupGroupFilter = 'ALL';
-        document.querySelectorAll('.zone-tab').forEach(b => {
-          b.classList.remove('bg-slate-800', 'text-white');
-        });
-        btn.classList.add('bg-slate-800', 'text-white');
-        renderVipSubfilters();
-        renderItems();
-      });
-
-      document.getElementById('vip-subfilters').addEventListener('click', (e) => {
-        const subBtn = e.target.closest('button[data-vip-sub]');
-        if (subBtn) {
-          vipSubFilter = subBtn.dataset.vipSub;
-          renderVipSubfilters();
-          renderItems();
-          return;
-        }
-        const tierBtn = e.target.closest('button[data-makeup-tier]');
-        if (tierBtn) {
-          makeupTierFilter = tierBtn.dataset.makeupTier;
-          renderVipSubfilters();
-          renderItems();
-          return;
-        }
-        const grpBtn = e.target.closest('button[data-makeup-group]');
-        if (grpBtn) {
-          makeupGroupFilter = grpBtn.dataset.makeupGroup;
-          vipSubFilter = 'ALL';
-          renderVipSubfilters();
-          renderItems();
-        }
-      });
-
-      document.getElementById('item-zone').addEventListener('change', (e) => {
-        configureModalForZone(e.target.value, null);
-      });
-      document.getElementById('makeup-group').addEventListener('change', (e) => {
-        populateMakeupModalSubs(e.target.value, '');
-      });
-      document.getElementById('item-photo-input').addEventListener('change', (e) => {
-        const f = e.target.files && e.target.files[0];
-        if (!f) return;
-        compressImageDataUrl(f, 440, 0.64, (dataUrl) => setModalPhoto(dataUrl));
-        e.target.value = '';
-      });
-      document.getElementById('remove-item-photo-btn').addEventListener('click', () => setModalPhoto(''));
-
       const groceryModal = document.getElementById('grocery-modal');
       const openGroceryBtn = document.getElementById('open-grocery-btn');
       if (openGroceryBtn && groceryModal) {
@@ -1996,7 +1556,7 @@
             try {
               const parsed = JSON.parse(ev.target.result);
               if (!Array.isArray(parsed.items)) throw new Error('Invalid backup');
-              items = mergeItemsByTimestamp(items, parsed.items);
+              items = parsed.items;
               if (Array.isArray(parsed.groceryItems)) groceryItems = parsed.groceryItems;
               if (parsed.storePhotoData !== undefined) storePhotoData = parsed.storePhotoData;
               if (Array.isArray(parsed.activityLogs)) activityLogs = parsed.activityLogs;
@@ -2105,17 +1665,16 @@
           e.target.value = '';
         }
       });
-
-      const lightbox = document.getElementById('photo-lightbox');
-      const lightboxImg = document.getElementById('lightbox-img');
       document.getElementById('store-photo-img').addEventListener('click', (e) => {
-        lightboxImg.src = e.target.src;
-        lightbox.classList.remove('hidden');
-        lightbox.classList.add('flex');
+        document.getElementById('lightbox-img').src = e.target.src;
+        const lb = document.getElementById('photo-lightbox');
+        lb.classList.remove('hidden');
+        lb.classList.add('flex');
       });
       document.getElementById('close-lightbox-btn').addEventListener('click', () => {
-        lightbox.classList.add('hidden');
-        lightbox.classList.remove('flex');
+        const lb = document.getElementById('photo-lightbox');
+        lb.classList.add('hidden');
+        lb.classList.remove('flex');
       });
 
       const copyShoppingBtn = document.getElementById('copy-shopping-btn');
@@ -2135,7 +1694,6 @@
         searchQuery = e.target.value;
         clearSearchBtn.classList.toggle('hidden', !searchQuery);
         clearSearchBtn.classList.toggle('flex', Boolean(searchQuery));
-        renderVipSubfilters();
         renderItems();
       });
       clearSearchBtn.addEventListener('click', () => {
@@ -2143,7 +1701,6 @@
         searchInput.value = '';
         clearSearchBtn.classList.add('hidden');
         clearSearchBtn.classList.remove('flex');
-        renderVipSubfilters();
         renderItems();
       });
 
@@ -2170,68 +1727,25 @@
       document.getElementById('item-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const id = document.getElementById('item-id').value;
-        const zone = document.getElementById('item-zone').value || 'ALL_HOME';
-        const name = document.getElementById('item-name').value.trim();
-        const spot = document.getElementById('item-spot').value.trim();
-
-        if (zone === 'ALL_HOME') {
-          if (!name || !spot) {
-            return showToast('اكتب اسم الحاجة والمكان بالظبط الأول ⚠️', 'info');
-          }
-        } else if (!name && !pendingModalPhoto) {
-          return showToast('اكتب اسم المنتج أو ارفع صورة على الأقل ⚠️', 'info');
-        }
-
-        let category = document.getElementById('item-category').value;
-        let vipSubType = '';
-        let makeupTier = '';
-        let makeupGroup = '';
-        let shade = '';
-        let scentOrNotes = '';
-
-        if (zone === 'BBW' || zone === 'VS') {
-          category = 'BATH_BODY';
-          vipSubType = document.getElementById('vip-body-type').value;
-          scentOrNotes = document.getElementById('vip-scent').value.trim();
-        } else if (zone === 'MAKEUP') {
-          category = 'MAKEUP';
-          makeupTier = document.getElementById('makeup-tier').value;
-          makeupGroup = document.getElementById('makeup-group').value;
-          vipSubType = document.getElementById('makeup-sub').value;
-          shade = document.getElementById('makeup-shade').value.trim();
-        } else if (zone === 'PERFUME') {
-          category = 'PERFUME';
-          vipSubType = document.getElementById('perfume-type').value;
-          scentOrNotes = document.getElementById('perfume-notes').value.trim();
-        }
-
         const payload = {
           id: id || ('item-' + Date.now()),
-          zone,
-          name,
-          owner: zone === 'ALL_HOME' ? document.getElementById('item-owner').value : 'HOME',
-          category,
-          location: zone === 'ALL_HOME' ? document.getElementById('item-location').value : 'HOME_LIVE',
-          qty: Math.max(0, parseInt(document.getElementById('item-qty').value, 10) || 1),
-          spot: zone === 'ALL_HOME' ? spot : (spot || (zone === 'BBW' ? 'Bath & Body Works' : zone === 'VS' ? "Victoria's Secret" : zone === 'MAKEUP' ? 'ركن الميكب' : 'ركن العطور')),
+          name: document.getElementById('item-name').value.trim(),
+          owner: document.getElementById('item-owner').value,
+          category: document.getElementById('item-category').value,
+          location: document.getElementById('item-location').value,
+          qty: Math.max(0, parseInt(document.getElementById('item-qty').value, 10) || 0),
+          spot: document.getElementById('item-spot').value.trim(),
           details: document.getElementById('item-details').value.trim(),
-          isConsumable: document.getElementById('item-consumable').checked,
-          vipSubType,
-          makeupTier,
-          makeupGroup,
-          shade,
-          scentOrNotes,
-          photo: pendingModalPhoto || '',
-          updatedAt: Date.now()
+          isConsumable: document.getElementById('item-consumable').checked
         };
 
         if (id) {
           const idx = items.findIndex(x => x.id === id);
           if (idx !== -1) items[idx] = payload;
-          addActivityLog(`تعديل بيانات: ${payload.name || 'منتج'}`);
+          addActivityLog(`تعديل بيانات: ${payload.name}`);
         } else {
           items.unshift(payload);
-          addActivityLog(`إضافة حاجة جديدة: ${payload.name || 'منتج'} (${payload.spot})`);
+          addActivityLog(`إضافة حاجة جديدة: ${payload.name} (${payload.spot})`);
         }
 
         closeItemModal();
@@ -2241,14 +1755,6 @@
       });
 
       document.getElementById('items-grid').addEventListener('click', (e) => {
-        const zoomImg = e.target.closest('img[data-zoom-src]');
-        if (zoomImg) {
-          lightboxImg.src = zoomImg.dataset.zoomSrc;
-          lightbox.classList.remove('hidden');
-          lightbox.classList.add('flex');
-          return;
-        }
-
         const btn = e.target.closest('button[data-action]');
         if (!btn) return;
         const action = btn.dataset.action;
@@ -2258,16 +1764,14 @@
 
         if (action === 'inc') {
           item.qty = Number(item.qty) + 1;
-          item.updatedAt = Date.now();
-          addActivityLog(`زيادة عدد "${item.name || 'منتج'}" إلى ${item.qty}`);
+          addActivityLog(`زيادة عدد "${item.name}" إلى ${item.qty}`);
           renderItems();
           persistAll();
           triggerRoleNotification();
         } else if (action === 'dec') {
           if (Number(item.qty) > 0) {
             item.qty = Number(item.qty) - 1;
-            item.updatedAt = Date.now();
-            addActivityLog(`سحب 1 من "${item.name || 'منتج'}" (المتبقي: ${item.qty})`);
+            addActivityLog(`سحب 1 من "${item.name}" (المتبقي: ${item.qty})`);
             renderItems();
             persistAll();
             triggerRoleNotification();
@@ -2278,18 +1782,17 @@
           const copy = {
             ...item,
             id: 'item-' + Date.now(),
-            name: (item.name || 'منتج') + ' (نسخة)',
-            updatedAt: Date.now()
+            name: item.name + ' (نسخة)'
           };
           items.unshift(copy);
-          addActivityLog(`تكرار كارت: ${item.name || 'منتج'}`);
+          addActivityLog(`تكرار كارت: ${item.name}`);
           renderItems();
           persistAll();
           triggerRoleNotification();
         } else if (action === 'delete') {
-          askConfirm(`متأكدين إننا عايزين نشيل "${item.name || 'العنصر ده'}" من القائمة؟`, () => {
+          askConfirm(`متأكدين إننا عايزين نشيل "${item.name}" من القائمة؟`, () => {
             items = items.filter(x => x.id !== id);
-            addActivityLog(`حذف "${item.name || 'عنصر'}" من القائمة`);
+            addActivityLog(`حذف "${item.name}" من القائمة`);
             renderItems();
             persistAll();
             triggerRoleNotification();
@@ -2318,7 +1821,6 @@
     async function init() {
       await loadStateFromServerOrLocal();
       bindEvents();
-      renderVipSubfilters();
       renderStorePhoto();
       renderItems();
       renderGroceryList();
@@ -2331,7 +1833,7 @@
         openUserSelectModal();
       }
 
-      setInterval(pollServerUpdates, 4000);
+      setInterval(pollServerUpdates, 3500);
     }
 
     init();
