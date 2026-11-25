@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0f172a" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <title>Mms & Drago v1.0.1 | مملكتنا الذكية 👑🎮</title>
+  <title>Mms & Drago v1.0.2 | مملكتنا الذكية 👑🎮</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -591,6 +591,12 @@
       font-weight: 700;
     }
 
+    .item-extra {
+      font-size: 0.79rem;
+      color: #fde68a;
+      font-weight: 700;
+    }
+
     .item-note {
       font-size: 0.82rem;
       color: var(--text-muted);
@@ -813,7 +819,7 @@
         <div>
           <div class="brand-title">
             <span id="user-greeting">أهلاً يا Mms 👑</span>
-            <span class="ver-pill">v1.0.1</span>
+            <span class="ver-pill">v1.0.2</span>
           </div>
           <div class="brand-sub" id="user-subtitle">كل حاجتك متنظمة ومحمية ✨</div>
         </div>
@@ -854,7 +860,7 @@
     <!-- Global Search -->
     <div class="search-bar-wrap">
       <span class="search-icon">🔍</span>
-      <input type="text" id="global-search" class="search-input" placeholder="ابحث في كل حاجة (ميكب، برفيوم، بودي ميست، طلبات البيت، المخزن...)" oninput="renderCurrentView()" />
+      <input type="text" id="global-search" class="search-input" placeholder="ابحث في كل حاجة (ميكب، درجة لون، برفيوم، بودي ميست، طلبات البيت، المخزن...)" oninput="renderCurrentView()" />
     </div>
 
     <!-- Navigation Tabs -->
@@ -906,7 +912,7 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label">ملاحظة / درجة اللون / الكمية (اختياري)</label>
+        <label class="form-label">ملاحظة / الكمية (اختياري)</label>
         <input type="text" id="item-note-input" class="form-control" placeholder="مثلاً: ريحته تحفة / قرب يخلص / عدد 2..." />
       </div>
 
@@ -1344,6 +1350,9 @@
           const blob = [
             item.name,
             item.note,
+            item.shade,
+            item.scent,
+            item.zone,
             item.subCategory,
             item.tier,
             item.makeupGroup,
@@ -1409,6 +1418,11 @@
 
         const metaLine = subBadges.join(" • ");
 
+        let extraLines = [];
+        if (item.shade) extraLines.push(`🎨 الدرجة: ${item.shade}`);
+        if (item.scent) extraLines.push(`🌸 الرائحة: ${item.scent}`);
+        if (item.zone) extraLines.push(`📍 المكان: ${item.zone}`);
+
         return `
           <article class="item-card ${item.bought ? "bought" : ""}">
             <div class="item-img-box" onclick="${item.image ? `openLightbox('${item.id}')` : ""}">
@@ -1423,6 +1437,7 @@
             <div class="item-body">
               <div class="item-name">${escapeHtml(item.name || "منتج بدون اسم 📸")}</div>
               ${metaLine ? `<div class="item-meta">${escapeHtml(metaLine)}</div>` : ""}
+              ${extraLines.length ? `<div class="item-extra">${escapeHtml(extraLines.join(" | "))}</div>` : ""}
               ${item.note ? `<div class="item-note">${escapeHtml(item.note)}</div>` : ""}
 
               <div class="item-actions">
@@ -1487,6 +1502,7 @@
 
       if (tab === "bbw" || tab === "vs") {
         const val = existing?.subCategory || (filters[tab] !== "All" ? filters[tab] : "Body Mist");
+        const scentVal = existing?.scent || "";
         box.innerHTML = `
           <div class="form-group">
             <label class="form-label">النوع</label>
@@ -1496,9 +1512,14 @@
               <option value="Body Butter" ${val === "Body Butter" ? "selected" : ""}>Body Butter</option>
             </select>
           </div>
+          <div class="form-group">
+            <label class="form-label">الرائحة / النوتة العطرية (اختياري)</label>
+            <input type="text" id="scent-input" class="form-control" value="${escapeHtml(scentVal)}" placeholder="مثلاً: فانيليا / توت / كراميل..." />
+          </div>
         `;
       } else if (tab === "perfume") {
         const val = existing?.subCategory || (filters.perfume !== "All" ? filters.perfume : "Original");
+        const scentVal = existing?.scent || "";
         box.innerHTML = `
           <div class="form-group">
             <label class="form-label">نوع البرفيوم</label>
@@ -1508,11 +1529,16 @@
               <option value="Handmade" ${val === "Handmade" ? "selected" : ""}>🎨 Handmade</option>
             </select>
           </div>
+          <div class="form-group">
+            <label class="form-label">النوتة العطرية / التركيز (اختياري)</label>
+            <input type="text" id="scent-input" class="form-control" value="${escapeHtml(scentVal)}" placeholder="مثلاً: عود عنبر / فواكه / تركيب..." />
+          </div>
         `;
       } else if (tab === "makeup") {
         const tierVal = existing?.tier || (filters.makeupTier !== "All" ? filters.makeupTier : "High End");
         const groupVal = existing?.makeupGroup || (filters.makeupGroup !== "All" ? filters.makeupGroup : "Face and Base");
         const typeVal = existing?.makeupType || (filters.makeupType !== "All" ? filters.makeupType : MAKEUP_CATALOG[groupVal][0]);
+        const shadeVal = existing?.shade || "";
 
         box.innerHTML = `
           <div class="form-group">
@@ -1534,8 +1560,20 @@
             <label class="form-label">نوع المنتج</label>
             <select id="makeup-type-select" class="form-control"></select>
           </div>
+          <div class="form-group">
+            <label class="form-label">الدرجة / اللون — Shade (اختياري)</label>
+            <input type="text" id="shade-input" class="form-control" value="${escapeHtml(shadeVal)}" placeholder="مثلاً: Velvet Teddy / Shade 220..." />
+          </div>
         `;
         populateMakeupTypes(typeVal);
+      } else if (tab === "home" || tab === "storage") {
+        const zoneVal = existing?.zone || "";
+        box.innerHTML = `
+          <div class="form-group">
+            <label class="form-label">المكان بالظبط / الـ Zone (اختياري)</label>
+            <input type="text" id="zone-input" class="form-control" value="${escapeHtml(zoneVal)}" placeholder="مثلاً: الرف التاني - بوكس الكابلات..." />
+          </div>
+        `;
       } else {
         box.innerHTML = "";
       }
@@ -1617,10 +1655,14 @@
 
       if (tab === "bbw" || tab === "vs" || tab === "perfume") {
         itemObj.subCategory = document.getElementById("sub-cat-select").value;
+        itemObj.scent = document.getElementById("scent-input")?.value.trim() || "";
       } else if (tab === "makeup") {
         itemObj.tier = document.getElementById("makeup-tier-select").value;
         itemObj.makeupGroup = document.getElementById("makeup-group-select").value;
         itemObj.makeupType = document.getElementById("makeup-type-select").value;
+        itemObj.shade = document.getElementById("shade-input")?.value.trim() || "";
+      } else if (tab === "home" || tab === "storage") {
+        itemObj.zone = document.getElementById("zone-input")?.value.trim() || "";
       }
 
       if (id) {
