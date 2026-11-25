@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0f172a" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <title>Mms & Drago v1.0.5 | مملكتنا الذكية 👑🎮</title>
+  <title>Mms & Drago v1.0.6 | مملكتنا الذكية 👑🎮</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -467,6 +467,16 @@
       gap: 8px;
     }
 
+    .count-badge {
+      font-size: 0.76rem;
+      padding: 2px 9px;
+      border-radius: 999px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
     .pills-row {
       display: flex;
       flex-wrap: wrap;
@@ -920,7 +930,7 @@
         <div>
           <div class="brand-title">
             <span id="user-greeting">أهلاً يا Mms 👑</span>
-            <span class="ver-pill">v1.0.5</span>
+            <span class="ver-pill">v1.0.6</span>
           </div>
           <div class="brand-sub" id="user-subtitle">كل حاجتك متنظمة ومحمية ✨</div>
         </div>
@@ -1222,6 +1232,7 @@
     let pendingImageBase64 = "";
     let lastDeletedItem = null;
     let lastJoyIdx = -1;
+    let lastVisibleCount = 0;
 
     let pushTimer = null;
     let isDirty = false;
@@ -1620,7 +1631,10 @@
 
       bar.innerHTML = `
         <div class="section-top">
-          <div class="section-title">${meta.title}</div>
+          <div class="section-title">
+            <span>${meta.title}</span>
+            <span class="count-badge" id="section-count-badge">${lastVisibleCount} عنصر</span>
+          </div>
           <button class="btn btn-primary" onclick="openAddModal('${currentTab}')">
             ➕ إضافة هنا
           </button>
@@ -1683,6 +1697,10 @@
         }
         return (b.createdAt || 0) - (a.createdAt || 0);
       });
+
+      lastVisibleCount = list.length;
+      const countBadge = document.getElementById("section-count-badge");
+      if (countBadge) countBadge.textContent = `${lastVisibleCount} عنصر`;
 
       if (!list.length) {
         grid.innerHTML = `
