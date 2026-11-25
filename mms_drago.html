@@ -911,7 +911,7 @@
     const STORAGE_KEY = "mms_drago_vault_v3";
     const CLOUD_CFG_KEY = "mms_drago_cloud_cfg_v1";
     // SHA-256 hash of "19891989"
-    const ADMIN_PIN_HASH = "e1f796f4d44d8f289f944be5f562e84336634f7126e416e49e8a8120c2ec31a5";
+    const ADMIN_PIN_HASH = "47c454a7e703cf426e984688894c05c4d21159843b30e043e0fe05c65c537e6c";
 
     const MAKEUP_CATALOG = {
       "Face and Base": [
@@ -978,7 +978,6 @@
     // 3. INITIALIZATION & AMBIENT ANIMATIONS
     // ==========================================
     window.addEventListener("DOMContentLoaded", () => {
-      // Clear any legacy auto-login keys so Role Gate always greets first
       try {
         localStorage.removeItem("selectedRole");
         sessionStorage.removeItem("selectedRole");
@@ -993,7 +992,6 @@
       const layer = document.getElementById("ambient-layer");
       layer.innerHTML = "";
 
-      // Stars for everyone
       const starIcons = ["✨", "⭐", "🌟", "💫"];
       for (let i = 0; i < 18; i++) {
         const el = document.createElement("span");
@@ -1007,7 +1005,6 @@
         layer.appendChild(el);
       }
 
-      // Butterflies, Teddy Bears, Pandas, Penguins (Rich & lively for Mms & Gate)
       const critters = mode === "drago"
         ? ["✨", "⭐", "🛸"]
         : ["🦋", "🧸", "🐼", "🐧", "🦋", "🌸", "🧸", "🐼", "🐧", "🦋"];
@@ -1193,7 +1190,6 @@
       let list = vaultData.items || [];
 
       if (query) {
-        // Global search across ALL tabs & categories
         list = list.filter(item => {
           const blob = [
             item.name,
@@ -1207,7 +1203,6 @@
           return blob.includes(query);
         });
       } else {
-        // Filter by current tab & sub-filters
         list = list.filter(item => item.tab === currentTab);
 
         if (currentTab === "bbw" && filters.bbw !== "All") {
@@ -1232,7 +1227,6 @@
         }
       }
 
-      // Sort unbought grocery items first
       list.sort((a, b) => {
         if (a.tab === "grocery" && b.tab === "grocery" && !!a.bought !== !!b.bought) {
           return a.bought ? 1 : -1;
